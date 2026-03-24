@@ -128,7 +128,7 @@ final class HushStructureFeatureSupport {
     }
 
     static void placeDoor(StructureWorldAccess world, BlockPos basePos, Direction facing) {
-        BlockState lower = Blocks.IRON_DOOR.getDefaultState()
+        BlockState lower = Blocks.DARK_OAK_DOOR.getDefaultState()
                 .with(DoorBlock.FACING, facing)
                 .with(DoorBlock.HALF, DoubleBlockHalf.LOWER);
         BlockState upper = lower.with(DoorBlock.HALF, DoubleBlockHalf.UPPER);

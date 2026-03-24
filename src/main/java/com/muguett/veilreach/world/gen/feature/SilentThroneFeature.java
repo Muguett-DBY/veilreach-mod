@@ -54,6 +54,7 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         buildSideBastion(world, center.add(11, 0, 3), polished, veilstone, frame, lantern, barrier);
         buildRearTower(world, center.add(-14, 0, 14), polished, veilstone, frame, lantern);
         buildRearTower(world, center.add(14, 0, 14), polished, veilstone, frame, lantern);
+        buildFrontStair(world, center, polished, frame);
 
         for (int ring = 10; ring >= 4; ring -= 3) {
             for (int dx = -ring; dx <= ring; dx++) {
@@ -152,6 +153,12 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
             }
         }
 
+        for (int dy = 1; dy <= 4; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                world.setBlockState(hall.add(dx, dy, -3), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+
         for (int step = 0; step <= 6; step++) {
             for (int dx = -3; dx <= 3; dx++) {
                 world.setBlockState(center.add(dx, step, -17 + step), polished, HushStructureFeatureSupport.GEN_FLAGS);
@@ -187,7 +194,20 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
                 }
             }
         }
-        world.setBlockState(center.add(0, 1, -3), barrier, HushStructureFeatureSupport.GEN_FLAGS);
+
+        for (int dy = 1; dy <= 4; dy++) {
+            world.setBlockState(center.add(0, dy, -5), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        }
+
+        for (int step = 0; step <= 3; step++) {
+            for (int width = -1; width <= 0; width++) {
+                BlockPos tread = center.add(width, step, -3 + step);
+                world.setBlockState(tread, polished, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(tread.up(), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(tread.up(2), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+        world.setBlockState(center.add(0, 4, -1), barrier, HushStructureFeatureSupport.GEN_FLAGS);
         world.setBlockState(center.add(0, 1, 3), barrier, HushStructureFeatureSupport.GEN_FLAGS);
         world.setBlockState(center.add(0, 5, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
@@ -254,14 +274,33 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         }
 
         for (int step = 0; step <= 5; step++) {
-            BlockPos stair = center.add(0, -step, 5 - step);
-            world.setBlockState(stair.down(), polished, HushStructureFeatureSupport.GEN_FLAGS);
-            world.setBlockState(stair, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-            world.setBlockState(stair.up(), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            BlockPos tread = center.add(0, -1 - step, 4 - step);
+            for (int width = -1; width <= 1; width++) {
+                world.setBlockState(tread.add(width, 0, 0), polished, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(tread.add(width, 1, 0), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(tread.add(width, 2, 0), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            }
         }
         world.setBlockState(crypt.add(-2, 1, -2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         world.setBlockState(crypt.add(2, 1, -2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         world.setBlockState(crypt.add(0, 2, 0), barrier, HushStructureFeatureSupport.GEN_FLAGS);
+    }
+
+    private static void buildFrontStair(StructureWorldAccess world, BlockPos center, BlockState polished, BlockState frame) {
+        for (int step = 0; step <= 7; step++) {
+            int z = -19 - step;
+            int y = Math.max(-1, 3 - (step / 2));
+            for (int dx = -4; dx <= 4; dx++) {
+                world.setBlockState(center.add(dx, y, z), polished, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(dx, y + 1, z), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(dx, y + 2, z), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+
+        for (int z = -26; z <= -18; z++) {
+            world.setBlockState(center.add(-5, 0, z), frame, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(5, 0, z), frame, HushStructureFeatureSupport.GEN_FLAGS);
+        }
     }
 }
 

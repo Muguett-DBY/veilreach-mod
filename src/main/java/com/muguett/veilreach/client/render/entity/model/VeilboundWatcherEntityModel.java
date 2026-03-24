@@ -31,16 +31,29 @@ public final class VeilboundWatcherEntityModel extends EntityModel<LivingEntityR
         ModelPartData root = modelData.getRoot();
         ModelPartData core = root.addChild("core", ModelPartBuilder.create()
                 .uv(0, 12).cuboid(-4.0F, -8.0F, -2.0F, 8.0F, 12.0F, 4.0F)
-                .uv(24, 12).cuboid(-3.5F, 4.0F, -1.5F, 7.0F, 6.0F, 3.0F), ModelTransform.origin(0.0F, 8.0F, 0.0F));
-        core.addChild("head", ModelPartBuilder.create()
+                .uv(24, 12).cuboid(-3.5F, 4.0F, -1.5F, 7.0F, 6.0F, 3.0F)
+                .uv(0, 28).cuboid(-2.5F, -5.0F, 2.0F, 5.0F, 10.0F, 2.0F), ModelTransform.origin(0.0F, 8.0F, 0.0F));
+        ModelPartData head = core.addChild("head", ModelPartBuilder.create()
                 .uv(0, 0).cuboid(-4.0F, -6.0F, -4.0F, 8.0F, 6.0F, 8.0F)
                 .uv(24, 0).cuboid(-2.0F, -8.0F, -1.0F, 4.0F, 2.0F, 4.0F), ModelTransform.origin(0.0F, -7.0F, 0.0F));
+        head.addChild("halo", ModelPartBuilder.create()
+                .uv(42, 0).cuboid(-5.0F, -5.0F, -0.5F, 10.0F, 1.0F, 1.0F), ModelTransform.of(0.0F, -4.0F, 0.0F, -0.2F, 0.0F, 0.0F));
+        head.addChild("face_veil", ModelPartBuilder.create()
+                .uv(44, 2).cuboid(-3.5F, -1.0F, -4.5F, 7.0F, 7.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.16F, 0.0F, 0.0F));
         core.addChild("left_arm", ModelPartBuilder.create()
-                .uv(44, 0).cuboid(-1.0F, 0.0F, -1.0F, 2.0F, 14.0F, 2.0F), ModelTransform.of(5.0F, -6.0F, 0.0F, 0.18F, 0.0F, -0.28F));
+                .uv(44, 10).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 17.0F, 2.0F), ModelTransform.of(5.0F, -6.0F, 0.0F, 0.22F, 0.0F, -0.32F));
         core.addChild("right_arm", ModelPartBuilder.create()
-                .uv(44, 0).cuboid(-1.0F, 0.0F, -1.0F, 2.0F, 14.0F, 2.0F), ModelTransform.of(-5.0F, -6.0F, 0.0F, 0.18F, 0.0F, 0.28F));
+                .uv(44, 10).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 17.0F, 2.0F), ModelTransform.of(-5.0F, -6.0F, 0.0F, 0.22F, 0.0F, 0.32F));
+        core.addChild("left_shroud", ModelPartBuilder.create()
+                .uv(18, 28).mirrored().cuboid(0.0F, -3.0F, -1.5F, 2.0F, 15.0F, 3.0F), ModelTransform.of(4.0F, -3.0F, 0.0F, 0.0F, 0.0F, -0.22F));
+        core.addChild("right_shroud", ModelPartBuilder.create()
+                .uv(18, 28).cuboid(-2.0F, -3.0F, -1.5F, 2.0F, 15.0F, 3.0F), ModelTransform.of(-4.0F, -3.0F, 0.0F, 0.0F, 0.0F, 0.22F));
         core.addChild("lower_veil", ModelPartBuilder.create()
-                .uv(36, 20).cuboid(-5.0F, 0.0F, -2.5F, 10.0F, 8.0F, 5.0F), ModelTransform.of(0.0F, 4.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+                .uv(32, 20).cuboid(-5.0F, 0.0F, -2.5F, 10.0F, 8.0F, 5.0F), ModelTransform.of(0.0F, 4.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+        core.addChild("left_tail", ModelPartBuilder.create()
+                .uv(30, 34).mirrored().cuboid(0.0F, 0.0F, -1.0F, 2.0F, 14.0F, 2.0F), ModelTransform.of(2.0F, 7.0F, 0.0F, 0.35F, 0.0F, -0.28F));
+        core.addChild("right_tail", ModelPartBuilder.create()
+                .uv(30, 34).cuboid(-2.0F, 0.0F, -1.0F, 2.0F, 14.0F, 2.0F), ModelTransform.of(-2.0F, 7.0F, 0.0F, 0.35F, 0.0F, 0.28F));
         return TexturedModelData.of(modelData, 64, 64);
     }
 
@@ -51,10 +64,10 @@ public final class VeilboundWatcherEntityModel extends EntityModel<LivingEntityR
         this.core.originY = 8.0F + (MathHelper.cos(state.age * 0.12F) * 1.2F);
         this.head.yaw = state.relativeHeadYaw * 0.017453292F * 0.75F;
         this.head.pitch = state.pitch * 0.017453292F * 0.45F;
-        this.leftArm.pitch = -0.15F + sway;
-        this.rightArm.pitch = -0.15F - sway;
-        this.leftArm.roll = -0.28F - sway;
-        this.rightArm.roll = 0.28F + sway;
+        this.leftArm.pitch = -0.28F + sway;
+        this.rightArm.pitch = -0.28F - sway;
+        this.leftArm.roll = -0.32F - sway;
+        this.rightArm.roll = 0.32F + sway;
         this.lowerVeil.yaw = sway * 1.6F;
     }
 }

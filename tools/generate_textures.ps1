@@ -338,36 +338,142 @@ function Draw-ToolHandle([System.Drawing.Bitmap]$bmp, [int]$x1, [int]$y1, [int]$
     Draw-Line $bmp ($x1 + 1) $y1 ($x2 + 1) $y2 (Color-Hex "#805139")
 }
 
+function Grid([double]$value) {
+    return [int][Math]::Round(($tileSize / 16.0) * $value)
+}
+
+function Fill-Rect([System.Drawing.Bitmap]$bmp, [int]$x, [int]$y, [int]$width, [int]$height, [System.Drawing.Color]$color) {
+    for ($px = $x; $px -lt ($x + $width); $px++) {
+        for ($py = $y; $py -lt ($y + $height); $py++) {
+            if ($px -ge 0 -and $px -lt $bmp.Width -and $py -ge 0 -and $py -lt $bmp.Height) {
+                $bmp.SetPixel($px, $py, $color)
+            }
+        }
+    }
+}
+
+function Draw-BrushPoint([System.Drawing.Bitmap]$bmp, [int]$x, [int]$y, [int]$radius, [System.Drawing.Color]$color) {
+    for ($dx = -$radius; $dx -le $radius; $dx++) {
+        for ($dy = -$radius; $dy -le $radius; $dy++) {
+            if (($dx * $dx) + ($dy * $dy) -le ($radius * $radius)) {
+                $px = $x + $dx
+                $py = $y + $dy
+                if ($px -ge 0 -and $px -lt $bmp.Width -and $py -ge 0 -and $py -lt $bmp.Height) {
+                    $bmp.SetPixel($px, $py, $color)
+                }
+            }
+        }
+    }
+}
+
+function Draw-WideLine([System.Drawing.Bitmap]$bmp, [int]$x1, [int]$y1, [int]$x2, [int]$y2, [System.Drawing.Color]$color, [int]$thickness = 1) {
+    $dx = [Math]::Abs($x2 - $x1)
+    $dy = -[Math]::Abs($y2 - $y1)
+    $sx = if ($x1 -lt $x2) { 1 } else { -1 }
+    $sy = if ($y1 -lt $y2) { 1 } else { -1 }
+    $err = $dx + $dy
+
+    while ($true) {
+        Draw-BrushPoint $bmp $x1 $y1 $thickness $color
+        if ($x1 -eq $x2 -and $y1 -eq $y2) {
+            break
+        }
+        $e2 = 2 * $err
+        if ($e2 -ge $dy) {
+            $err += $dy
+            $x1 += $sx
+        }
+        if ($e2 -le $dx) {
+            $err += $dx
+            $y1 += $sy
+        }
+    }
+}
+
+function Draw-RingWide([System.Drawing.Bitmap]$bmp, [int]$cx, [int]$cy, [int]$radius, [System.Drawing.Color]$color, [int]$thickness = 1) {
+    for ($x = 0; $x -lt $bmp.Width; $x++) {
+        for ($y = 0; $y -lt $bmp.Height; $y++) {
+            $distance = [Math]::Sqrt((($x - $cx) * ($x - $cx)) + (($y - $cy) * ($y - $cy)))
+            if ($distance -ge ($radius - $thickness) -and $distance -le ($radius + $thickness)) {
+                $bmp.SetPixel($x, $y, $color)
+            }
+        }
+    }
+}
+
+function Draw-LineGrid([System.Drawing.Bitmap]$bmp, [double]$x1, [double]$y1, [double]$x2, [double]$y2, [System.Drawing.Color]$color, [double]$thickness = 0.7) {
+    Draw-WideLine $bmp (Grid $x1) (Grid $y1) (Grid $x2) (Grid $y2) $color ([Math]::Max(1, (Grid $thickness)))
+}
+
+function Draw-DiamondGrid([System.Drawing.Bitmap]$bmp, [double]$cx, [double]$cy, [double]$radius, [System.Drawing.Color]$fill, [System.Drawing.Color]$edge) {
+    Draw-Diamond $bmp (Grid $cx) (Grid $cy) (Grid $radius) $fill $edge
+}
+
+function Draw-RingGrid([System.Drawing.Bitmap]$bmp, [double]$cx, [double]$cy, [double]$radius, [System.Drawing.Color]$color, [double]$thickness = 0.8) {
+    Draw-RingWide $bmp (Grid $cx) (Grid $cy) (Grid $radius) $color ([Math]::Max(1, (Grid $thickness)))
+}
+
+function Draw-StarGrid([System.Drawing.Bitmap]$bmp, [double]$cx, [double]$cy, [System.Drawing.Color]$core, [System.Drawing.Color]$accent, [double]$size = 1.0) {
+    $centerX = Grid $cx
+    $centerY = Grid $cy
+    $arm = [Math]::Max(2, (Grid ($size * 0.7)))
+    $thickness = [Math]::Max(1, (Grid ($size * 0.35)))
+    Draw-BrushPoint $bmp $centerX $centerY $thickness $core
+    foreach ($offset in @(@($arm, 0), @(-$arm, 0), @(0, $arm), @(0, -$arm), @($arm, $arm), @(-$arm, $arm), @($arm, -$arm), @(-$arm, -$arm))) {
+        Draw-BrushPoint $bmp ($centerX + $offset[0]) ($centerY + $offset[1]) $thickness $accent
+    }
+}
+
+function Draw-ToolHandleGrid([System.Drawing.Bitmap]$bmp, [double]$x1, [double]$y1, [double]$x2, [double]$y2) {
+    Draw-LineGrid $bmp $x1 $y1 $x2 $y2 (Color-Hex "#4a2e1f") 0.7
+    Draw-LineGrid $bmp ($x1 + 0.7) $y1 ($x2 + 0.7) $y2 (Color-Hex "#805139") 0.45
+}
+
+function Fill-RectGrid([System.Drawing.Bitmap]$bmp, [double]$x, [double]$y, [double]$width, [double]$height, [System.Drawing.Color]$color) {
+    Fill-Rect $bmp (Grid $x) (Grid $y) ([Math]::Max(1, (Grid $width))) ([Math]::Max(1, (Grid $height))) $color
+}
+
 function Create-StoneBlock([string]$path, [string]$baseDark, [string]$baseLight, [string]$vein) {
-    $bmp = New-Bitmap
-    Fill-Noise $bmp (Color-Hex $baseDark) (Color-Hex $baseLight) 12
-    for ($i = 0; $i -lt 3; $i++) {
-        Draw-Line $bmp $random.Next(0, 5) $random.Next(0, 15) $random.Next(10, 15) $random.Next(0, 15) (Color-Hex $vein)
+    $bmp = New-Bitmap $tileSize $tileSize
+    Fill-Noise $bmp (Color-Hex $baseDark) (Color-Hex $baseLight) 14
+    for ($i = 0; $i -lt 18; $i++) {
+        Draw-WideLine $bmp $random.Next(0, [Math]::Floor($tileSize * 0.35)) $random.Next(0, $tileSize) $random.Next([Math]::Floor($tileSize * 0.55), $tileSize) $random.Next(0, $tileSize) (Color-Hex $vein) ([Math]::Max(1, [int]($tileSize / 42)))
+    }
+    for ($i = 0; $i -lt 26; $i++) {
+        $cx = $random.Next(6, $tileSize - 6)
+        $cy = $random.Next(6, $tileSize - 6)
+        Draw-RingWide $bmp $cx $cy ([Math]::Max(2, [int]($tileSize / 18))) ([System.Drawing.Color]::FromArgb(42, (Color-Hex $vein).R, (Color-Hex $vein).G, (Color-Hex $vein).B)) 1
     }
     Save-Png $bmp $path
 }
 
 function Create-WoodPlanks([string]$path, [string]$base, [string]$accent) {
-    $bmp = New-Bitmap
+    $bmp = New-Bitmap $tileSize $tileSize
     Fill-Noise $bmp (Color-Hex "#18232d") (Color-Hex $base) 10
-    for ($y = 2; $y -lt 16; $y += 4) {
-        Draw-Line $bmp 0 $y 15 $y (Color-Hex "#0c1319")
-        Draw-Line $bmp 0 ($y + 1) 15 ($y + 1) (Color-Hex $accent)
+    $plankHeight = [Math]::Max(12, [int]($tileSize / 4))
+    for ($y = $plankHeight; $y -lt $tileSize; $y += $plankHeight) {
+        Draw-WideLine $bmp 0 $y ($tileSize - 1) $y (Color-Hex "#0c1319") ([Math]::Max(1, [int]($tileSize / 64)))
+        Draw-WideLine $bmp 0 ($y + [Math]::Max(1, [int]($tileSize / 96))) ($tileSize - 1) ($y + [Math]::Max(1, [int]($tileSize / 96))) (Color-Hex $accent) ([Math]::Max(1, [int]($tileSize / 96)))
     }
-    for ($x = 1; $x -lt 15; $x += 5) {
-        Draw-Line $bmp $x 0 ($x + 2) 15 (Shade-Color (Color-Hex $accent) -30)
+    for ($x = 0; $x -lt $tileSize; $x += [Math]::Max(12, [int]($tileSize / 5))) {
+        Draw-WideLine $bmp $x 0 ([Math]::Min($tileSize - 1, $x + [Math]::Max(4, [int]($tileSize / 9)))) ($tileSize - 1) (Shade-Color (Color-Hex $accent) -30) 1
+    }
+    for ($i = 0; $i -lt 48; $i++) {
+        $kx = $random.Next(8, $tileSize - 8)
+        $ky = $random.Next(8, $tileSize - 8)
+        Draw-RingWide $bmp $kx $ky ([Math]::Max(2, [int]($tileSize / 30))) ([System.Drawing.Color]::FromArgb(50, 255, 255, 255)) 1
     }
     Save-Png $bmp $path
 }
 
 function Create-WoodLog([string]$path) {
-    $bmp = New-Bitmap
+    $bmp = New-Bitmap $tileSize $tileSize
     Fill-Noise $bmp (Color-Hex "#11161d") (Color-Hex "#355266") 14
-    for ($x = 1; $x -lt 16; $x += 3) {
-        Draw-Line $bmp $x 0 $x 15 (Color-Hex "#5a879f")
+    for ($x = [Math]::Max(4, [int]($tileSize / 18)); $x -lt $tileSize; $x += [Math]::Max(10, [int]($tileSize / 6))) {
+        Draw-WideLine $bmp $x 0 $x ($tileSize - 1) (Color-Hex "#5a879f") ([Math]::Max(1, [int]($tileSize / 64)))
     }
-    Draw-Line $bmp 7 0 7 15 (Color-Hex "#91d0df")
-    Draw-Line $bmp 8 0 8 15 (Color-Hex "#91d0df")
+    Draw-WideLine $bmp ([int]($tileSize * 0.46)) 0 ([int]($tileSize * 0.46)) ($tileSize - 1) (Color-Hex "#91d0df") ([Math]::Max(1, [int]($tileSize / 80)))
+    Draw-WideLine $bmp ([int]($tileSize * 0.52)) 0 ([int]($tileSize * 0.52)) ($tileSize - 1) (Color-Hex "#91d0df") ([Math]::Max(1, [int]($tileSize / 80)))
     Save-Png $bmp $path
 }
 
@@ -470,42 +576,44 @@ function Create-Lantern([string]$path) {
 }
 
 function Create-Frame([string]$path) {
-    $bmp = New-Bitmap
+    $bmp = New-Bitmap $tileSize $tileSize
     Fill-Noise $bmp (Color-Hex "#10242a") (Color-Hex "#30545d") 10
     foreach ($i in @(2, 5, 8, 11, 14)) {
-        Draw-Line $bmp $i 0 0 $i (Color-Hex "#7ed0c1")
-        Draw-Line $bmp 15 $i $i 15 (Color-Hex "#d8e6b7")
+        $scaled = Grid $i
+        Draw-WideLine $bmp $scaled 0 0 $scaled (Color-Hex "#7ed0c1") ([Math]::Max(1, [int]($tileSize / 72)))
+        Draw-WideLine $bmp ($tileSize - 1) $scaled $scaled ($tileSize - 1) (Color-Hex "#d8e6b7") ([Math]::Max(1, [int]($tileSize / 72)))
     }
+    Draw-RingWide $bmp (Grid 8) (Grid 8) (Grid 4.5) ([System.Drawing.Color]::FromArgb(65, 217, 245, 199)) ([Math]::Max(1, [int]($tileSize / 96)))
     Draw-Border $bmp (Color-Hex "#0a1116") (Color-Hex "#9ce7d3")
     Save-Png $bmp $path
 }
 
 function Create-FrameTop([string]$path) {
-    $bmp = New-Bitmap
+    $bmp = New-Bitmap $tileSize $tileSize
     Fill-Noise $bmp (Color-Hex "#162732") (Color-Hex "#3f6670") 10
-    Draw-Ring $bmp 8 8 5 (Color-Hex "#d9f5c7")
-    Draw-Ring $bmp 8 8 3 (Color-Hex "#86d7d8")
-    Draw-Star $bmp 8 8 (Color-Hex "#fff4bf") (Color-Hex "#8fe1ff")
+    Draw-RingGrid $bmp 8 8 5.2 (Color-Hex "#d9f5c7") 0.75
+    Draw-RingGrid $bmp 8 8 3.3 (Color-Hex "#86d7d8") 0.45
+    Draw-StarGrid $bmp 8 8 (Color-Hex "#fff4bf") (Color-Hex "#8fe1ff") 1.1
     Draw-Border $bmp (Color-Hex "#0a1116") (Color-Hex "#9ce7d3")
     Save-Png $bmp $path
 }
 
 function Create-FrameSide([string]$path) {
-    $bmp = New-Bitmap
+    $bmp = New-Bitmap $tileSize $tileSize
     Fill-Noise $bmp (Color-Hex "#10242a") (Color-Hex "#30545d") 10
     for ($y = 2; $y -lt 15; $y += 4) {
-        Draw-Line $bmp 2 $y 13 $y (Color-Hex "#9ce7d3")
-        Draw-Line $bmp 4 ($y + 1) 11 ($y + 1) (Color-Hex "#dff3bc")
+        Draw-LineGrid $bmp 2 $y 13 $y (Color-Hex "#9ce7d3") 0.4
+        Draw-LineGrid $bmp 4 ($y + 1) 11 ($y + 1) (Color-Hex "#dff3bc") 0.3
     }
     Draw-Border $bmp (Color-Hex "#0a1116") (Color-Hex "#9ce7d3")
     Save-Png $bmp $path
 }
 
 function Create-FrameBottom([string]$path) {
-    $bmp = New-Bitmap
+    $bmp = New-Bitmap $tileSize $tileSize
     Fill-Noise $bmp (Color-Hex "#0d1b20") (Color-Hex "#274952") 8
     for ($x = 3; $x -lt 14; $x += 4) {
-        Draw-Line $bmp $x 3 $x 12 (Color-Hex "#5ea2b0")
+        Draw-LineGrid $bmp $x 3 $x 12 (Color-Hex "#5ea2b0") 0.35
     }
     Draw-Border $bmp (Color-Hex "#0a1116") (Color-Hex "#7fc0c3")
     Save-Png $bmp $path
@@ -566,88 +674,87 @@ function Create-Cache([string]$path) {
 }
 
 function Create-ItemCanvas() {
-    return New-Bitmap
+    return New-Bitmap $tileSize $tileSize
 }
 
 function Create-CrystalItem([string]$path, [string]$fill, [string]$edge) {
     $bmp = Create-ItemCanvas
-    Draw-Diamond $bmp 8 8 5 (Color-Hex $fill) (Color-Hex $edge)
-    Draw-Line $bmp 6 5 10 9 (Shade-Color (Color-Hex $edge) 25)
-    Draw-Line $bmp 8 3 8 12 (Shade-Color (Color-Hex $fill) 30)
+    Draw-DiamondGrid $bmp 8 8 5.3 (Color-Hex $fill) (Color-Hex $edge)
+    Draw-LineGrid $bmp 5.4 4.4 10.8 9.6 (Shade-Color (Color-Hex $edge) 25) 0.55
+    Draw-LineGrid $bmp 8 2.2 8 13.4 (Shade-Color (Color-Hex $fill) 30) 0.45
+    Draw-LineGrid $bmp 6.2 6.5 9.6 6.5 (Color-Hex "#f7fdff") 0.3
     Save-Png $bmp $path
 }
 
 function Create-BerryItem([string]$path) {
     $bmp = Create-ItemCanvas
-    Draw-Diamond $bmp 6 9 3 (Color-Hex "#7f2f8a") (Color-Hex "#d88ef1")
-    Draw-Diamond $bmp 10 10 3 (Color-Hex "#5a2370") (Color-Hex "#c57de4")
-    Draw-Line $bmp 7 4 8 6 (Color-Hex "#8dc76b")
-    Draw-Line $bmp 8 4 10 5 (Color-Hex "#c5f6a0")
+    Draw-DiamondGrid $bmp 6 9 3.2 (Color-Hex "#7f2f8a") (Color-Hex "#d88ef1")
+    Draw-DiamondGrid $bmp 10 10 3.1 (Color-Hex "#5a2370") (Color-Hex "#c57de4")
+    Draw-LineGrid $bmp 7 3.6 8 6.1 (Color-Hex "#8dc76b") 0.45
+    Draw-LineGrid $bmp 8 4.0 10.7 5.1 (Color-Hex "#c5f6a0") 0.35
+    Draw-StarGrid $bmp 5.2 8.6 (Color-Hex "#f5c0ff") (Color-Hex "#ffffff") 0.4
     Save-Png $bmp $path
 }
 
 function Create-TartItem([string]$path) {
     $bmp = Create-ItemCanvas
-    for ($x = 3; $x -le 12; $x++) {
-        for ($y = 6; $y -le 12; $y++) {
-            $bmp.SetPixel($x, $y, (Color-Hex "#d9b47c"))
-        }
-    }
-    for ($x = 4; $x -le 11; $x++) {
-        for ($y = 4; $y -le 8; $y++) {
-            $bmp.SetPixel($x, $y, (Color-Hex "#7a3c86"))
-        }
-    }
-    Draw-Line $bmp 4 5 11 5 (Color-Hex "#f3d9ff")
-    Draw-Line $bmp 5 3 6 1 (Color-Hex "#9cd7b2")
-    Draw-Line $bmp 8 3 9 1 (Color-Hex "#c4f3a9")
+    Fill-RectGrid $bmp 2.8 6.0 9.4 6.8 (Color-Hex "#d9b47c")
+    Fill-RectGrid $bmp 3.8 4.0 7.6 4.8 (Color-Hex "#7a3c86")
+    Draw-LineGrid $bmp 3.8 5.1 11.2 5.1 (Color-Hex "#f3d9ff") 0.35
+    Draw-LineGrid $bmp 5.2 3.2 6.4 1.0 (Color-Hex "#9cd7b2") 0.4
+    Draw-LineGrid $bmp 8.4 3.2 9.6 1.0 (Color-Hex "#c4f3a9") 0.4
+    Draw-LineGrid $bmp 4.0 11.8 11.5 11.8 (Color-Hex "#8d6036") 0.45
     Save-Png $bmp $path
 }
 
 function Create-SigilItem([string]$path, [string]$ring, [string]$core) {
     $bmp = Create-ItemCanvas
-    Draw-Ring $bmp 8 8 5 (Color-Hex $ring)
-    Draw-Star $bmp 8 8 (Color-Hex $core) (Shade-Color (Color-Hex $ring) 20)
-    Draw-Line $bmp 8 1 8 3 (Color-Hex $ring)
-    Draw-Line $bmp 1 8 3 8 (Color-Hex $ring)
-    Draw-Line $bmp 13 8 15 8 (Color-Hex $ring)
-    Draw-Line $bmp 8 13 8 15 (Color-Hex $ring)
+    Draw-RingGrid $bmp 8 8 5.2 (Color-Hex $ring) 0.75
+    Draw-RingGrid $bmp 8 8 3.4 (Shade-Color (Color-Hex $ring) 15) 0.35
+    Draw-StarGrid $bmp 8 8 (Color-Hex $core) (Shade-Color (Color-Hex $ring) 20) 1.25
+    Draw-LineGrid $bmp 8 0.7 8 3.0 (Color-Hex $ring) 0.35
+    Draw-LineGrid $bmp 0.7 8 3.0 8 (Color-Hex $ring) 0.35
+    Draw-LineGrid $bmp 13.0 8 15.3 8 (Color-Hex $ring) 0.35
+    Draw-LineGrid $bmp 8 13.0 8 15.3 (Color-Hex $ring) 0.35
     Save-Png $bmp $path
 }
 
 function Create-FiberItem([string]$path) {
     $bmp = Create-ItemCanvas
-    Draw-Line $bmp 4 3 10 13 (Color-Hex "#e8f1ff")
-    Draw-Line $bmp 7 2 13 12 (Color-Hex "#8ed8ff")
-    Draw-Line $bmp 3 8 12 6 (Color-Hex "#f9eeb1")
+    Draw-LineGrid $bmp 4 3 10 13 (Color-Hex "#e8f1ff") 0.5
+    Draw-LineGrid $bmp 7 2 13 12 (Color-Hex "#8ed8ff") 0.45
+    Draw-LineGrid $bmp 3 8 12 6 (Color-Hex "#f9eeb1") 0.35
+    Draw-LineGrid $bmp 5 5 11 11 (Color-Hex "#d4f9ff") 0.25
     Save-Png $bmp $path
 }
 
 function Create-CharmItem([string]$path) {
     $bmp = Create-ItemCanvas
-    Draw-Line $bmp 8 1 8 4 (Color-Hex "#d7edf6")
-    Draw-Diamond $bmp 8 8 4 (Color-Hex "#5c7f95") (Color-Hex "#d4f1ff")
-    Draw-Star $bmp 8 8 (Color-Hex "#fff7c8") (Color-Hex "#9ce3ff")
+    Draw-LineGrid $bmp 8 1 8 4 (Color-Hex "#d7edf6") 0.4
+    Draw-DiamondGrid $bmp 8 8 4.2 (Color-Hex "#5c7f95") (Color-Hex "#d4f1ff")
+    Draw-StarGrid $bmp 8 8 (Color-Hex "#fff7c8") (Color-Hex "#9ce3ff") 1.0
+    Draw-RingGrid $bmp 8 8 2.4 (Color-Hex "#a8d7ef") 0.25
     Save-Png $bmp $path
 }
 
 function Create-SovereignWardItem([string]$path) {
     $bmp = Create-ItemCanvas
-    Draw-Ring $bmp 8 8 5 (Color-Hex "#8fd8ff")
-    Draw-Diamond $bmp 8 8 3 (Color-Hex "#fff0b5") (Color-Hex "#d4f3ff")
-    Draw-Line $bmp 8 1 8 4 (Color-Hex "#fff8d7")
-    Draw-Line $bmp 3 8 13 8 (Color-Hex "#8fd8ff")
+    Draw-RingGrid $bmp 8 8 5.3 (Color-Hex "#8fd8ff") 0.75
+    Draw-RingGrid $bmp 8 8 3.9 (Color-Hex "#d8f5ff") 0.25
+    Draw-DiamondGrid $bmp 8 8 3.4 (Color-Hex "#fff0b5") (Color-Hex "#d4f3ff")
+    Draw-LineGrid $bmp 8 1 8 4 (Color-Hex "#fff8d7") 0.35
+    Draw-LineGrid $bmp 3 8 13 8 (Color-Hex "#8fd8ff") 0.35
     Save-Png $bmp $path
 }
 
 function Create-KeyItem([string]$path, [string]$metal, [string]$gem) {
     $bmp = Create-ItemCanvas
-    Draw-Ring $bmp 5 10 2 (Color-Hex $metal)
-    Draw-Line $bmp 5 3 5 11 (Color-Hex $metal)
-    Draw-Line $bmp 5 5 10 5 (Shade-Color (Color-Hex $metal) 20)
-    Draw-Line $bmp 9 5 9 7 (Shade-Color (Color-Hex $metal) -12)
-    Draw-Line $bmp 7 5 7 8 (Shade-Color (Color-Hex $metal) -6)
-    Draw-Diamond $bmp 5 2 1 (Color-Hex $gem) (Shade-Color (Color-Hex $gem) 24)
+    Draw-RingGrid $bmp 5 10 2.3 (Color-Hex $metal) 0.45
+    Draw-LineGrid $bmp 5 3 5 11 (Color-Hex $metal) 0.45
+    Draw-LineGrid $bmp 5 5 10 5 (Shade-Color (Color-Hex $metal) 20) 0.4
+    Draw-LineGrid $bmp 9 5 9 7 (Shade-Color (Color-Hex $metal) -12) 0.35
+    Draw-LineGrid $bmp 7 5 7 8 (Shade-Color (Color-Hex $metal) -6) 0.3
+    Draw-DiamondGrid $bmp 5 2 1.1 (Color-Hex $gem) (Shade-Color (Color-Hex $gem) 24)
     Save-Png $bmp $path
 }
 
@@ -655,33 +762,34 @@ function Create-ToolItem([string]$path, [string]$type) {
     $bmp = Create-ItemCanvas
     switch ($type) {
         "blade" {
-            Draw-Line $bmp 4 3 11 10 (Color-Hex "#d6e7f2")
-            Draw-Line $bmp 3 4 10 11 (Color-Hex "#89c8e1")
-            Draw-ToolHandle $bmp 10 10 13 13
+            Draw-LineGrid $bmp 3.8 2.8 11.2 10.4 (Color-Hex "#d6e7f2") 0.55
+            Draw-LineGrid $bmp 3.0 4.0 10.2 11.2 (Color-Hex "#89c8e1") 0.4
+            Draw-ToolHandleGrid $bmp 10.0 10.2 13.3 13.6
+            Draw-LineGrid $bmp 5.0 4.3 8.2 7.5 (Color-Hex "#ffffff") 0.2
         }
         "pickaxe" {
-            Draw-Line $bmp 8 4 8 13 (Color-Hex "#dfe9ef")
-            Draw-Line $bmp 4 5 12 5 (Color-Hex "#9cd2e0")
-            Draw-Line $bmp 4 6 6 8 (Color-Hex "#dfe9ef")
-            Draw-Line $bmp 10 6 12 8 (Color-Hex "#dfe9ef")
-            Draw-ToolHandle $bmp 8 8 8 14
+            Draw-LineGrid $bmp 8 4 8 13.5 (Color-Hex "#dfe9ef") 0.5
+            Draw-LineGrid $bmp 4 5 12 5 (Color-Hex "#9cd2e0") 0.55
+            Draw-LineGrid $bmp 4 6 6.2 8.3 (Color-Hex "#dfe9ef") 0.4
+            Draw-LineGrid $bmp 10 6 12.2 8.3 (Color-Hex "#dfe9ef") 0.4
+            Draw-ToolHandleGrid $bmp 8 8.3 8 14.2
         }
         "axe" {
-            Draw-Line $bmp 8 3 8 14 (Color-Hex "#dfe9ef")
-            Draw-Line $bmp 5 4 10 8 (Color-Hex "#91d2e5")
-            Draw-Line $bmp 4 5 8 9 (Color-Hex "#dfe9ef")
-            Draw-ToolHandle $bmp 8 8 8 14
+            Draw-LineGrid $bmp 8 3 8 14.2 (Color-Hex "#dfe9ef") 0.5
+            Draw-LineGrid $bmp 5 4 10.5 8.3 (Color-Hex "#91d2e5") 0.6
+            Draw-LineGrid $bmp 4 5 8.5 9.2 (Color-Hex "#dfe9ef") 0.45
+            Draw-ToolHandleGrid $bmp 8 8 8 14.2
         }
         "shovel" {
-            Draw-Line $bmp 8 3 8 14 (Color-Hex "#dfe9ef")
-            Draw-Diamond $bmp 8 5 3 (Color-Hex "#8bc9e1") (Color-Hex "#e8f3f7")
-            Draw-ToolHandle $bmp 8 8 8 14
+            Draw-LineGrid $bmp 8 3 8 14.2 (Color-Hex "#dfe9ef") 0.5
+            Draw-DiamondGrid $bmp 8 5 3.2 (Color-Hex "#8bc9e1") (Color-Hex "#e8f3f7")
+            Draw-ToolHandleGrid $bmp 8 8.4 8 14.2
         }
         "glaive" {
-            Draw-Line $bmp 6 2 11 7 (Color-Hex "#fff0b5")
-            Draw-Line $bmp 5 3 10 8 (Color-Hex "#8fd8ff")
-            Draw-Line $bmp 9 6 13 10 (Color-Hex "#d8f6ff")
-            Draw-ToolHandle $bmp 8 8 4 14
+            Draw-LineGrid $bmp 6 2 11.4 7.2 (Color-Hex "#fff0b5") 0.6
+            Draw-LineGrid $bmp 5 3 10.4 8.2 (Color-Hex "#8fd8ff") 0.45
+            Draw-LineGrid $bmp 9 6 13.2 10.5 (Color-Hex "#d8f6ff") 0.35
+            Draw-ToolHandleGrid $bmp 8.2 8.2 4.2 14.4
         }
     }
     Save-Png $bmp $path
@@ -691,35 +799,35 @@ function Create-ArmorItem([string]$path, [string]$type) {
     $bmp = Create-ItemCanvas
     switch ($type) {
         "helmet" {
-            Draw-Line $bmp 4 5 11 5 (Color-Hex "#dfeaf2")
-            Draw-Line $bmp 3 6 4 11 (Color-Hex "#89c8e1")
-            Draw-Line $bmp 12 6 11 11 (Color-Hex "#89c8e1")
-            Draw-Line $bmp 5 11 10 11 (Color-Hex "#dfeaf2")
-            Draw-Line $bmp 6 7 9 7 (Color-Hex "#fff4bf")
+            Draw-LineGrid $bmp 4 5 11.2 5 (Color-Hex "#dfeaf2") 0.5
+            Draw-LineGrid $bmp 3 6 4.2 11.2 (Color-Hex "#89c8e1") 0.45
+            Draw-LineGrid $bmp 12 6 10.8 11.2 (Color-Hex "#89c8e1") 0.45
+            Draw-LineGrid $bmp 5 11.2 10.2 11.2 (Color-Hex "#dfeaf2") 0.45
+            Draw-LineGrid $bmp 6 7 9.2 7 (Color-Hex "#fff4bf") 0.35
         }
         "chestplate" {
-            Draw-Line $bmp 5 3 10 3 (Color-Hex "#dfeaf2")
-            Draw-Line $bmp 4 4 4 12 (Color-Hex "#89c8e1")
-            Draw-Line $bmp 11 4 11 12 (Color-Hex "#89c8e1")
-            Draw-Line $bmp 6 4 6 7 (Color-Hex "#dfeaf2")
-            Draw-Line $bmp 9 4 9 7 (Color-Hex "#dfeaf2")
-            Draw-Line $bmp 5 12 10 12 (Color-Hex "#dfeaf2")
-            Draw-Star $bmp 8 8 (Color-Hex "#fff0b5") (Color-Hex "#9ce3ff")
+            Draw-LineGrid $bmp 5 3 10.2 3 (Color-Hex "#dfeaf2") 0.45
+            Draw-LineGrid $bmp 4 4 4 12.2 (Color-Hex "#89c8e1") 0.45
+            Draw-LineGrid $bmp 11 4 11 12.2 (Color-Hex "#89c8e1") 0.45
+            Draw-LineGrid $bmp 6 4 6 7.2 (Color-Hex "#dfeaf2") 0.35
+            Draw-LineGrid $bmp 9 4 9 7.2 (Color-Hex "#dfeaf2") 0.35
+            Draw-LineGrid $bmp 5 12.2 10.2 12.2 (Color-Hex "#dfeaf2") 0.45
+            Draw-StarGrid $bmp 8 8 (Color-Hex "#fff0b5") (Color-Hex "#9ce3ff") 0.9
         }
         "leggings" {
-            Draw-Line $bmp 5 3 10 3 (Color-Hex "#dfeaf2")
-            Draw-Line $bmp 5 4 5 12 (Color-Hex "#89c8e1")
-            Draw-Line $bmp 10 4 10 12 (Color-Hex "#89c8e1")
-            Draw-Line $bmp 7 7 7 13 (Color-Hex "#dfeaf2")
-            Draw-Line $bmp 8 7 8 13 (Color-Hex "#dfeaf2")
+            Draw-LineGrid $bmp 5 3 10.1 3 (Color-Hex "#dfeaf2") 0.45
+            Draw-LineGrid $bmp 5 4 5 12.2 (Color-Hex "#89c8e1") 0.45
+            Draw-LineGrid $bmp 10 4 10 12.2 (Color-Hex "#89c8e1") 0.45
+            Draw-LineGrid $bmp 7 7 7 13.2 (Color-Hex "#dfeaf2") 0.35
+            Draw-LineGrid $bmp 8 7 8 13.2 (Color-Hex "#dfeaf2") 0.35
         }
         "boots" {
-            Draw-Line $bmp 4 8 6 8 (Color-Hex "#dfeaf2")
-            Draw-Line $bmp 9 8 11 8 (Color-Hex "#dfeaf2")
-            Draw-Line $bmp 4 9 4 12 (Color-Hex "#89c8e1")
-            Draw-Line $bmp 11 9 11 12 (Color-Hex "#89c8e1")
-            Draw-Line $bmp 5 12 7 12 (Color-Hex "#dfeaf2")
-            Draw-Line $bmp 8 12 10 12 (Color-Hex "#dfeaf2")
+            Draw-LineGrid $bmp 4 8 6.3 8 (Color-Hex "#dfeaf2") 0.45
+            Draw-LineGrid $bmp 9 8 11.3 8 (Color-Hex "#dfeaf2") 0.45
+            Draw-LineGrid $bmp 4 9 4 12.2 (Color-Hex "#89c8e1") 0.45
+            Draw-LineGrid $bmp 11 9 11 12.2 (Color-Hex "#89c8e1") 0.45
+            Draw-LineGrid $bmp 5 12.2 7.2 12.2 (Color-Hex "#dfeaf2") 0.4
+            Draw-LineGrid $bmp 8 12.2 10.2 12.2 (Color-Hex "#dfeaf2") 0.4
         }
     }
     Save-Png $bmp $path
@@ -750,10 +858,19 @@ function Create-SpawnEggItem([string]$path, [string]$shell, [string]$spots) {
     $shellColor = Color-Hex $shell
     $spotColor = Color-Hex $spots
 
-    for ($x = 3; $x -le 12; $x++) {
-        for ($y = 2; $y -le 13; $y++) {
-            $nx = ($x - 7.5) / 4.8
-            $ny = ($y - 7.5) / 6.0
+    $minX = Grid 3
+    $maxX = Grid 12
+    $minY = Grid 2
+    $maxY = Grid 13
+    $centerX = Grid 7.5
+    $centerY = Grid 7.5
+    $radiusX = [double](Grid 4.8)
+    $radiusY = [double](Grid 6.0)
+
+    for ($x = $minX; $x -le $maxX; $x++) {
+        for ($y = $minY; $y -le $maxY; $y++) {
+            $nx = ($x - $centerX) / $radiusX
+            $ny = ($y - $centerY) / $radiusY
             if ((($nx * $nx) + ($ny * $ny)) -le 1.0) {
                 $shade = [int](($ny * -18) + ($nx * 6))
                 $bmp.SetPixel($x, $y, (Shade-Color $shellColor $shade))
@@ -762,11 +879,11 @@ function Create-SpawnEggItem([string]$path, [string]$shell, [string]$spots) {
     }
 
     foreach ($dot in @(@(6, 5), @(9, 7), @(7, 10), @(10, 11), @(5, 8))) {
-        Draw-Diamond $bmp $dot[0] $dot[1] 1 $spotColor (Shade-Color $spotColor 25)
+        Draw-DiamondGrid $bmp $dot[0] $dot[1] 1.0 $spotColor (Shade-Color $spotColor 25)
     }
 
-    Draw-Line $bmp 5 3 8 2 (Color-Hex "#fff7dd")
-    Draw-Line $bmp 4 4 6 3 (Color-Hex "#fff7dd")
+    Draw-LineGrid $bmp 5 3 8 2 (Color-Hex "#fff7dd") 0.3
+    Draw-LineGrid $bmp 4 4 6 3 (Color-Hex "#fff7dd") 0.25
     Save-Png $bmp $path
 }
 
@@ -814,6 +931,31 @@ function Recolor-Entity([System.Drawing.Bitmap]$bmp, [System.Drawing.Color]$dark
             $bmp.SetPixel($x, $y, ([System.Drawing.Color]::FromArgb($px.A, $mapped.R, $mapped.G, $mapped.B)))
         }
     }
+}
+
+function Paint-HushlingDetails([System.Drawing.Bitmap]$bmp) {
+    $eye = [System.Drawing.Color]::FromArgb(255, 214, 255, 242)
+    $glow = [System.Drawing.Color]::FromArgb(220, 130, 232, 221)
+    $scar = [System.Drawing.Color]::FromArgb(160, 78, 136, 132)
+    Draw-BrushPoint $bmp 10 19 1 $eye
+    Draw-BrushPoint $bmp 14 19 1 $eye
+    Draw-BrushPoint $bmp 10 19 2 $glow
+    Draw-BrushPoint $bmp 14 19 2 $glow
+    Draw-WideLine $bmp 8 22 16 26 $scar 1
+    Draw-WideLine $bmp 9 31 14 37 $scar 1
+    Draw-WideLine $bmp 18 35 23 49 ([System.Drawing.Color]::FromArgb(140, 180, 230, 225)) 1
+}
+
+function Paint-WatcherDetails([System.Drawing.Bitmap]$bmp) {
+    $eye = [System.Drawing.Color]::FromArgb(255, 181, 227, 255)
+    $veil = [System.Drawing.Color]::FromArgb(120, 112, 173, 211)
+    $rune = [System.Drawing.Color]::FromArgb(185, 214, 244, 255)
+    Draw-BrushPoint $bmp 9 18 1 $eye
+    Draw-BrushPoint $bmp 14 18 1 $eye
+    Draw-WideLine $bmp 6 33 18 46 $veil 1
+    Draw-WideLine $bmp 18 33 6 46 $veil 1
+    Draw-WideLine $bmp 12 20 12 30 $rune 1
+    Draw-WideLine $bmp 9 25 15 25 $rune 1
 }
 
 Create-StoneBlock (Join-Path $blockDir "veilstone.png") "#20262f" "#495a66" "#7cc8d4"
@@ -876,6 +1018,7 @@ Save-Png $mirrorStag (Join-Path $entityDir "mirror_stag.png")
 
 $hushling = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/zombie/zombie.png"
 Recolor-Entity $hushling (Color-Hex "#13191d") (Color-Hex "#38646c") (Color-Hex "#9fe3da") (Color-Hex "#d5fff7")
+Paint-HushlingDetails $hushling
 Save-Png $hushling (Join-Path $entityDir "hushling.png")
 
 $hushSovereign = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/skeleton/wither_skeleton.png"
@@ -892,6 +1035,7 @@ Save-Png $moonfallenKnight (Join-Path $entityDir "moonfallen_knight.png")
 
 $watcher = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/enderman/enderman.png"
 Recolor-Entity $watcher (Color-Hex "#06070d") (Color-Hex "#24334b") (Color-Hex "#9dc5e8") (Color-Hex "#d0f6ff")
+Paint-WatcherDetails $watcher
 Save-Png $watcher (Join-Path $entityDir "veilbound_watcher.png")
 
 $warden = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/skeleton/wither_skeleton.png"
