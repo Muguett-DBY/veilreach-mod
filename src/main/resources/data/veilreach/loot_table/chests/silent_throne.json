@@ -165,13 +165,13 @@
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:sovereign_ward",
+          "name": "veilreach:mirror_helmet",
           "weight": 2
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:sovereign_glaive",
-          "weight": 1
+          "name": "veilreach:mirror_chestplate",
+          "weight": 2
         }
       ]
     }

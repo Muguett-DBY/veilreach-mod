@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "CAC",
+    " K "
+  ],
+  "key": {
+    "S": "veilreach:starfragment",
+    "C": "veilreach:cathedral_seal",
+    "A": "veilreach:hush_ward_charm",
+    "K": "veilreach:sanctum_key"
+  },
+  "result": {
+    "id": "veilreach:warden_sigil",
+    "count": 1
+  }
+}

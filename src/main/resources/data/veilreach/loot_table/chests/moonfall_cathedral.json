@@ -149,17 +149,17 @@
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:warden_sigil",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
           "name": "veilreach:cathedral_seal",
-          "weight": 2
+          "weight": 5
         },
         {
           "type": "minecraft:item",
           "name": "veilreach:hush_ward_charm",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:mirror_chestplate",
           "weight": 2
         }
       ]

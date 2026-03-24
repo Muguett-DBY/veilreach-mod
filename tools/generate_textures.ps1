@@ -838,6 +838,52 @@ function Create-ArmorItem([string]$path, [string]$type) {
     Save-Png $bmp $path
 }
 
+function Create-SovereignArmorItem([string]$path, [string]$type) {
+    $bmp = Create-ItemCanvas
+    $steel = Color-Hex "#dff5ff"
+    $aura = Color-Hex "#8fd8ff"
+    $gold = Color-Hex "#fff0b5"
+    switch ($type) {
+        "helmet" {
+            Draw-LineGrid $bmp 4 5 11.2 5 $steel 0.5
+            Draw-LineGrid $bmp 3 6 4.2 11.2 $aura 0.45
+            Draw-LineGrid $bmp 12 6 10.8 11.2 $aura 0.45
+            Draw-LineGrid $bmp 5 11.2 10.2 11.2 $steel 0.45
+            Draw-StarGrid $bmp 8 4.7 $gold $aura 0.8
+            Draw-LineGrid $bmp 8 1.8 8 3.8 $gold 0.3
+        }
+        "chestplate" {
+            Draw-LineGrid $bmp 5 3 10.2 3 $steel 0.45
+            Draw-LineGrid $bmp 4 4 4 12.2 $aura 0.45
+            Draw-LineGrid $bmp 11 4 11 12.2 $aura 0.45
+            Draw-LineGrid $bmp 5 12.2 10.2 12.2 $steel 0.45
+            Draw-LineGrid $bmp 6 4 6 7.2 $steel 0.35
+            Draw-LineGrid $bmp 9 4 9 7.2 $steel 0.35
+            Draw-StarGrid $bmp 8 8 $gold $aura 1.1
+            Draw-RingGrid $bmp 8 8 2.2 $aura 0.25
+        }
+        "leggings" {
+            Draw-LineGrid $bmp 5 3 10.1 3 $steel 0.45
+            Draw-LineGrid $bmp 5 4 5 12.2 $aura 0.45
+            Draw-LineGrid $bmp 10 4 10 12.2 $aura 0.45
+            Draw-LineGrid $bmp 7 7 7 13.2 $steel 0.35
+            Draw-LineGrid $bmp 8 7 8 13.2 $steel 0.35
+            Draw-LineGrid $bmp 6 5 9 5 $gold 0.25
+        }
+        "boots" {
+            Draw-LineGrid $bmp 4 8 6.3 8 $steel 0.45
+            Draw-LineGrid $bmp 9 8 11.3 8 $steel 0.45
+            Draw-LineGrid $bmp 4 9 4 12.2 $aura 0.45
+            Draw-LineGrid $bmp 11 9 11 12.2 $aura 0.45
+            Draw-LineGrid $bmp 5 12.2 7.2 12.2 $steel 0.4
+            Draw-LineGrid $bmp 8 12.2 10.2 12.2 $steel 0.4
+            Draw-StarGrid $bmp 5.6 9.2 $gold $aura 0.5
+            Draw-StarGrid $bmp 10.0 9.2 $gold $aura 0.5
+        }
+    }
+    Save-Png $bmp $path
+}
+
 function Create-ArmorLayer([string]$path, [bool]$leggings) {
     $bmp = New-Bitmap 64 64
     Fill-Noise $bmp (Color-Hex "#1b2531") (Color-Hex "#8bbfd8") 12
@@ -854,6 +900,26 @@ function Create-ArmorLayer([string]$path, [bool]$leggings) {
     } else {
         Draw-Ring $bmp 32 22 11 (Color-Hex "#d7f3ff")
         Draw-Star $bmp 32 22 (Color-Hex "#fff2bf") (Color-Hex "#8fd8ff")
+    }
+    Save-Png $bmp $path
+}
+
+function Create-SovereignArmorLayer([string]$path, [bool]$leggings) {
+    $bmp = New-Bitmap 64 64
+    Fill-Noise $bmp (Color-Hex "#0e1520") (Color-Hex "#79b9d8") 12
+    Draw-Border $bmp (Color-Hex "#06090f") (Color-Hex "#dff7ff")
+    for ($x = 8; $x -lt 56; $x += 8) {
+        Draw-Line $bmp $x 0 $x 63 (Color-Hex "#335468")
+    }
+    for ($y = 8; $y -lt 56; $y += 8) {
+        Draw-Line $bmp 0 $y 63 $y (Color-Hex "#142230")
+    }
+    if ($leggings) {
+        Draw-Ring $bmp 32 34 10 (Color-Hex "#9fdfff")
+        Draw-Line $bmp 24 34 40 34 (Color-Hex "#fff0b5")
+    } else {
+        Draw-Ring $bmp 32 22 11 (Color-Hex "#9fdfff")
+        Draw-Star $bmp 32 22 (Color-Hex "#fff0b5") (Color-Hex "#dff7ff")
     }
     Save-Png $bmp $path
 }
@@ -1055,6 +1121,10 @@ Create-ArmorItem (Join-Path $itemDir "mirror_helmet.png") "helmet"
 Create-ArmorItem (Join-Path $itemDir "mirror_chestplate.png") "chestplate"
 Create-ArmorItem (Join-Path $itemDir "mirror_leggings.png") "leggings"
 Create-ArmorItem (Join-Path $itemDir "mirror_boots.png") "boots"
+Create-SovereignArmorItem (Join-Path $itemDir "sovereign_helmet.png") "helmet"
+Create-SovereignArmorItem (Join-Path $itemDir "sovereign_chestplate.png") "chestplate"
+Create-SovereignArmorItem (Join-Path $itemDir "sovereign_leggings.png") "leggings"
+Create-SovereignArmorItem (Join-Path $itemDir "sovereign_boots.png") "boots"
 Create-ToolItem (Join-Path $itemDir "sovereign_glaive.png") "glaive"
 Create-CrystalItem (Join-Path $itemDir "starfragment.png") "#f2d56e" "#fff9d3"
 Create-KeyItem (Join-Path $itemDir "sanctum_key.png") "#a8c8dd" "#8fe8ff"
@@ -1117,6 +1187,8 @@ foreach ($dir in @($humanoidDir, $leggingsDir)) {
 }
 Create-ArmorLayer (Join-Path $humanoidDir "mirrorsteel.png") $false
 Create-ArmorLayer (Join-Path $leggingsDir "mirrorsteel.png") $true
+Create-SovereignArmorLayer (Join-Path $humanoidDir "sovereign.png") $false
+Create-SovereignArmorLayer (Join-Path $leggingsDir "sovereign.png") $true
 
 $icon = [System.Drawing.Bitmap]::new((Join-Path $itemDir "astral_sigil.png"))
 $iconLarge = [System.Drawing.Bitmap]::new(128, 128)

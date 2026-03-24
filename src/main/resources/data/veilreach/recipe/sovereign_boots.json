@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "HCH",
+    "S S"
+  ],
+  "key": {
+    "S": "veilreach:starfragment",
+    "H": "veilreach:mirror_boots",
+    "C": "veilreach:sovereign_core"
+  },
+  "result": {
+    "id": "veilreach:sovereign_boots",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "HCH",
+    " S "
+  ],
+  "key": {
+    "S": "veilreach:starfragment",
+    "H": "veilreach:mirror_chestplate",
+    "C": "veilreach:sovereign_core"
+  },
+  "result": {
+    "id": "veilreach:sovereign_chestplate",
+    "count": 1
+  }
+}

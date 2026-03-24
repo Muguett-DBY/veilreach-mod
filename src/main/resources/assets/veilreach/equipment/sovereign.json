@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "veilreach:sovereign"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "veilreach:sovereign"
+      }
+    ]
+  }
+}

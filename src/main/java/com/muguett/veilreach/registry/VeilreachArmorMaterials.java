@@ -14,6 +14,7 @@ import java.util.Map;
 
 public final class VeilreachArmorMaterials {
     public static final RegistryKey<net.minecraft.item.equipment.EquipmentAsset> MIRRORSTEEL_ASSET = EquipmentAssetKeys.register(Identifier.of(VeilreachMod.MOD_ID, "mirrorsteel").getPath());
+    public static final RegistryKey<net.minecraft.item.equipment.EquipmentAsset> SOVEREIGN_ASSET = EquipmentAssetKeys.register(Identifier.of(VeilreachMod.MOD_ID, "sovereign").getPath());
     public static final TagKey<Item> REPAIRS_MIRRORSTEEL_ARMOR = VeilreachToolMaterials.REPAIRS_MIRRORSTEEL;
     public static final ArmorMaterial MIRRORSTEEL = new ArmorMaterial(
             23,
@@ -29,6 +30,21 @@ public final class VeilreachArmorMaterials {
             0.05F,
             REPAIRS_MIRRORSTEEL_ARMOR,
             MIRRORSTEEL_ASSET
+    );
+    public static final ArmorMaterial SOVEREIGN = new ArmorMaterial(
+            31,
+            Map.of(
+                    EquipmentType.HELMET, 4,
+                    EquipmentType.CHESTPLATE, 9,
+                    EquipmentType.LEGGINGS, 7,
+                    EquipmentType.BOOTS, 4
+            ),
+            22,
+            SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE,
+            3.5F,
+            0.12F,
+            REPAIRS_MIRRORSTEEL_ARMOR,
+            SOVEREIGN_ASSET
     );
 
     private VeilreachArmorMaterials() {

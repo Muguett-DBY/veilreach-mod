@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "HCH",
+    " S "
+  ],
+  "key": {
+    "S": "veilreach:starfragment",
+    "H": "veilreach:mirror_helmet",
+    "C": "veilreach:sovereign_core"
+  },
+  "result": {
+    "id": "veilreach:sovereign_helmet",
+    "count": 1
+  }
+}

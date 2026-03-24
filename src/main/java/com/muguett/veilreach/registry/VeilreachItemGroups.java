@@ -38,6 +38,10 @@ public final class VeilreachItemGroups {
                     entries.add(VeilreachItems.MIRROR_CHESTPLATE);
                     entries.add(VeilreachItems.MIRROR_LEGGINGS);
                     entries.add(VeilreachItems.MIRROR_BOOTS);
+                    entries.add(VeilreachItems.SOVEREIGN_HELMET);
+                    entries.add(VeilreachItems.SOVEREIGN_CHESTPLATE);
+                    entries.add(VeilreachItems.SOVEREIGN_LEGGINGS);
+                    entries.add(VeilreachItems.SOVEREIGN_BOOTS);
                     entries.add(VeilreachItems.SOVEREIGN_GLAIVE);
                     entries.add(VeilreachItems.STARFRAGMENT);
                     entries.add(VeilreachItems.SOVEREIGN_CORE);

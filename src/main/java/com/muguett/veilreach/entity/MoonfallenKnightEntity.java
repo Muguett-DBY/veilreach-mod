@@ -41,14 +41,14 @@ public class MoonfallenKnightEntity extends WitherSkeletonEntity {
     @Override
     public void onDeath(DamageSource damageSource) {
         if (this.getEntityWorld() instanceof ServerWorld serverWorld && !this.isRemoved()) {
-            if (this.getRandom().nextFloat() < 0.35F) {
-                this.dropStack(serverWorld, new ItemStack(VeilreachItems.WARDEN_SIGIL));
-            }
             if (this.getRandom().nextFloat() < 0.25F) {
                 this.dropStack(serverWorld, new ItemStack(VeilreachItems.MIRROR_AXE));
             }
-            if (this.getRandom().nextFloat() < 0.45F) {
-                this.dropStack(serverWorld, new ItemStack(VeilreachItems.STARFRAGMENT, 2));
+            if (this.getRandom().nextFloat() < 0.8F) {
+                this.dropStack(serverWorld, new ItemStack(VeilreachItems.STARFRAGMENT, 2 + this.getRandom().nextInt(2)));
+            }
+            if (this.getRandom().nextFloat() < 0.3F) {
+                this.dropStack(serverWorld, new ItemStack(VeilreachItems.MIRROR_INGOT, 1 + this.getRandom().nextInt(2)));
             }
         }
         super.onDeath(damageSource);

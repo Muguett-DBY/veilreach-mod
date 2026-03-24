@@ -57,13 +57,24 @@
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:sovereign_ward",
+          "name": "veilreach:mirror_helmet",
           "weight": 2
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:sovereign_glaive",
-          "weight": 1
+          "name": "veilreach:starfragment",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 3.0,
+                "max": 6.0
+              },
+              "add": false
+            }
+          ]
         }
       ]
     }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "HCH",
+    "   "
+  ],
+  "key": {
+    "S": "veilreach:starfragment",
+    "H": "veilreach:mirror_leggings",
+    "C": "veilreach:sovereign_core"
+  },
+  "result": {
+    "id": "veilreach:sovereign_leggings",
+    "count": 1
+  }
+}

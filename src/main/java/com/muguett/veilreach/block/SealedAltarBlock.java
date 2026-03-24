@@ -40,7 +40,6 @@ public class SealedAltarBlock extends Block {
         }
 
         serverWorld.setBlockState(pos, VeilreachBlocks.AWAKENED_ALTAR.getDefaultState(), Block.NOTIFY_ALL);
-        Block.dropStack(serverWorld, pos.up(), new ItemStack(VeilreachItems.HUSH_WARD_CHARM));
         if (serverWorld.getEntitiesByType(EntityType.PLAYER, playerBox -> playerBox.squaredDistanceTo(pos.toCenterPos()) <= (48.0D * 48.0D)).size() > 0
                 && serverWorld.getEntitiesByType(VeilreachEntities.HUSH_SOVEREIGN, entity -> entity.squaredDistanceTo(pos.toCenterPos()) <= (40.0D * 40.0D)).isEmpty()) {
             MobEntity boss = VeilreachEntities.HUSH_SOVEREIGN.spawn(serverWorld, pos.up(), SpawnReason.EVENT);
@@ -49,7 +48,7 @@ public class SealedAltarBlock extends Block {
             }
         }
         serverWorld.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1.0F, 0.85F);
-        player.sendMessage(Text.literal("The seal breaks. A hush ward charm drifts from the altar, and the Sovereign answers."), true);
+        player.sendMessage(Text.literal("The seal breaks, and the Sovereign answers."), true);
         if (!player.isCreative()) {
             held.decrement(1);
         }
