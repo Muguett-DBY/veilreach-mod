@@ -108,13 +108,19 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         world.setBlockState(chamberCenter.north(2), barrier, Block.NOTIFY_ALL);
         world.setBlockState(chamberCenter.south(2), barrier, Block.NOTIFY_ALL);
         carveSideCells(world, chamberCenter, polished, veilstone, lantern);
+        carveOuterRing(world, chamberCenter, polished, veilstone, lantern);
+        carveDetentionHall(world, chamberCenter, polished, veilstone, lantern);
         HushStructureFeatureSupport.spawnPersistentMob(world, chamberCenter.add(0, 0, -2), VeilreachEntities.MOONFALLEN_KNIGHT);
         HushStructureFeatureSupport.spawnPersistentMob(world, chamberCenter.add(2, 0, 2), VeilreachEntities.LANTERNKEEPER);
+        HushStructureFeatureSupport.spawnPersistentMob(world, chamberCenter.add(-6, 0, 0), VeilreachEntities.WARDEN_OF_SILENCE);
+        HushStructureFeatureSupport.spawnPersistentMob(world, chamberCenter.add(6, 0, 0), VeilreachEntities.VEILBOUND_WATCHER);
 
         HushStructureFeatureSupport.placeLootChest(world, chamberCenter.add(-4, 0, -4), Direction.SOUTH, "chests/sunken_sanctum");
         HushStructureFeatureSupport.placeLootChest(world, chamberCenter.add(4, 0, -4), Direction.SOUTH, "chests/sunken_sanctum");
         HushStructureFeatureSupport.placeLootChest(world, chamberCenter.add(0, 0, 4), Direction.NORTH, "chests/sunken_sanctum");
         HushStructureFeatureSupport.placeLootChest(world, chamberCenter.add(-4, 0, 4), Direction.NORTH, "chests/sunken_sanctum");
+        HushStructureFeatureSupport.placeLootChest(world, chamberCenter.add(0, 0, -8), Direction.SOUTH, "chests/sunken_sanctum");
+        HushStructureFeatureSupport.placeLootChest(world, chamberCenter.add(0, 0, 8), Direction.NORTH, "chests/sunken_sanctum");
         return true;
     }
 
@@ -137,6 +143,64 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
             world.setBlockState(roomCenter.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
             world.setBlockState(roomCenter.add(0, 0, side * -2), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
             world.setBlockState(roomCenter.add(0, 1, side * -2), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+        }
+    }
+
+    private static void carveOuterRing(StructureWorldAccess world, BlockPos chamberCenter, BlockState polished, BlockState veilstone, BlockState lantern) {
+        for (int dx = -8; dx <= 8; dx++) {
+            for (int dz = -8; dz <= 8; dz++) {
+                if (Math.abs(dx) < 7 && Math.abs(dz) < 7) {
+                    continue;
+                }
+                for (int dy = 0; dy <= 4; dy++) {
+                    BlockPos pos = chamberCenter.add(dx, dy, dz);
+                    if (Math.abs(dx) == 8 || Math.abs(dz) == 8 || dy == 4) {
+                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    }
+                }
+                world.setBlockState(chamberCenter.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+            }
+        }
+        world.setBlockState(chamberCenter.add(-8, 1, 0), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(chamberCenter.add(8, 1, 0), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(chamberCenter.add(0, 1, -8), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(chamberCenter.add(0, 1, 8), lantern, Block.NOTIFY_ALL);
+    }
+
+    private static void carveDetentionHall(StructureWorldAccess world, BlockPos chamberCenter, BlockState polished, BlockState veilstone, BlockState lantern) {
+        for (int dz = -9; dz <= -6; dz++) {
+            for (int dx = -3; dx <= 3; dx++) {
+                for (int dy = 0; dy <= 3; dy++) {
+                    BlockPos pos = chamberCenter.add(dx, dy, dz);
+                    if (Math.abs(dx) == 3 || dz == -9 || dy == 3) {
+                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    }
+                }
+                world.setBlockState(chamberCenter.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+            }
+        }
+
+        for (int side = -1; side <= 1; side += 2) {
+            BlockPos cellBase = chamberCenter.add(side * 4, 0, -8);
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dz = -1; dz <= 1; dz++) {
+                    for (int dy = 0; dy <= 3; dy++) {
+                        BlockPos pos = cellBase.add(dx, dy, dz);
+                        if (Math.abs(dx) == 1 || Math.abs(dz) == 1 || dy == 3) {
+                            world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                        } else {
+                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                        }
+                    }
+                    world.setBlockState(cellBase.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                }
+            }
+            HushStructureFeatureSupport.placeDoor(world, cellBase.add(0, 0, side == -1 ? 1 : -1), side == -1 ? Direction.SOUTH : Direction.NORTH);
+            world.setBlockState(cellBase.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
         }
     }
 

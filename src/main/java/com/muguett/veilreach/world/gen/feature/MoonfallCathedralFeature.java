@@ -97,15 +97,21 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
 
         carveDoorway(world, center.south(6));
         carveCrypt(world, center, polished, veilstone, lantern, altar);
+        carveSideChapels(world, center, polished, veilstone, glass, lantern);
+        carveReliquary(world, center, polished, veilstone, lantern);
 
         world.setBlockState(center.add(0, 1, -2), cache, Block.NOTIFY_ALL);
         world.setBlockState(center.add(0, 1, 2), cache, Block.NOTIFY_ALL);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-2, 1, 1), VeilreachEntities.MOONFALLEN_KNIGHT);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(2, 1, 1), VeilreachEntities.LANTERNKEEPER);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(0, -4, 2), VeilreachEntities.MOONFALLEN_KNIGHT);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-7, 1, 0), VeilreachEntities.VEILBOUND_WATCHER);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(7, 1, 0), VeilreachEntities.WARDEN_OF_SILENCE);
         HushStructureFeatureSupport.placeLootChest(world, center.add(-5, 1, -4), Direction.SOUTH, "chests/moonfall_cathedral");
         HushStructureFeatureSupport.placeLootChest(world, center.add(5, 1, -4), Direction.SOUTH, "chests/moonfall_cathedral");
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, -4, 0), Direction.NORTH, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(-7, 1, 4), Direction.WEST, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(7, 1, 4), Direction.EAST, "chests/moonfall_cathedral");
         return true;
     }
 
@@ -151,6 +157,47 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         world.setBlockState(crypt, altar, Block.NOTIFY_ALL);
         world.setBlockState(crypt.north(2), lantern, Block.NOTIFY_ALL);
         world.setBlockState(crypt.south(2), lantern, Block.NOTIFY_ALL);
+    }
+
+    private static void carveSideChapels(StructureWorldAccess world, BlockPos center, BlockState polished, BlockState veilstone, BlockState glass, BlockState lantern) {
+        for (int side = -1; side <= 1; side += 2) {
+            BlockPos chapel = center.add(side * 10, 0, 0);
+            for (int dx = -2; dx <= 2; dx++) {
+                for (int dz = -3; dz <= 3; dz++) {
+                    for (int dy = 0; dy <= 6; dy++) {
+                        BlockPos pos = chapel.add(dx, dy, dz);
+                        if (Math.abs(dx) == 2 || Math.abs(dz) == 3 || dy == 6) {
+                            world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                        } else {
+                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                        }
+                    }
+                    world.setBlockState(chapel.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                }
+            }
+            world.setBlockState(chapel.add(0, 2, -3), glass, Block.NOTIFY_ALL);
+            world.setBlockState(chapel.add(0, 3, -3), glass, Block.NOTIFY_ALL);
+            world.setBlockState(chapel.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
+        }
+    }
+
+    private static void carveReliquary(StructureWorldAccess world, BlockPos center, BlockState polished, BlockState veilstone, BlockState lantern) {
+        BlockPos reliquary = center.add(0, 0, -8);
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                for (int dy = 0; dy <= 4; dy++) {
+                    BlockPos pos = reliquary.add(dx, dy, dz);
+                    if (Math.abs(dx) == 2 || Math.abs(dz) == 2 || dy == 4) {
+                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    }
+                }
+                world.setBlockState(reliquary.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+            }
+        }
+        world.setBlockState(reliquary.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
+        HushStructureFeatureSupport.placeDoor(world, reliquary.add(0, 0, 2), Direction.SOUTH);
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {

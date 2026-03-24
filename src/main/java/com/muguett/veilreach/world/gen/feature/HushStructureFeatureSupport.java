@@ -6,7 +6,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.entity.ChestBlockEntity;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.MobEntity;
@@ -49,6 +51,15 @@ final class HushStructureFeatureSupport {
             chest.setLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of(VeilreachMod.MOD_ID, lootPath)));
             chest.setLootTableSeed(world.getRandom().nextLong());
         }
+    }
+
+    static void placeDoor(StructureWorldAccess world, BlockPos basePos, Direction facing) {
+        BlockState lower = Blocks.IRON_DOOR.getDefaultState()
+                .with(DoorBlock.FACING, facing)
+                .with(DoorBlock.HALF, DoubleBlockHalf.LOWER);
+        BlockState upper = lower.with(DoorBlock.HALF, DoubleBlockHalf.UPPER);
+        world.setBlockState(basePos, lower, Block.NOTIFY_ALL);
+        world.setBlockState(basePos.up(), upper, Block.NOTIFY_ALL);
     }
 
     static <T extends MobEntity> void spawnPersistentMob(StructureWorldAccess world, BlockPos pos, EntityType<T> entityType) {

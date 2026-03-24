@@ -2,6 +2,7 @@ package com.muguett.veilreach.world.gen.feature;
 
 import com.mojang.serialization.Codec;
 import com.muguett.veilreach.registry.VeilreachBlocks;
+import com.muguett.veilreach.registry.VeilreachEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -52,6 +53,8 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
         buildWalls(world, center, 0, 4, log, planks, frame, glass);
         buildWalls(world, center, 6, 9, log, planks, frame, glass);
         buildInteriorRooms(world, center, planks, polished, lantern);
+        buildManorBasement(world, center, polished, planks, lantern);
+        buildUpperGallery(world, center, planks, polished, lantern, frame);
 
         for (int dx = -7; dx <= 7; dx++) {
             for (int dz = -5; dz <= 5; dz++) {
@@ -94,6 +97,7 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
 
         world.setBlockState(center.add(0, 1, 0), cache, Block.NOTIFY_ALL);
         world.setBlockState(center.add(0, 6, 0), cache, Block.NOTIFY_ALL);
+        world.setBlockState(center.add(0, -3, 0), cache, Block.NOTIFY_ALL);
 
         for (int dz = 2; dz <= 4; dz++) {
             world.setBlockState(center.add(-2, 1, dz), lantern, Block.NOTIFY_ALL);
@@ -106,6 +110,9 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.placeLootChest(world, center.add(5, 1, -3), Direction.WEST, "chests/forgotten_manor");
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, 6, -4), Direction.SOUTH, "chests/forgotten_manor");
         HushStructureFeatureSupport.placeLootChest(world, center.add(5, 6, 3), Direction.WEST, "chests/forgotten_manor");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(0, -3, -4), Direction.SOUTH, "chests/forgotten_manor");
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-4, -3, 0), VeilreachEntities.MOONFALLEN_KNIGHT);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(4, 6, 0), VeilreachEntities.LANTERNKEEPER);
         return true;
     }
 
@@ -183,6 +190,51 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
         world.setBlockState(center.add(5, 6, -4), lantern, Block.NOTIFY_ALL);
         world.setBlockState(center.add(5, 6, 4), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         world.setBlockState(center.add(5, 7, 4), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+    }
+
+    private static void buildManorBasement(StructureWorldAccess world, BlockPos center, BlockState polished, BlockState planks, BlockState lantern) {
+        BlockPos base = center.down(4);
+        for (int dx = -6; dx <= 6; dx++) {
+            for (int dz = -4; dz <= 4; dz++) {
+                for (int dy = 0; dy <= 4; dy++) {
+                    BlockPos pos = base.add(dx, dy, dz);
+                    if (Math.abs(dx) == 6 || Math.abs(dz) == 4 || dy == 4) {
+                        world.setBlockState(pos, polished, Block.NOTIFY_ALL);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    }
+                }
+                world.setBlockState(base.add(dx, -1, dz), planks, Block.NOTIFY_ALL);
+            }
+        }
+        for (int step = 0; step <= 4; step++) {
+            BlockPos stair = center.add(-5 + step, -step, 4);
+            world.setBlockState(stair, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+            world.setBlockState(stair.up(), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+            world.setBlockState(stair.down(), polished, Block.NOTIFY_ALL);
+        }
+        world.setBlockState(base.add(-4, 1, -2), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(base.add(4, 1, -2), lantern, Block.NOTIFY_ALL);
+        HushStructureFeatureSupport.placeDoor(world, base.add(0, 0, -3), Direction.SOUTH);
+    }
+
+    private static void buildUpperGallery(StructureWorldAccess world, BlockPos center, BlockState planks, BlockState polished, BlockState lantern, BlockState frame) {
+        for (int dx = -5; dx <= 5; dx++) {
+            world.setBlockState(center.add(dx, 7, -2), polished, Block.NOTIFY_ALL);
+            world.setBlockState(center.add(dx, 7, 2), polished, Block.NOTIFY_ALL);
+        }
+        for (int dz = -2; dz <= 2; dz++) {
+            world.setBlockState(center.add(-5, 7, dz), polished, Block.NOTIFY_ALL);
+            world.setBlockState(center.add(5, 7, dz), polished, Block.NOTIFY_ALL);
+        }
+        for (int dx = -4; dx <= 4; dx += 8) {
+            for (int dz = -1; dz <= 1; dz += 2) {
+                for (int dy = 7; dy <= 9; dy++) {
+                    world.setBlockState(center.add(dx, dy, dz), frame, Block.NOTIFY_ALL);
+                }
+                world.setBlockState(center.add(dx, 9, dz), lantern, Block.NOTIFY_ALL);
+            }
+        }
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {
