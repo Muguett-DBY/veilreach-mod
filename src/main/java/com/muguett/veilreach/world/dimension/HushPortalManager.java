@@ -96,6 +96,10 @@ public final class HushPortalManager {
                         mutable.move(Direction.DOWN);
                     }
 
+                    if (!isPortalLocationUsable(world, mutable)) {
+                        continue;
+                    }
+
                     double distance = mutable.getSquaredDistance(preferred);
                     if (distance < bestDistance) {
                         bestDistance = distance;
@@ -210,6 +214,17 @@ public final class HushPortalManager {
         }
 
         return portalBase;
+    }
+
+    private static boolean isPortalLocationUsable(ServerWorld world, BlockPos portalBase) {
+        if (portalBase.getY() <= world.getBottomY() + 12) {
+            return false;
+        }
+        if (world.getRegistryKey() == VeilreachDimensions.HUSHLANDS_WORLD && portalBase.getY() < world.getSeaLevel() - 16) {
+            return false;
+        }
+        BlockPos safeArrival = findSafeArrival(world, portalBase);
+        return isArrivalSpace(world, safeArrival);
     }
 
     private static boolean isArrivalSpace(ServerWorld world, BlockPos pos) {
