@@ -103,6 +103,22 @@
               "add": false
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ender_eye",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1.0,
+                "max": 3.0
+              },
+              "add": false
+            }
+          ]
         }
       ]
     },
@@ -181,6 +197,18 @@
           "type": "minecraft:item",
           "name": "veilreach:mirror_chestplate",
           "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:starfragment",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 2,
+              "add": false
+            }
+          ]
         },
         {
           "type": "minecraft:item",

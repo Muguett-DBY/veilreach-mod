@@ -11,8 +11,10 @@ import com.muguett.veilreach.world.gen.feature.LanternWatchpostFeature;
 import com.muguett.veilreach.world.gen.feature.MoonfallCathedralFeature;
 import com.muguett.veilreach.world.gen.feature.MoonblossomPatchFeature;
 import com.muguett.veilreach.world.gen.feature.MoonShrineFeature;
+import com.muguett.veilreach.world.gen.feature.MoonwovenArchFeature;
 import com.muguett.veilreach.world.gen.feature.RiftglassBasinFeature;
 import com.muguett.veilreach.world.gen.feature.RiftBloomPatchFeature;
+import com.muguett.veilreach.world.gen.feature.RiftSpireFeature;
 import com.muguett.veilreach.world.gen.feature.ShimmerleafGroveFeature;
 import com.muguett.veilreach.world.gen.feature.SilentThroneFeature;
 import com.muguett.veilreach.world.gen.feature.SilentArchiveFeature;
@@ -46,6 +48,11 @@ public final class VeilreachFeatures {
             Identifier.of(VeilreachMod.MOD_ID, "moonblossom_patch"),
             new MoonblossomPatchFeature(DefaultFeatureConfig.CODEC)
     );
+    public static final Feature<DefaultFeatureConfig> MOONWOVEN_ARCH = Registry.register(
+            Registries.FEATURE,
+            Identifier.of(VeilreachMod.MOD_ID, "moonwoven_arch"),
+            new MoonwovenArchFeature(DefaultFeatureConfig.CODEC)
+    );
     public static final Feature<DefaultFeatureConfig> WATCHER_OBELISK = Registry.register(
             Registries.FEATURE,
             Identifier.of(VeilreachMod.MOD_ID, "watcher_obelisk"),
@@ -75,6 +82,11 @@ public final class VeilreachFeatures {
             Registries.FEATURE,
             Identifier.of(VeilreachMod.MOD_ID, "rift_bloom_patch"),
             new RiftBloomPatchFeature(DefaultFeatureConfig.CODEC)
+    );
+    public static final Feature<DefaultFeatureConfig> RIFT_SPIRE = Registry.register(
+            Registries.FEATURE,
+            Identifier.of(VeilreachMod.MOD_ID, "rift_spire"),
+            new RiftSpireFeature(DefaultFeatureConfig.CODEC)
     );
     public static final Feature<DefaultFeatureConfig> FALLEN_GATEWAY = Registry.register(
             Registries.FEATURE,

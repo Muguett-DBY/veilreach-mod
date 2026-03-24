@@ -52,7 +52,7 @@
     }
   },
   "features": [
-    [], [], [], [], [], [], [], [], ["veilreach:duskcap_patch"], ["veilreach:gloamwood_camp", "veilreach:shimmerleaf_grove"], [], []
+    [], [], [], [], [], [], [], [], ["veilreach:duskcap_patch"], ["veilreach:gloamwood_camp", "veilreach:shimmerleaf_grove", "veilreach:moonwoven_arch"], [], []
   ],
   "spawn_costs": {},
   "spawners": {

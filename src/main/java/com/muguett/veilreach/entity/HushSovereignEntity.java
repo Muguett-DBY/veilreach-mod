@@ -60,10 +60,14 @@ public class HushSovereignEntity extends WitherSkeletonEntity {
         super.tick();
         if (this.getEntityWorld() instanceof ServerWorld serverWorld && this.age % 12 == 0) {
             serverWorld.spawnParticles(ParticleTypes.SOUL_FIRE_FLAME, this.getX(), this.getBodyY(0.9D), this.getZ(), 3, 0.2D, 0.3D, 0.2D, 0.01D);
+            if (this.age % 24 == 0) {
+                serverWorld.spawnParticles(ParticleTypes.GLOW, this.getX(), this.getBodyY(1.1D), this.getZ(), 4, 0.35D, 0.45D, 0.35D, 0.01D);
+            }
         }
         if (this.getTarget() != null && this.age % 90 == 0) {
             this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 1));
             this.getTarget().addVelocity(this.getTarget().getX() > this.getX() ? 0.8D : -0.8D, 0.25D, this.getTarget().getZ() > this.getZ() ? 0.8D : -0.8D);
+            this.playSound(SoundEvents.ENTITY_WITHER_SHOOT, 0.85F, 0.55F);
         }
     }
 }

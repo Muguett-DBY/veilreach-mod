@@ -51,11 +51,14 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         buildTransepts(world, center, base, wall, trim, frame, lantern, bars, pillar);
         buildUpperChoir(world, center, base, inlay, wall, lantern, stair);
         buildRearApse(world, center, base, wall, trim, frame, lantern, bars, altar);
+        buildProcessionalBridge(world, center, base, trim, frame, lantern);
         buildTower(world, center.add(-16, 0, 17), base, wall, frame, lantern, bars, false);
         buildTower(world, center.add(16, 0, 17), base, wall, frame, lantern, bars, true);
         buildCrypt(world, center, base, wall, trim, lantern, cache);
         buildReliquaryWing(world, center, base, wall, trim, frame, lantern, true);
         buildReliquaryWing(world, center, base, wall, trim, frame, lantern, false);
+        buildChapterHouse(world, center.add(-20, 0, -10), base, wall, trim, frame, lantern, true);
+        buildChapterHouse(world, center.add(20, 0, -10), base, wall, trim, frame, lantern, false);
         carveCathedralFlow(world, center, trim, stair, slab);
         buildRoseFacade(world, center, frame, bars, lantern, pillar);
 
@@ -70,6 +73,8 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, -5, -2), Direction.NORTH, "chests/moonfall_cathedral");
         HushStructureFeatureSupport.placeLootChest(world, center.add(-15, 1, -2), Direction.EAST, "chests/moonfall_cathedral");
         HushStructureFeatureSupport.placeLootChest(world, center.add(15, 1, -2), Direction.WEST, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(-20, 1, -10), Direction.EAST, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(20, 1, -10), Direction.WEST, "chests/moonfall_cathedral");
 
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-4, 1, 11), VeilreachEntities.MOONFALLEN_KNIGHT);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(4, 1, 11), VeilreachEntities.MOONFALLEN_KNIGHT);
@@ -78,7 +83,44 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(0, -5, -2), VeilreachEntities.MOONFALLEN_KNIGHT);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-16, 1, 17), VeilreachEntities.LANTERNKEEPER);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(16, 10, 17), VeilreachEntities.VEILBOUND_WATCHER);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-20, 1, -10), VeilreachEntities.VEILBOUND_WATCHER);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(20, 1, -10), VeilreachEntities.LANTERNKEEPER);
         return true;
+    }
+
+    private static void buildProcessionalBridge(StructureWorldAccess world, BlockPos center, BlockState base, BlockState trim, BlockState frame, BlockState lantern) {
+        for (int dz = 24; dz <= 34; dz++) {
+            int width = dz >= 30 ? 4 : 3;
+            for (int dx = -width; dx <= width; dx++) {
+                world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(dx, 0, dz), dx == 0 ? trim : base, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+        for (int side = -1; side <= 1; side += 2) {
+            for (int y = 1; y <= 7; y++) {
+                world.setBlockState(center.add(side * 4, y, 30), frame, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+            world.setBlockState(center.add(side * 4, 8, 30), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        }
+    }
+
+    private static void buildChapterHouse(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState frame, BlockState lantern, boolean west) {
+        for (int dx = -4; dx <= 4; dx++) {
+            for (int dz = -4; dz <= 4; dz++) {
+                world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                for (int dy = 0; dy <= 7; dy++) {
+                    BlockPos pos = center.add(dx, dy, dz);
+                    if (Math.abs(dx) == 4 || Math.abs(dz) == 4 || dy == 7) {
+                        world.setBlockState(pos, dy >= 6 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
+            }
+        }
+        HushStructureFeatureSupport.placeDoor(world, center.add(west ? 4 : -4, 0, 0), west ? Direction.WEST : Direction.EAST);
+        world.setBlockState(center.add(0, 0, 0), trim, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.add(0, 1, -2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
     private static void buildFrontCourt(StructureWorldAccess world, BlockPos center, BlockState base, BlockState trim, BlockState frame, BlockState lantern, BlockState stair, BlockState slab) {

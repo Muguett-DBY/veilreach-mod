@@ -55,9 +55,13 @@ public class WardenOfSilenceEntity extends WitherSkeletonEntity {
     @Override
     public void tick() {
         super.tick();
+        if (this.getEntityWorld() instanceof ServerWorld serverWorld && this.age % 14 == 0) {
+            serverWorld.spawnParticles(ParticleTypes.SCULK_SOUL, this.getX(), this.getBodyY(0.85D), this.getZ(), 3, 0.25D, 0.35D, 0.25D, 0.01D);
+        }
         if (this.getTarget() != null && this.age % 80 == 0) {
             this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 60, 0));
             this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 60, 0));
+            this.playSound(SoundEvents.ENTITY_WARDEN_NEARBY_CLOSER, 0.75F, 0.6F);
         }
     }
 }

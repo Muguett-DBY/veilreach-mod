@@ -21,12 +21,12 @@ public class MoonfallenKnightEntity extends WitherSkeletonEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_WITHER_SKELETON_AMBIENT;
+        return SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE.value();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_WITHER_SKELETON_HURT;
+        return SoundEvents.ITEM_SHIELD_BLOCK.value();
     }
 
     @Override
@@ -56,5 +56,17 @@ public class MoonfallenKnightEntity extends WitherSkeletonEntity {
             serverWorld.playSound(null, this.getBlockPos(), SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, this.getSoundCategory(), 0.8F, 0.7F);
         }
         super.onDeath(damageSource);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.getEntityWorld() instanceof ServerWorld serverWorld && this.age % 16 == 0) {
+            serverWorld.spawnParticles(ParticleTypes.ENCHANT, this.getX(), this.getBodyY(0.8D), this.getZ(), 3, 0.22D, 0.35D, 0.22D, 0.01D);
+        }
+        if (this.getTarget() != null && this.age % 70 == 0 && this.squaredDistanceTo(this.getTarget()) < 25.0D) {
+            this.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(net.minecraft.entity.effect.StatusEffects.SPEED, 40, 1, false, false));
+            this.playSound(SoundEvents.ITEM_TRIDENT_RETURN, 0.7F, 0.55F);
+        }
     }
 }

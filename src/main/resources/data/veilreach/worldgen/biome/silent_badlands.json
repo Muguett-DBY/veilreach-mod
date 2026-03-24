@@ -52,7 +52,7 @@
     }
   },
   "features": [
-    [], [], [], [], [], [], [], [], ["veilreach:veilstone_pile"], ["veilreach:echo_monolith", "veilreach:watcher_obelisk"], [], []
+    [], [], [], [], [], [], [], [], ["veilreach:veilstone_pile"], ["veilreach:echo_monolith", "veilreach:watcher_obelisk", "veilreach:rift_spire"], [], []
   ],
   "spawn_costs": {},
   "spawners": {

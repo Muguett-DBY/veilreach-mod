@@ -51,6 +51,7 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         buildCellWing(world, chamber.add(9, 0, -1), base, wall, trim, lantern, bars, false);
         buildRitualWing(world, chamber, base, wall, trim, frame, lantern, barrier, stair, tile);
         buildVaultBranch(world, chamber.add(10, 0, 10), base, wall, trim, lantern, glass, stair);
+        buildOssuary(world, chamber.add(-11, 0, 10), base, wall, trim, frame, lantern, bars);
         carveSanctumFlow(world, chamber, trim, stair);
         buildSanctumCage(world, chamber, bars, frame, lantern);
 
@@ -62,13 +63,36 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.placeLootChest(world, chamber.add(0, 0, -9), Direction.SOUTH, "chests/sunken_sanctum");
         HushStructureFeatureSupport.placeLootChest(world, chamber.add(10, 0, 10), Direction.WEST, "chests/sunken_sanctum_vault");
         HushStructureFeatureSupport.placeLootChest(world, chamber.add(12, 0, 10), Direction.WEST, "chests/sunken_sanctum_vault");
+        HushStructureFeatureSupport.placeLootChest(world, chamber.add(-11, 0, 10), Direction.EAST, "chests/sunken_sanctum");
 
         HushStructureFeatureSupport.spawnPersistentMob(world, chamber.add(0, 0, -2), VeilreachEntities.MOONFALLEN_KNIGHT);
         HushStructureFeatureSupport.spawnPersistentMob(world, chamber.add(-9, 0, -1), VeilreachEntities.WARDEN_OF_SILENCE);
         HushStructureFeatureSupport.spawnPersistentMob(world, chamber.add(9, 0, -1), VeilreachEntities.VEILBOUND_WATCHER);
         HushStructureFeatureSupport.spawnPersistentMob(world, chamber.add(3, 0, 7), VeilreachEntities.LANTERNKEEPER);
         HushStructureFeatureSupport.spawnPersistentMob(world, chamber.add(10, 0, 10), VeilreachEntities.MOONFALLEN_KNIGHT);
+        HushStructureFeatureSupport.spawnPersistentMob(world, chamber.add(-11, 0, 10), VeilreachEntities.WARDEN_OF_SILENCE);
         return true;
+    }
+
+    private static void buildOssuary(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState frame, BlockState lantern, BlockState bars) {
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dz = -3; dz <= 3; dz++) {
+                world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                for (int dy = 0; dy <= 5; dy++) {
+                    BlockPos pos = center.add(dx, dy, dz);
+                    if (Math.abs(dx) == 3 || Math.abs(dz) == 3 || dy == 5) {
+                        world.setBlockState(pos, dy >= 4 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                    } else if (Math.abs(dx) == 1 && Math.abs(dz) <= 1 && dy <= 3) {
+                        world.setBlockState(pos, bars, HushStructureFeatureSupport.GEN_FLAGS);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
+            }
+        }
+        HushStructureFeatureSupport.placeDoor(world, center.add(3, 0, 0), Direction.EAST);
+        world.setBlockState(center.add(0, 1, -1), trim, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.add(0, 1, 1), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
     private static void buildEntranceCourt(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState frame, BlockState lantern, BlockState stair, BlockState slab) {

@@ -52,7 +52,7 @@
     }
   },
   "features": [
-    [], [], [], [], [], [], [], [], ["veilreach:rift_bloom_patch"], ["veilreach:echo_monolith", "veilreach:riftglass_basin", "veilreach:lantern_watchpost", "veilreach:silent_archive"], [], []
+    [], [], [], [], [], [], [], [], ["veilreach:rift_bloom_patch"], ["veilreach:echo_monolith", "veilreach:riftglass_basin", "veilreach:lantern_watchpost", "veilreach:silent_archive", "veilreach:rift_spire"], [], []
   ],
   "spawn_costs": {},
   "spawners": {
