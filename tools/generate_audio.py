@@ -1,0 +1,197 @@
+from __future__ import annotations
+
+import math
+from pathlib import Path
+
+import numpy as np
+import soundfile as sf
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SOUND_DIR = ROOT / "src" / "main" / "resources" / "assets" / "veilreach" / "sounds"
+SAMPLE_RATE = 44100
+
+
+def ensure_dir(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+
+def normalize(audio: np.ndarray, peak: float = 0.9) -> np.ndarray:
+    max_value = float(np.max(np.abs(audio)))
+    if max_value <= 1.0e-6:
+        return audio.astype(np.float32)
+    return (audio * (peak / max_value)).astype(np.float32)
+
+
+def envelope(length: int, attack: float, release: float) -> np.ndarray:
+    env = np.ones(length, dtype=np.float32)
+    attack_len = max(1, int(length * attack))
+    release_len = max(1, int(length * release))
+    env[:attack_len] = np.linspace(0.0, 1.0, attack_len, dtype=np.float32)
+    env[-release_len:] = np.linspace(1.0, 0.0, release_len, dtype=np.float32)
+    return env
+
+
+def sine(freq: float, duration: float, phase: float = 0.0) -> np.ndarray:
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    return np.sin((2.0 * math.pi * freq * t) + phase)
+
+
+def noise(duration: float, seed: int, color: str = "white") -> np.ndarray:
+    rng = np.random.default_rng(seed)
+    data = rng.uniform(-1.0, 1.0, int(SAMPLE_RATE * duration)).astype(np.float32)
+    if color == "pink":
+        fft = np.fft.rfft(data)
+        freqs = np.fft.rfftfreq(data.size, 1.0 / SAMPLE_RATE)
+        scale = np.ones_like(freqs)
+        scale[1:] = 1.0 / np.sqrt(freqs[1:])
+        data = np.fft.irfft(fft * scale, n=data.size).astype(np.float32)
+    elif color == "brown":
+        data = np.cumsum(data)
+        data /= np.max(np.abs(data))
+    return data.astype(np.float32)
+
+
+def apply_reverb(signal: np.ndarray, delay_s: float, decay: float, taps: int) -> np.ndarray:
+    delay = int(SAMPLE_RATE * delay_s)
+    output = signal.astype(np.float32).copy()
+    for tap in range(1, taps + 1):
+        start = delay * tap
+        if start >= output.size:
+            break
+        output[start:] += signal[:-start] * (decay ** tap)
+    return output
+
+
+def pan_stereo(signal: np.ndarray, pan: float) -> np.ndarray:
+    left = signal * math.sqrt((1.0 - pan) * 0.5)
+    right = signal * math.sqrt((1.0 + pan) * 0.5)
+    return np.column_stack((left, right)).astype(np.float32)
+
+
+def write_ogg(relative_path: str, data: np.ndarray) -> None:
+    output = SOUND_DIR / relative_path
+    ensure_dir(output)
+    sf.write(output, normalize(data), SAMPLE_RATE, format="OGG", subtype="VORBIS")
+    print(f"wrote {output.relative_to(ROOT)}")
+
+
+def layered_chime(freqs: list[float], duration: float, seed: int, drift: float = 0.004) -> np.ndarray:
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    signal = np.zeros_like(t)
+    for index, freq in enumerate(freqs):
+        partial = np.sin(2 * math.pi * freq * t + (index * 0.7))
+        partial += 0.5 * np.sin(2 * math.pi * freq * 2.01 * t + (index * 1.3))
+        partial += 0.18 * np.sin(2 * math.pi * freq * 3.98 * t + (index * 0.2))
+        wobble = 1.0 + (drift * np.sin(2 * math.pi * (0.12 + index * 0.03) * t))
+        signal += partial * wobble * (0.45 / (index + 1))
+    signal *= envelope(signal.size, 0.01, 0.82)
+    signal = apply_reverb(signal, 0.11, 0.58, 4)
+    signal += noise(duration, seed, "pink") * 0.018
+    return signal
+
+
+def make_ui_sigil() -> np.ndarray:
+    base = layered_chime([392.0, 523.25, 783.99], 1.65, 1)
+    whisper = noise(1.65, 2, "pink") * np.linspace(0.15, 0.02, base.size, dtype=np.float32)
+    pulse = sine(1046.5, 1.65) * np.linspace(0.0, 0.18, base.size, dtype=np.float32)
+    return pan_stereo(base + whisper + pulse, -0.1)
+
+
+def make_altar_unlock() -> np.ndarray:
+    low = layered_chime([130.81, 196.0, 261.63], 2.8, 3, drift=0.003)
+    rise = np.linspace(0.2, 1.0, low.size, dtype=np.float32)
+    shock = sine(55.0, 2.8) * rise * 0.35
+    glass = layered_chime([659.25, 880.0, 1174.66], 2.8, 4) * 0.45
+    return pan_stereo(low + shock + glass, 0.0)
+
+
+def make_portal_hum() -> np.ndarray:
+    duration = 5.5
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    hum = 0.42 * np.sin(2 * math.pi * 61.0 * t)
+    hum += 0.24 * np.sin(2 * math.pi * 122.0 * t + 0.3)
+    hum += 0.08 * np.sin(2 * math.pi * 245.0 * t + 1.4)
+    modulation = 0.78 + 0.22 * np.sin(2 * math.pi * 0.18 * t)
+    hiss = noise(duration, 5, "pink") * 0.04
+    shimmer = layered_chime([415.3, 622.25], duration, 6) * 0.22
+    signal = (hum * modulation) + hiss + shimmer
+    signal = apply_reverb(signal, 0.16, 0.52, 3)
+    stereo = pan_stereo(signal, 0.12)
+    stereo[:, 1] *= 0.95
+    return stereo
+
+
+def make_whisper_ambient() -> np.ndarray:
+    duration = 6.0
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    bed = noise(duration, 7, "brown") * 0.11
+    air = noise(duration, 8, "pink") * 0.04
+    tones = layered_chime([174.61, 261.63, 349.23], duration, 9) * 0.25
+    breaths = np.sin(2 * math.pi * 0.23 * t) * 0.5 + 0.5
+    signal = (bed * breaths) + air + tones
+    return pan_stereo(apply_reverb(signal, 0.19, 0.48, 4), -0.2)
+
+
+def make_rift_ambient() -> np.ndarray:
+    duration = 5.0
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    bass = 0.34 * np.sin(2 * math.pi * 73.42 * t + 0.4)
+    wobble = 0.18 * np.sin(2 * math.pi * 146.83 * t * (1.0 + 0.008 * np.sin(2 * math.pi * 0.31 * t)))
+    static = noise(duration, 10, "pink") * 0.05
+    spark = layered_chime([493.88, 739.99], duration, 11, drift=0.01) * 0.2
+    signal = apply_reverb(bass + wobble + static + spark, 0.13, 0.55, 4)
+    return pan_stereo(signal, 0.25)
+
+
+def make_hushling_attack() -> np.ndarray:
+    duration = 0.75
+    scrape = noise(duration, 12, "white") * np.linspace(0.55, 0.0, int(SAMPLE_RATE * duration), dtype=np.float32)
+    sting = sine(220.0, duration) * np.linspace(0.0, 0.4, scrape.size, dtype=np.float32)
+    signal = apply_reverb(scrape + sting, 0.04, 0.38, 2)
+    return pan_stereo(signal * envelope(signal.size, 0.01, 0.55), -0.15)
+
+
+def make_sovereign_pulse() -> np.ndarray:
+    duration = 1.6
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    throb = sine(82.41, duration) * np.linspace(0.25, 0.7, t.size, dtype=np.float32)
+    choir = layered_chime([329.63, 415.3, 554.37], duration, 13) * 0.45
+    flare = sine(987.77, duration) * envelope(t.size, 0.02, 0.9) * 0.1
+    signal = apply_reverb(throb + choir + flare, 0.09, 0.62, 4)
+    return pan_stereo(signal, 0.0)
+
+
+def make_music(seed: int, roots: list[float], duration: float, pan: float) -> np.ndarray:
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    signal = np.zeros_like(t)
+    for idx, freq in enumerate(roots):
+        slow = np.sin(2 * math.pi * (0.03 + idx * 0.012) * t)
+        layer = np.sin(2 * math.pi * freq * t + idx * 0.4 + slow * 0.12)
+        layer += 0.28 * np.sin(2 * math.pi * (freq * 0.5) * t + idx)
+        signal += layer * (0.16 / (1 + idx * 0.35))
+    shimmer = layered_chime([roots[-1] * 2.0], duration, seed) * 0.08
+    wind = noise(duration, seed + 20, "pink") * 0.018
+    pulse = np.sin(2 * math.pi * 0.055 * t) * 0.05
+    signal = apply_reverb(signal + shimmer + wind + pulse, 0.18, 0.6, 3)
+    stereo = pan_stereo(signal, pan)
+    blend = np.linspace(0.0, 1.0, int(SAMPLE_RATE * 4.0), dtype=np.float32)
+    stereo[:blend.size] *= blend[:, None]
+    stereo[-blend.size:] *= blend[::-1, None]
+    return stereo
+
+
+def main() -> None:
+    write_ogg("ui/astral_sigil.ogg", make_ui_sigil())
+    write_ogg("ui/sealed_altar_unlock.ogg", make_altar_unlock())
+    write_ogg("block/hush_portal_loop.ogg", make_portal_hum())
+    write_ogg("ambient/hushlands_whispers.ogg", make_whisper_ambient())
+    write_ogg("ambient/rift_meadows_resonance.ogg", make_rift_ambient())
+    write_ogg("entity/hushling_lunge.ogg", make_hushling_attack())
+    write_ogg("entity/hush_sovereign_pulse.ogg", make_sovereign_pulse())
+    write_ogg("music/hushlands_dream.ogg", make_music(31, [130.81, 196.0, 261.63, 392.0], 10.0, -0.12))
+    write_ogg("music/hushlands_depths.ogg", make_music(47, [98.0, 146.83, 220.0, 329.63], 10.0, 0.08))
+
+
+if __name__ == "__main__":
+    main()

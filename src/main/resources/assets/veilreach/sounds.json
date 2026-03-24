@@ -17,6 +17,63 @@
       }
     ]
   },
+  "block.hush_portal_loop": {
+    "sounds": [
+      {
+        "name": "veilreach:block/hush_portal_loop",
+        "stream": true,
+        "volume": 0.75
+      }
+    ]
+  },
+  "entity.hushling_lunge": {
+    "sounds": [
+      {
+        "name": "veilreach:entity/hushling_lunge",
+        "volume": 0.85
+      }
+    ]
+  },
+  "entity.hush_sovereign_pulse": {
+    "sounds": [
+      {
+        "name": "veilreach:entity/hush_sovereign_pulse",
+        "volume": 0.9
+      }
+    ]
+  },
+  "ui.astral_sigil": {
+    "sounds": [
+      {
+        "name": "veilreach:ui/astral_sigil",
+        "volume": 0.9
+      }
+    ]
+  },
+  "ui.sealed_altar_unlock": {
+    "sounds": [
+      {
+        "name": "veilreach:ui/sealed_altar_unlock",
+        "volume": 0.95
+      }
+    ]
+  },
+  "music.hushlands_dream": {
+    "sounds": [
+      {
+        "name": "veilreach:music/hushlands_dream",
+        "stream": true
+      }
+    ]
+  },
+  "music.hushlands_depths": {
+    "sounds": [
+      {
+        "name": "veilreach:music/hushlands_depths",
+        "stream": true
+      }
+    ]
+  },
   "music.hushlands.hush_grove": {
     "sounds": [
       {

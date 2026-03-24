@@ -1,6 +1,7 @@
 package com.muguett.veilreach;
 
 import com.muguett.veilreach.client.HushlandsClientEffects;
+import com.muguett.veilreach.client.HushlandsHudOverlay;
 import com.muguett.veilreach.client.render.entity.HushlingEntityRenderer;
 import com.muguett.veilreach.client.render.entity.HushSovereignEntityRenderer;
 import com.muguett.veilreach.client.render.entity.LanternkeeperEntityRenderer;
@@ -25,6 +26,7 @@ public final class VeilreachModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         HushlandsClientEffects.initialize();
+        HushlandsHudOverlay.initialize();
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.MIRROR_STAG, MirrorStagEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.HUSHLING, HushlingEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.HUSH_SOVEREIGN, HushSovereignEntityModel::getTexturedModelData);
