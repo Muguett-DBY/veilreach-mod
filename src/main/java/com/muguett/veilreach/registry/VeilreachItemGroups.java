@@ -41,6 +41,8 @@ public final class VeilreachItemGroups {
                     entries.add(VeilreachItems.SOVEREIGN_GLAIVE);
                     entries.add(VeilreachItems.STARFRAGMENT);
                     entries.add(VeilreachItems.SOVEREIGN_CORE);
+                    entries.add(VeilreachItems.SANCTUM_KEY);
+                    entries.add(VeilreachItems.CATHEDRAL_SEAL);
                     entries.add(VeilreachItems.SOVEREIGN_WARD);
                     entries.add(VeilreachItems.GLOAMWOOD_SAP);
 

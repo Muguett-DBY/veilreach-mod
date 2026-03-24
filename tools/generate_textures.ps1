@@ -517,6 +517,17 @@ function Create-SovereignWardItem([string]$path) {
     Save-Png $bmp $path
 }
 
+function Create-KeyItem([string]$path, [string]$metal, [string]$gem) {
+    $bmp = Create-ItemCanvas
+    Draw-Ring $bmp 5 10 2 (Color-Hex $metal)
+    Draw-Line $bmp 5 3 5 11 (Color-Hex $metal)
+    Draw-Line $bmp 5 5 10 5 (Shade-Color (Color-Hex $metal) 20)
+    Draw-Line $bmp 9 5 9 7 (Shade-Color (Color-Hex $metal) -12)
+    Draw-Line $bmp 7 5 7 8 (Shade-Color (Color-Hex $metal) -6)
+    Draw-Diamond $bmp 5 2 1 (Color-Hex $gem) (Shade-Color (Color-Hex $gem) 24)
+    Save-Png $bmp $path
+}
+
 function Create-ToolItem([string]$path, [string]$type) {
     $bmp = Create-ItemCanvas
     switch ($type) {
@@ -717,6 +728,8 @@ Create-ArmorItem (Join-Path $itemDir "mirror_leggings.png") "leggings"
 Create-ArmorItem (Join-Path $itemDir "mirror_boots.png") "boots"
 Create-ToolItem (Join-Path $itemDir "sovereign_glaive.png") "glaive"
 Create-CrystalItem (Join-Path $itemDir "starfragment.png") "#f2d56e" "#fff9d3"
+Create-KeyItem (Join-Path $itemDir "sanctum_key.png") "#a8c8dd" "#8fe8ff"
+Create-KeyItem (Join-Path $itemDir "cathedral_seal.png") "#e4d49a" "#fff2b3"
 Create-SigilItem (Join-Path $itemDir "warden_sigil.png") "#97b8cb" "#fff4c3"
 Create-CharmItem (Join-Path $itemDir "hush_ward_charm.png")
 Create-SovereignWardItem (Join-Path $itemDir "sovereign_ward.png")

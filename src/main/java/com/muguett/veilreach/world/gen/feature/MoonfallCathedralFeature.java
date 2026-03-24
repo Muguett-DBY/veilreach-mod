@@ -99,6 +99,7 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         carveCrypt(world, center, polished, veilstone, lantern, altar);
         carveSideChapels(world, center, polished, veilstone, glass, lantern);
         carveReliquary(world, center, polished, veilstone, lantern);
+        carveHiddenSacristy(world, center, polished, veilstone, lantern, glass);
 
         world.setBlockState(center.add(0, 1, -2), cache, Block.NOTIFY_ALL);
         world.setBlockState(center.add(0, 1, 2), cache, Block.NOTIFY_ALL);
@@ -112,6 +113,7 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, -4, 0), Direction.NORTH, "chests/moonfall_cathedral");
         HushStructureFeatureSupport.placeLootChest(world, center.add(-7, 1, 4), Direction.WEST, "chests/moonfall_cathedral");
         HushStructureFeatureSupport.placeLootChest(world, center.add(7, 1, 4), Direction.EAST, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, -11), Direction.SOUTH, "chests/moonfall_cathedral_vault");
         return true;
     }
 
@@ -198,6 +200,27 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         }
         world.setBlockState(reliquary.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
         HushStructureFeatureSupport.placeDoor(world, reliquary.add(0, 0, 2), Direction.SOUTH);
+    }
+
+    private static void carveHiddenSacristy(StructureWorldAccess world, BlockPos center, BlockState polished, BlockState veilstone, BlockState lantern, BlockState glass) {
+        BlockPos sacristy = center.add(0, 1, -11);
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                for (int dy = 0; dy <= 4; dy++) {
+                    BlockPos pos = sacristy.add(dx, dy, dz);
+                    if (Math.abs(dx) == 2 || Math.abs(dz) == 2 || dy == 4) {
+                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    }
+                }
+                world.setBlockState(sacristy.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+            }
+        }
+        world.setBlockState(sacristy.add(0, 1, -2), glass, Block.NOTIFY_ALL);
+        world.setBlockState(sacristy.add(0, 2, -2), glass, Block.NOTIFY_ALL);
+        world.setBlockState(sacristy.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
+        HushStructureFeatureSupport.placeDoor(world, sacristy.add(0, 0, 2), Direction.SOUTH);
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {

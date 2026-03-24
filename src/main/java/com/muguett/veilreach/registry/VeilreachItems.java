@@ -35,6 +35,8 @@ public final class VeilreachItems {
     public static final Item SOVEREIGN_GLAIVE = register("sovereign_glaive", settings -> new Item(VeilreachToolMaterials.SOVEREIGN.applySwordSettings(settings, 5.0F, -2.7F)));
     public static final Item STARFRAGMENT = register("starfragment", Item::new);
     public static final Item SOVEREIGN_CORE = register("sovereign_core", Item::new);
+    public static final Item SANCTUM_KEY = register("sanctum_key", Item::new);
+    public static final Item CATHEDRAL_SEAL = register("cathedral_seal", Item::new);
     public static final Item WARDEN_SIGIL = register("warden_sigil", Item::new);
     public static final Item HUSH_WARD_CHARM = register("hush_ward_charm", HushWardCharmItem::new);
     public static final Item SOVEREIGN_WARD = register("sovereign_ward", SovereignWardItem::new);

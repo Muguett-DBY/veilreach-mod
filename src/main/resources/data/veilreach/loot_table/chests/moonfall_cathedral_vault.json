@@ -1,0 +1,46 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 3,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_golden_apple",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_sword",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "min": 30.0,
+                "max": 46.0
+              },
+              "options": "#minecraft:on_random_loot"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:sovereign_glaive",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:cathedral_seal",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:mirror_helmet",
+          "weight": 3
+        }
+      ]
+    }
+  ]
+}

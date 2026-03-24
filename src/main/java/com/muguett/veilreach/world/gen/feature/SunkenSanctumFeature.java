@@ -110,6 +110,7 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         carveSideCells(world, chamberCenter, polished, veilstone, lantern);
         carveOuterRing(world, chamberCenter, polished, veilstone, lantern);
         carveDetentionHall(world, chamberCenter, polished, veilstone, lantern);
+        carveVault(world, chamberCenter, polished, veilstone, lantern, glass);
         HushStructureFeatureSupport.spawnPersistentMob(world, chamberCenter.add(0, 0, -2), VeilreachEntities.MOONFALLEN_KNIGHT);
         HushStructureFeatureSupport.spawnPersistentMob(world, chamberCenter.add(2, 0, 2), VeilreachEntities.LANTERNKEEPER);
         HushStructureFeatureSupport.spawnPersistentMob(world, chamberCenter.add(-6, 0, 0), VeilreachEntities.WARDEN_OF_SILENCE);
@@ -121,6 +122,7 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.placeLootChest(world, chamberCenter.add(-4, 0, 4), Direction.NORTH, "chests/sunken_sanctum");
         HushStructureFeatureSupport.placeLootChest(world, chamberCenter.add(0, 0, -8), Direction.SOUTH, "chests/sunken_sanctum");
         HushStructureFeatureSupport.placeLootChest(world, chamberCenter.add(0, 0, 8), Direction.NORTH, "chests/sunken_sanctum");
+        HushStructureFeatureSupport.placeLootChest(world, chamberCenter.add(8, 0, 8), Direction.WEST, "chests/sunken_sanctum_vault");
         return true;
     }
 
@@ -202,6 +204,27 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
             HushStructureFeatureSupport.placeDoor(world, cellBase.add(0, 0, side == -1 ? 1 : -1), side == -1 ? Direction.SOUTH : Direction.NORTH);
             world.setBlockState(cellBase.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
         }
+    }
+
+    private static void carveVault(StructureWorldAccess world, BlockPos chamberCenter, BlockState polished, BlockState veilstone, BlockState lantern, BlockState glass) {
+        BlockPos vault = chamberCenter.add(8, 0, 8);
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                for (int dy = 0; dy <= 4; dy++) {
+                    BlockPos pos = vault.add(dx, dy, dz);
+                    if (Math.abs(dx) == 2 || Math.abs(dz) == 2 || dy == 4) {
+                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    }
+                }
+                world.setBlockState(vault.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+            }
+        }
+        world.setBlockState(vault.add(0, 1, -2), glass, Block.NOTIFY_ALL);
+        world.setBlockState(vault.add(0, 2, -2), glass, Block.NOTIFY_ALL);
+        world.setBlockState(vault.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
+        HushStructureFeatureSupport.placeDoor(world, vault.add(-2, 0, 0), Direction.WEST);
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {
