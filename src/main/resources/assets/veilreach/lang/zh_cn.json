@@ -91,6 +91,11 @@
   "message.veilreach.starlight_cache.opened": "一匣星辉金属从储匣中倾泻而出。",
   "title.veilreach.hushlands": "寂辉荒境",
   "subtitle.veilreach.hushlands": "银色寂辉已在你身后缓缓闭合。",
+  "subtitle.veilreach.biome.hush_grove": "银色树根之下，整个世界都陷入了寂静。",
+  "subtitle.veilreach.biome.gloam_forest": "幽暗木林发出低响，像是早已记住了你的名字。",
+  "subtitle.veilreach.biome.moonlit_thicket": "冰冷月辉正沿着每一片叶脉慢慢汇聚。",
+  "subtitle.veilreach.biome.rift_meadows": "裂开的帷幕后，空气本身都在微微闪烁。",
+  "subtitle.veilreach.biome.silent_badlands": "灰烬与石影吞没了所有遥远的回声。",
   "itemGroup.veilreach.main": "帷境远界",
   "itemGroup.veilreach.materials": "帷境远界：材料",
   "itemGroup.veilreach.creatures": "帷境远界：生物"

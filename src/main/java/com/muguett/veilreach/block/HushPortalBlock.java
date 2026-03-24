@@ -63,8 +63,11 @@ public class HushPortalBlock extends Block {
         if (random.nextInt(18) == 0) {
             world.playSound(null, pos, SoundEvents.BLOCK_PORTAL_AMBIENT, SoundCategory.BLOCKS, 0.45F, 0.8F + (random.nextFloat() * 0.35F));
         }
+        if (random.nextInt(30) == 0) {
+            world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_AMBIENT, SoundCategory.BLOCKS, 0.18F, 0.7F + (random.nextFloat() * 0.15F));
+        }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) {
             double x = pos.getX() + 0.15D + (random.nextDouble() * 0.7D);
             double y = pos.getY() + 0.15D + (random.nextDouble() * 0.7D);
             double z = pos.getZ() + 0.15D + (random.nextDouble() * 0.7D);
@@ -72,8 +75,12 @@ public class HushPortalBlock extends Block {
             double velocityY = 0.01D + (random.nextDouble() * 0.03D);
             double velocityZ = (random.nextDouble() - 0.5D) * 0.05D;
             world.addParticleClient(ParticleTypes.REVERSE_PORTAL, x, y, z, velocityX, velocityY, velocityZ);
+            world.addParticleClient(ParticleTypes.GLOW, x, y, z, velocityX * 0.15D, velocityY * 0.2D, velocityZ * 0.15D);
             if (random.nextBoolean()) {
                 world.addParticleClient(ParticleTypes.END_ROD, x, y + 0.1D, z, velocityX * 0.3D, velocityY * 0.5D, velocityZ * 0.3D);
+            }
+            if (random.nextInt(3) == 0) {
+                world.addParticleClient(ParticleTypes.WHITE_ASH, x, y - 0.1D, z, 0.0D, 0.01D, 0.0D);
             }
         }
     }

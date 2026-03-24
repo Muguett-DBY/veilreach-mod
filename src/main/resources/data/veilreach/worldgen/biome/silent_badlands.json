@@ -25,7 +25,7 @@
         "particle": {
           "type": "minecraft:ash"
         },
-        "probability": 0.009
+        "probability": 0.012
       }
     ]
   },
@@ -38,12 +38,12 @@
     "minecraft:canyon"
   ],
   "effects": {
-    "fog_color": 3815730,
-    "water_color": 3554357,
-    "water_fog_color": 1775374,
-    "sky_color": 3224895,
-    "grass_color": 4211545,
-    "foliage_color": 4606058,
+    "fog_color": 2566186,
+    "water_color": 2369789,
+    "water_fog_color": 1183777,
+    "sky_color": 2036518,
+    "grass_color": 3157553,
+    "foliage_color": 3421230,
     "mood_sound": {
       "sound": "minecraft:ambient.basalt_deltas.mood",
       "tick_delay": 4200,

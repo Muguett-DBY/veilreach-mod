@@ -19,6 +19,8 @@ public final class HushlandsClientEffects {
     private static RegistryKey<World> lastWorldKey;
     private static int arrivalBurstTicks;
     private static int ambientPulseTicks;
+    private static String lastBiomeId = "";
+    private static int biomeTitleCooldown;
 
     private HushlandsClientEffects() {
     }
@@ -33,6 +35,8 @@ public final class HushlandsClientEffects {
             lastWorldKey = null;
             arrivalBurstTicks = 0;
             ambientPulseTicks = 0;
+            lastBiomeId = "";
+            biomeTitleCooldown = 0;
             return;
         }
 
@@ -59,6 +63,16 @@ public final class HushlandsClientEffects {
         boolean rift = biomeId.contains("rift_meadows");
         boolean badlands = biomeId.contains("silent_badlands");
         boolean forest = biomeId.contains("gloam_forest");
+        boolean grove = biomeId.contains("hush_grove");
+
+        if (biomeTitleCooldown > 0) {
+            biomeTitleCooldown--;
+        }
+        if (!biomeId.equals(lastBiomeId) && biomeTitleCooldown == 0) {
+            showBiomeTitle(client, biomeId);
+            biomeTitleCooldown = 120;
+            lastBiomeId = biomeId;
+        }
 
         if (arrivalBurstTicks > 0) {
             spawnArrivalBurst(world, client, origin, random, moonlit || rift);
@@ -99,6 +113,9 @@ public final class HushlandsClientEffects {
             if (forest && random.nextInt(5) == 0) {
                 world.addParticleClient(ParticleTypes.SPORE_BLOSSOM_AIR, x, y, z, 0.0D, 0.006D, 0.0D);
             }
+            if (grove && random.nextInt(5) == 0) {
+                world.addParticleClient(ParticleTypes.FALLING_OBSIDIAN_TEAR, x, y + 0.3D, z, 0.0D, 0.004D, 0.0D);
+            }
             if (badlands && random.nextInt(5) == 0) {
                 world.addParticleClient(ParticleTypes.SMOKE, x, y - 0.3D, z, 0.0D, 0.01D, 0.0D);
             }
@@ -114,8 +131,12 @@ public final class HushlandsClientEffects {
             double sx = client.player.getX() + (random.nextDouble() * 16.0D - 8.0D);
             double sy = client.player.getY() + 3.5D + random.nextDouble() * 2.5D;
             double sz = client.player.getZ() + (random.nextDouble() * 16.0D - 8.0D);
-            world.addParticleClient(ParticleTypes.END_ROD, sx, sy, sz, 0.18D, -0.03D, 0.18D);
+            world.addParticleClient((badlands || rift) ? ParticleTypes.REVERSE_PORTAL : ParticleTypes.END_ROD, sx, sy, sz, 0.18D, -0.03D, 0.18D);
             world.addParticleClient(ParticleTypes.GLOW, sx, sy, sz, 0.0D, 0.0D, 0.0D);
+        }
+
+        if (random.nextInt(260) == 0) {
+            spawnHorizonVeil(world, client, random, moonlit, rift, badlands, forest, grove);
         }
 
         if (random.nextInt(320) == 0) {
@@ -123,7 +144,7 @@ public final class HushlandsClientEffects {
                     ? SoundEvents.AMBIENT_BASALT_DELTAS_MOOD.value()
                     : (moonlit
                     ? SoundEvents.AMBIENT_WARPED_FOREST_MOOD.value()
-                    : (rift ? SoundEvents.BLOCK_RESPAWN_ANCHOR_AMBIENT : SoundEvents.BLOCK_AMETHYST_CLUSTER_HIT));
+                    : (rift ? SoundEvents.BLOCK_RESPAWN_ANCHOR_AMBIENT : (forest ? SoundEvents.BLOCK_SCULK_CATALYST_BLOOM : (grove ? SoundEvents.BLOCK_AMETHYST_CLUSTER_FALL : SoundEvents.BLOCK_AMETHYST_CLUSTER_HIT))));
             world.playSoundClient(
                     client.player.getX(),
                     client.player.getY(),
@@ -152,6 +173,16 @@ public final class HushlandsClientEffects {
         client.inGameHud.setTitleTicks(15, 80, 35);
     }
 
+    private static void showBiomeTitle(MinecraftClient client, String biomeId) {
+        if (client.inGameHud == null || biomeId.isBlank() || !biomeId.startsWith("veilreach:")) {
+            return;
+        }
+        String biomeKey = biomeId.substring("veilreach:".length());
+        client.inGameHud.setTitle(net.minecraft.text.Text.translatable("biome.veilreach." + biomeKey));
+        client.inGameHud.setSubtitle(net.minecraft.text.Text.translatable("subtitle.veilreach.biome." + biomeKey));
+        client.inGameHud.setTitleTicks(10, 55, 20);
+    }
+
     private static void spawnArrivalBurst(ClientWorld world, MinecraftClient client, BlockPos origin, Random random, boolean bright) {
         for (int i = 0; i < 16; i++) {
             double angle = (Math.PI * 2.0D * i) / 16.0D;
@@ -178,6 +209,30 @@ public final class HushlandsClientEffects {
             world.addParticleClient(intense ? ParticleTypes.REVERSE_PORTAL : ParticleTypes.END_ROD, x, y, z, 0.0D, -0.03D, 0.0D);
             if (random.nextBoolean()) {
                 world.addParticleClient(ParticleTypes.GLOW, x, y, z, 0.0D, -0.01D, 0.0D);
+            }
+        }
+    }
+
+    private static void spawnHorizonVeil(ClientWorld world, MinecraftClient client, Random random, boolean moonlit, boolean rift, boolean badlands, boolean forest, boolean grove) {
+        double angle = random.nextDouble() * Math.PI * 2.0D;
+        double distance = 18.0D + random.nextDouble() * 12.0D;
+        double baseX = client.player.getX() + Math.cos(angle) * distance;
+        double baseZ = client.player.getZ() + Math.sin(angle) * distance;
+        double baseY = client.player.getY() + 4.0D + random.nextDouble() * 6.0D;
+        for (int i = 0; i < 12; i++) {
+            double x = baseX + random.nextDouble() * 2.6D - 1.3D;
+            double y = baseY + i * 0.24D;
+            double z = baseZ + random.nextDouble() * 2.6D - 1.3D;
+            if (badlands) {
+                world.addParticleClient(ParticleTypes.SMOKE, x, y, z, 0.0D, 0.01D, 0.0D);
+            } else if (rift) {
+                world.addParticleClient(ParticleTypes.REVERSE_PORTAL, x, y, z, 0.0D, 0.012D, 0.0D);
+            } else if (moonlit) {
+                world.addParticleClient(ParticleTypes.END_ROD, x, y, z, 0.0D, 0.01D, 0.0D);
+            } else if (forest) {
+                world.addParticleClient(ParticleTypes.SPORE_BLOSSOM_AIR, x, y, z, 0.0D, 0.006D, 0.0D);
+            } else if (grove) {
+                world.addParticleClient(ParticleTypes.WHITE_ASH, x, y, z, 0.0D, 0.006D, 0.0D);
             }
         }
     }

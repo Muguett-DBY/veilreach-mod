@@ -25,7 +25,7 @@
         "particle": {
           "type": "minecraft:glow"
         },
-        "probability": 0.008
+        "probability": 0.012
       }
     ]
   },
@@ -38,12 +38,12 @@
     "minecraft:canyon"
   ],
   "effects": {
-    "fog_color": 7300102,
-    "water_color": 5666020,
-    "water_fog_color": 2895967,
-    "sky_color": 5397472,
-    "grass_color": 7504302,
-    "foliage_color": 8298181,
+    "fog_color": 9149326,
+    "water_color": 6905139,
+    "water_fog_color": 3292459,
+    "sky_color": 6248667,
+    "grass_color": 8231343,
+    "foliage_color": 9349569,
     "mood_sound": {
       "sound": "minecraft:ambient.warped_forest.mood",
       "tick_delay": 4800,

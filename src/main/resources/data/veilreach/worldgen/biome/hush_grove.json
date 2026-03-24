@@ -15,9 +15,9 @@
     },
     "minecraft:audio/background_music": {
       "default": {
-        "sound": "minecraft:music.nether.warped_forest",
-        "min_delay": 12000,
-        "max_delay": 24000
+        "sound": "minecraft:music.end",
+        "min_delay": 10000,
+        "max_delay": 20000
       }
     },
     "minecraft:visual/ambient_particles": [
@@ -25,7 +25,7 @@
         "particle": {
           "type": "minecraft:ash"
         },
-        "probability": 0.004
+        "probability": 0.006
       }
     ]
   },
@@ -38,12 +38,12 @@
     "minecraft:canyon"
   ],
   "effects": {
-    "fog_color": 8048305,
-    "water_color": 5791743,
-    "water_fog_color": 3622731,
-    "sky_color": 4867648,
-    "grass_color": 6064757,
-    "foliage_color": 7381665,
+    "fog_color": 6908270,
+    "water_color": 5004527,
+    "water_fog_color": 2437172,
+    "sky_color": 3358034,
+    "grass_color": 5539748,
+    "foliage_color": 6722218,
     "mood_sound": {
       "sound": "minecraft:ambient.soul_sand_valley.mood",
       "tick_delay": 6000,

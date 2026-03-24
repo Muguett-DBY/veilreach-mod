@@ -25,7 +25,7 @@
         "particle": {
           "type": "minecraft:end_rod"
         },
-        "probability": 0.004
+        "probability": 0.007
       }
     ]
   },
@@ -38,12 +38,12 @@
     "minecraft:canyon"
   ],
   "effects": {
-    "fog_color": 7103583,
-    "water_color": 5006354,
-    "water_fog_color": 2501688,
-    "sky_color": 5001734,
-    "grass_color": 6454229,
-    "foliage_color": 7047144,
+    "fog_color": 5529057,
+    "water_color": 4017670,
+    "water_fog_color": 1977147,
+    "sky_color": 3755771,
+    "grass_color": 5797060,
+    "foliage_color": 6519743,
     "mood_sound": {
       "sound": "minecraft:ambient.soul_sand_valley.mood",
       "tick_delay": 5600,

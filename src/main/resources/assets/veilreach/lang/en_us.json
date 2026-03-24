@@ -91,6 +91,11 @@
   "message.veilreach.starlight_cache.opened": "A stash of starlit metal spills from the cache.",
   "title.veilreach.hushlands": "Hushlands",
   "subtitle.veilreach.hushlands": "The silver hush closes behind you.",
+  "subtitle.veilreach.biome.hush_grove": "The world falls silent beneath silver roots.",
+  "subtitle.veilreach.biome.gloam_forest": "The dark timber creaks as if it remembers you.",
+  "subtitle.veilreach.biome.moonlit_thicket": "Cold light gathers across every leaf.",
+  "subtitle.veilreach.biome.rift_meadows": "The air flickers with tears in the veil.",
+  "subtitle.veilreach.biome.silent_badlands": "Ash and stone swallow every distant sound.",
   "itemGroup.veilreach.main": "Veilreach",
   "itemGroup.veilreach.materials": "Veilreach Materials",
   "itemGroup.veilreach.creatures": "Veilreach Creatures"
