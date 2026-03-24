@@ -41,6 +41,7 @@ public final class HushlandsClientEffects {
             if (currentWorldKey.equals(VeilreachDimensions.HUSHLANDS_WORLD)) {
                 arrivalBurstTicks = 40;
                 ambientPulseTicks = 140;
+                showArrivalTitle(client);
                 playArrivalChime(world, client);
             }
             lastWorldKey = currentWorldKey;
@@ -140,6 +141,15 @@ public final class HushlandsClientEffects {
         world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.AMBIENT, 0.55F, 0.7F, false);
         world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.AMBIENT, 0.45F, 0.55F, false);
         world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), SoundEvents.ENTITY_ENDERMAN_STARE, SoundCategory.AMBIENT, 0.18F, 0.45F, false);
+    }
+
+    private static void showArrivalTitle(MinecraftClient client) {
+        if (client.inGameHud == null) {
+            return;
+        }
+        client.inGameHud.setTitle(net.minecraft.text.Text.translatable("title.veilreach.hushlands"));
+        client.inGameHud.setSubtitle(net.minecraft.text.Text.translatable("subtitle.veilreach.hushlands"));
+        client.inGameHud.setTitleTicks(15, 80, 35);
     }
 
     private static void spawnArrivalBurst(ClientWorld world, MinecraftClient client, BlockPos origin, Random random, boolean bright) {

@@ -84,6 +84,13 @@
   "message.veilreach.hushlands.hazard": "银色雾潮正在逼近。寂辉护符会让你的呼吸重新平稳。",
   "message.veilreach.fogbound_barrier.locked": "沉重的雾幕封住了前路。你需要寂辉护符来稳定它。",
   "message.veilreach.fogbound_barrier.opened": "雾缚封印松动了，前路也随之敞开。",
+  "message.veilreach.portal.invalid_frame": "星仪符印需要一座完整的月织门框。",
+  "message.veilreach.portal.opened": "空气被缓缓撕开，一道通往寂辉荒境的门就此开启。",
+  "message.veilreach.sealed_altar.locked": "沉寂的守护拒绝了你。祭坛需要守望者印记。",
+  "message.veilreach.sealed_altar.awakened": "封印已经破碎，寂主回应了你的呼唤。",
+  "message.veilreach.starlight_cache.opened": "一匣星辉金属从储匣中倾泻而出。",
+  "title.veilreach.hushlands": "寂辉荒境",
+  "subtitle.veilreach.hushlands": "银色寂辉已在你身后缓缓闭合。",
   "itemGroup.veilreach.main": "帷境远界",
   "itemGroup.veilreach.materials": "帷境远界：材料",
   "itemGroup.veilreach.creatures": "帷境远界：生物"

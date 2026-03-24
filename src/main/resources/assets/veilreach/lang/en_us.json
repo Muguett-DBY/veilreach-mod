@@ -84,6 +84,13 @@
   "message.veilreach.hushlands.hazard": "The silver fog presses in. A Hush Ward Charm would steady your breath.",
   "message.veilreach.fogbound_barrier.locked": "A heavy veil seals the way. A Hush Ward Charm should steady it.",
   "message.veilreach.fogbound_barrier.opened": "The fogbound seal loosens and the passage opens.",
+  "message.veilreach.portal.invalid_frame": "The sigil needs a complete Moonwoven Frame.",
+  "message.veilreach.portal.opened": "The air parts. A gate to the Hushlands opens.",
+  "message.veilreach.sealed_altar.locked": "A silent ward rejects you. The altar needs a Warden Sigil.",
+  "message.veilreach.sealed_altar.awakened": "The seal breaks, and the Sovereign answers.",
+  "message.veilreach.starlight_cache.opened": "A stash of starlit metal spills from the cache.",
+  "title.veilreach.hushlands": "Hushlands",
+  "subtitle.veilreach.hushlands": "The silver hush closes behind you.",
   "itemGroup.veilreach.main": "Veilreach",
   "itemGroup.veilreach.materials": "Veilreach Materials",
   "itemGroup.veilreach.creatures": "Veilreach Creatures"

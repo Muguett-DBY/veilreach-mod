@@ -36,7 +36,7 @@ public class StarlightCacheBlock extends Block {
 
         serverWorld.setBlockState(pos, VeilreachBlocks.POLISHED_VEILSTONE.getDefaultState(), Block.NOTIFY_ALL);
         serverWorld.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.BLOCKS, 0.9F, 1.0F);
-        player.sendMessage(Text.literal("A stash of starlit metal spills from the cache."), true);
+        player.sendMessage(Text.translatable("message.veilreach.starlight_cache.opened"), true);
         return ActionResult.SUCCESS;
     }
 }

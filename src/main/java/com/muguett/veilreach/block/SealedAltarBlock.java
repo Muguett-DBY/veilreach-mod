@@ -30,7 +30,7 @@ public class SealedAltarBlock extends Block {
         ItemStack held = player.getStackInHand(Hand.MAIN_HAND);
         if (!held.isOf(VeilreachItems.WARDEN_SIGIL)) {
             if (!world.isClient()) {
-                player.sendMessage(Text.literal("A silent ward rejects you. The altar needs a Warden Sigil."), true);
+                player.sendMessage(Text.translatable("message.veilreach.sealed_altar.locked"), true);
             }
             return ActionResult.SUCCESS;
         }
@@ -48,7 +48,7 @@ public class SealedAltarBlock extends Block {
             }
         }
         serverWorld.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1.0F, 0.85F);
-        player.sendMessage(Text.literal("The seal breaks, and the Sovereign answers."), true);
+        player.sendMessage(Text.translatable("message.veilreach.sealed_altar.awakened"), true);
         if (!player.isCreative()) {
             held.decrement(1);
         }

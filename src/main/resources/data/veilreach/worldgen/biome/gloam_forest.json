@@ -13,6 +13,13 @@
         "offset": 2.0
       }
     },
+    "minecraft:audio/background_music": {
+      "default": {
+        "sound": "minecraft:music.nether.crimson_forest",
+        "min_delay": 10000,
+        "max_delay": 21000
+      }
+    },
     "minecraft:visual/ambient_particles": [
       {
         "particle": {

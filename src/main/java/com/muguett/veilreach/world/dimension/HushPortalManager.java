@@ -41,13 +41,13 @@ public final class HushPortalManager {
     public static boolean tryActivate(ServerWorld world, BlockPos clickedPos, PlayerEntity player) {
         PortalFrame frame = findFrame(world, clickedPos);
         if (frame == null) {
-            player.sendMessage(Text.literal("The sigil needs a complete Moonwoven Frame."), true);
+            player.sendMessage(Text.translatable("message.veilreach.portal.invalid_frame"), true);
             return false;
         }
 
         fillPortal(world, frame);
         world.playSound(null, clickedPos, net.minecraft.sound.SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, net.minecraft.sound.SoundCategory.BLOCKS, 1.0F, 0.8F);
-        player.sendMessage(Text.literal("The air parts. A gate to the Hushlands opens."), true);
+        player.sendMessage(Text.translatable("message.veilreach.portal.opened"), true);
         return true;
     }
 

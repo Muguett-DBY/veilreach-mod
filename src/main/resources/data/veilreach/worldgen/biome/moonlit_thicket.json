@@ -13,6 +13,13 @@
         "offset": 2.0
       }
     },
+    "minecraft:audio/background_music": {
+      "default": {
+        "sound": "minecraft:music.end",
+        "min_delay": 9000,
+        "max_delay": 18000
+      }
+    },
     "minecraft:visual/ambient_particles": [
       {
         "particle": {
