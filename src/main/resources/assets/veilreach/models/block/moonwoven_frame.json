@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "all": "veilreach:block/moonwoven_frame"
+    "top": "veilreach:block/moonwoven_frame_top",
+    "bottom": "veilreach:block/moonwoven_frame_bottom",
+    "side": "veilreach:block/moonwoven_frame_side"
   }
 }

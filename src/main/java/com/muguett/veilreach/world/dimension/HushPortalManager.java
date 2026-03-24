@@ -36,6 +36,9 @@ public final class HushPortalManager {
     }
 
     public static void teleport(ServerPlayerEntity player, BlockPos portalPos) {
+        if (player.hasPortalCooldown()) {
+            return;
+        }
         ServerWorld currentWorld = player.getEntityWorld();
         ServerWorld targetWorld = currentWorld.getRegistryKey() == VeilreachDimensions.HUSHLANDS_WORLD
                 ? currentWorld.getServer().getOverworld()

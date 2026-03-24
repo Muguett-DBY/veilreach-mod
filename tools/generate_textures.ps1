@@ -388,6 +388,37 @@ function Create-Frame([string]$path) {
     Save-Png $bmp $path
 }
 
+function Create-FrameTop([string]$path) {
+    $bmp = New-Bitmap
+    Fill-Noise $bmp (Color-Hex "#162732") (Color-Hex "#3f6670") 10
+    Draw-Ring $bmp 8 8 5 (Color-Hex "#d9f5c7")
+    Draw-Ring $bmp 8 8 3 (Color-Hex "#86d7d8")
+    Draw-Star $bmp 8 8 (Color-Hex "#fff4bf") (Color-Hex "#8fe1ff")
+    Draw-Border $bmp (Color-Hex "#0a1116") (Color-Hex "#9ce7d3")
+    Save-Png $bmp $path
+}
+
+function Create-FrameSide([string]$path) {
+    $bmp = New-Bitmap
+    Fill-Noise $bmp (Color-Hex "#10242a") (Color-Hex "#30545d") 10
+    for ($y = 2; $y -lt 15; $y += 4) {
+        Draw-Line $bmp 2 $y 13 $y (Color-Hex "#9ce7d3")
+        Draw-Line $bmp 4 ($y + 1) 11 ($y + 1) (Color-Hex "#dff3bc")
+    }
+    Draw-Border $bmp (Color-Hex "#0a1116") (Color-Hex "#9ce7d3")
+    Save-Png $bmp $path
+}
+
+function Create-FrameBottom([string]$path) {
+    $bmp = New-Bitmap
+    Fill-Noise $bmp (Color-Hex "#0d1b20") (Color-Hex "#274952") 8
+    for ($x = 3; $x -lt 14; $x += 4) {
+        Draw-Line $bmp $x 3 $x 12 (Color-Hex "#5ea2b0")
+    }
+    Draw-Border $bmp (Color-Hex "#0a1116") (Color-Hex "#7fc0c3")
+    Save-Png $bmp $path
+}
+
 function Create-Altar([string]$path, [bool]$awakened) {
     $bmp = New-Bitmap
     Fill-Noise $bmp (Color-Hex "#1d232c") (Color-Hex "#7d8c98") 10
@@ -707,6 +738,9 @@ Create-Flower (Join-Path $blockDir "veilstone_pile.png") "#8e95a1" "#dee3ef" "#5
 Create-Glass (Join-Path $blockDir "riftglass.png")
 Create-Lantern (Join-Path $blockDir "starlantern.png")
 Create-Frame (Join-Path $blockDir "moonwoven_frame.png")
+Create-FrameTop (Join-Path $blockDir "moonwoven_frame_top.png")
+Create-FrameSide (Join-Path $blockDir "moonwoven_frame_side.png")
+Create-FrameBottom (Join-Path $blockDir "moonwoven_frame_bottom.png")
 Create-Portal (Join-Path $blockDir "hush_portal.png")
 Create-Altar (Join-Path $blockDir "sealed_altar.png") $false
 Create-Altar (Join-Path $blockDir "awakened_altar.png") $true

@@ -8,11 +8,20 @@ import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.BlockView;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
 public class HushPortalBlock extends Block {
+    private static final VoxelShape PORTAL_SHAPE = VoxelShapes.empty();
+
     public HushPortalBlock(Settings settings) {
         super(settings);
     }
@@ -23,10 +32,29 @@ public class HushPortalBlock extends Block {
         if (!(entity instanceof ServerPlayerEntity player)) {
             return;
         }
-        if (player.hasPortalCooldown() || player.isSpectator() || !player.canUsePortals(false)) {
+        if (player.hasPortalCooldown() || player.isSpectator()) {
             return;
         }
-        HushPortalManager.teleport(player, pos);
+        world.getServer().execute(() -> HushPortalManager.teleport(player, pos));
+    }
+
+    @Override
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (!world.isClient() && player instanceof ServerPlayerEntity serverPlayer && !serverPlayer.hasPortalCooldown() && !serverPlayer.isSpectator()) {
+            HushPortalManager.teleport(serverPlayer, pos);
+            return ActionResult.SUCCESS_SERVER;
+        }
+        return ActionResult.SUCCESS;
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
+        return PORTAL_SHAPE;
+    }
+
+    @Override
+    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, net.minecraft.block.ShapeContext context) {
+        return PORTAL_SHAPE;
     }
 
     @Override
