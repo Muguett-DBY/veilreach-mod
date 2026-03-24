@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "veilreach:block/hush_portal" }
+  }
+}

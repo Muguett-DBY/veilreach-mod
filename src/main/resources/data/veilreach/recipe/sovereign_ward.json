@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "WCW",
+    " S "
+  ],
+  "key": {
+    "S": "veilreach:starfragment",
+    "W": "veilreach:hush_ward_charm",
+    "C": "veilreach:sovereign_core"
+  },
+  "result": {
+    "id": "veilreach:sovereign_ward",
+    "count": 1
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "additions": {
+        "sound": "minecraft:ambient.soul_sand_valley.additions",
+        "tick_chance": 0.007
+      },
+      "loop": "minecraft:ambient.soul_sand_valley.loop",
+      "mood": {
+        "sound": "minecraft:ambient.soul_sand_valley.mood",
+        "tick_delay": 5600,
+        "block_search_extent": 8,
+        "offset": 2.0
+      }
+    },
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:end_rod"
+        },
+        "probability": 0.004
+      }
+    ]
+  },
+  "has_precipitation": false,
+  "temperature": 0.36,
+  "downfall": 0.0,
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "effects": {
+    "fog_color": 7103583,
+    "water_color": 5006354,
+    "water_fog_color": 2501688,
+    "sky_color": 5001734,
+    "grass_color": 6454229,
+    "foliage_color": 7047144,
+    "mood_sound": {
+      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "tick_delay": 5600,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "features": [
+    [], [], [], [], [], [], [], [], ["veilreach:rift_bloom_patch"], ["veilreach:riftglass_basin", "veilreach:lantern_watchpost", "veilreach:silent_archive", "veilreach:echo_monolith"], [], []
+  ],
+  "spawn_costs": {},
+  "spawners": {
+    "monster": [
+      { "type": "veilreach:hushling", "weight": 58, "minCount": 2, "maxCount": 4 },
+      { "type": "veilreach:lanternkeeper", "weight": 12, "minCount": 1, "maxCount": 2 },
+      { "type": "veilreach:veilbound_watcher", "weight": 14, "minCount": 1, "maxCount": 2 }
+    ],
+    "creature": [
+      { "type": "veilreach:mirror_stag", "weight": 10, "minCount": 2, "maxCount": 3 }
+    ],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "additions": {
+        "sound": "minecraft:ambient.soul_sand_valley.additions",
+        "tick_chance": 0.009
+      },
+      "loop": "minecraft:ambient.warped_forest.loop",
+      "mood": {
+        "sound": "minecraft:ambient.soul_sand_valley.mood",
+        "tick_delay": 6000,
+        "block_search_extent": 8,
+        "offset": 2.0
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "sound": "minecraft:music.nether.warped_forest",
+        "min_delay": 12000,
+        "max_delay": 24000
+      }
+    },
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:ash"
+        },
+        "probability": 0.004
+      }
+    ]
+  },
+  "has_precipitation": false,
+  "temperature": 0.35,
+  "downfall": 0.0,
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "effects": {
+    "fog_color": 8048305,
+    "water_color": 5791743,
+    "water_fog_color": 3622731,
+    "sky_color": 4867648,
+    "grass_color": 6064757,
+    "foliage_color": 7381665,
+    "mood_sound": {
+      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "features": [
+    [], [], [], [], [], [], [], [], [], ["veilreach:echo_monolith", "veilreach:moon_shrine", "veilreach:watcher_obelisk", "veilreach:gloamwood_camp", "veilreach:shimmerleaf_grove", "veilreach:riftglass_basin", "veilreach:fallen_gateway", "veilreach:forgotten_manor", "veilreach:lantern_watchpost", "veilreach:moonfall_cathedral", "veilreach:silent_archive", "veilreach:silent_throne", "veilreach:sunken_sanctum"], [], []
+  ],
+  "spawn_costs": {},
+  "spawners": {
+    "monster": [
+      { "type": "veilreach:hushling", "weight": 95, "minCount": 2, "maxCount": 4 },
+      { "type": "veilreach:lanternkeeper", "weight": 6, "minCount": 1, "maxCount": 1 },
+      { "type": "veilreach:moonfallen_knight", "weight": 4, "minCount": 1, "maxCount": 1 },
+      { "type": "veilreach:veilbound_watcher", "weight": 18, "minCount": 1, "maxCount": 2 },
+      { "type": "veilreach:warden_of_silence", "weight": 3, "minCount": 1, "maxCount": 1 }
+    ],
+    "creature": [
+      { "type": "veilreach:mirror_stag", "weight": 12, "minCount": 2, "maxCount": 3 }
+    ],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  }
+}

@@ -1,0 +1,70 @@
+package com.muguett.veilreach.registry;
+
+import com.muguett.veilreach.VeilreachMod;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+
+public final class VeilreachItemGroups {
+    public static final RegistryKey<ItemGroup> VEILREACH_GROUP_KEY = RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.of(VeilreachMod.MOD_ID, "veilreach"));
+
+    private VeilreachItemGroups() {
+    }
+
+    public static void initialize() {
+        Registry.register(Registries.ITEM_GROUP, VEILREACH_GROUP_KEY, FabricItemGroup.builder()
+                .icon(() -> new ItemStack(VeilreachItems.ASTRAL_SIGIL))
+                .displayName(Text.translatable("itemGroup.veilreach.main"))
+                .entries((context, entries) -> {
+                    entries.add(VeilreachItems.ASTRAL_SIGIL);
+                    entries.add(VeilreachItems.WARDEN_SIGIL);
+                    entries.add(VeilreachItems.HUSH_WARD_CHARM);
+                    entries.add(VeilreachItems.VEIL_SHARD);
+                    entries.add(VeilreachItems.HUSHBERRY);
+                    entries.add(VeilreachItems.MOONBROTH_TART);
+                    entries.add(VeilreachItems.LUNAR_FIBER);
+                    entries.add(VeilreachItems.MIRROR_INGOT);
+                    entries.add(VeilreachItems.MIRROR_BLADE);
+                    entries.add(VeilreachItems.MIRROR_PICKAXE);
+                    entries.add(VeilreachItems.MIRROR_AXE);
+                    entries.add(VeilreachItems.MIRROR_SHOVEL);
+                    entries.add(VeilreachItems.SOVEREIGN_GLAIVE);
+                    entries.add(VeilreachItems.STARFRAGMENT);
+                    entries.add(VeilreachItems.SOVEREIGN_CORE);
+                    entries.add(VeilreachItems.SOVEREIGN_WARD);
+                    entries.add(VeilreachItems.GLOAMWOOD_SAP);
+
+                    entries.add(VeilreachBlocks.VEILSTONE);
+                    entries.add(VeilreachBlocks.POLISHED_VEILSTONE);
+                    entries.add(VeilreachBlocks.MIRROR_GRASS);
+                    entries.add(VeilreachBlocks.MOONMOSS);
+                    entries.add(VeilreachBlocks.GLOAMWOOD_PLANKS);
+                    entries.add(VeilreachBlocks.GLOAMWOOD_LOG);
+                    entries.add(VeilreachBlocks.SHIMMERLEAF_LEAVES);
+                    entries.add(VeilreachBlocks.MOONBLOSSOM);
+                    entries.add(VeilreachBlocks.RIFT_BLOOM);
+                    entries.add(VeilreachBlocks.RIFTGLASS);
+                    entries.add(VeilreachBlocks.STARLANTERN);
+                    entries.add(VeilreachBlocks.MOONWOVEN_FRAME);
+                    entries.add(VeilreachBlocks.SEALED_ALTAR);
+                    entries.add(VeilreachBlocks.AWAKENED_ALTAR);
+                    entries.add(VeilreachBlocks.FOGBOUND_BARRIER);
+                    entries.add(VeilreachBlocks.STARLIGHT_CACHE);
+
+                    entries.add(VeilreachItems.MIRROR_STAG_SPAWN_EGG);
+                    entries.add(VeilreachItems.HUSHLING_SPAWN_EGG);
+                    entries.add(VeilreachItems.LANTERNKEEPER_SPAWN_EGG);
+                    entries.add(VeilreachItems.MOONFALLEN_KNIGHT_SPAWN_EGG);
+                    entries.add(VeilreachItems.HUSH_SOVEREIGN_SPAWN_EGG);
+                    entries.add(VeilreachItems.VEILBOUND_WATCHER_SPAWN_EGG);
+                    entries.add(VeilreachItems.WARDEN_OF_SILENCE_SPAWN_EGG);
+                })
+                .build());
+    }
+}

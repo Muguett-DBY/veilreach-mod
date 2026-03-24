@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "VV",
+    "VV"
+  ],
+  "key": {
+    "V": "veilreach:veilstone"
+  },
+  "result": {
+    "id": "veilreach:polished_veilstone",
+    "count": 4
+  }
+}

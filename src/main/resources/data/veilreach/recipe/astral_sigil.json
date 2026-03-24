@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "MFM",
+    " V "
+  ],
+  "key": {
+    "S": "veilreach:starfragment",
+    "M": "veilreach:mirror_ingot",
+    "F": "veilreach:lunar_fiber",
+    "V": "veilreach:veil_shard"
+  },
+  "result": {
+    "id": "veilreach:astral_sigil",
+    "count": 1
+  }
+}

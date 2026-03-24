@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "hanging=false": { "model": "veilreach:block/starlantern" },
+    "hanging=true": { "model": "veilreach:block/starlantern_hanging" }
+  }
+}

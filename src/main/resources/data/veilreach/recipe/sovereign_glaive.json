@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " SC",
+    " BS",
+    "B  "
+  ],
+  "key": {
+    "S": "veilreach:starfragment",
+    "C": "veilreach:sovereign_core",
+    "B": "veilreach:mirror_blade"
+  },
+  "result": {
+    "id": "veilreach:sovereign_glaive",
+    "count": 1
+  }
+}

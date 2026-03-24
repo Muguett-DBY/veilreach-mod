@@ -1,0 +1,66 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "additions": {
+        "sound": "minecraft:ambient.basalt_deltas.additions",
+        "tick_chance": 0.006
+      },
+      "loop": "minecraft:ambient.basalt_deltas.loop",
+      "mood": {
+        "sound": "minecraft:ambient.basalt_deltas.mood",
+        "tick_delay": 4200,
+        "block_search_extent": 8,
+        "offset": 2.0
+      }
+    },
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:ash"
+        },
+        "probability": 0.009
+      }
+    ]
+  },
+  "has_precipitation": false,
+  "temperature": 0.21,
+  "downfall": 0.0,
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "effects": {
+    "fog_color": 3815730,
+    "water_color": 3554357,
+    "water_fog_color": 1775374,
+    "sky_color": 3224895,
+    "grass_color": 4211545,
+    "foliage_color": 4606058,
+    "mood_sound": {
+      "sound": "minecraft:ambient.basalt_deltas.mood",
+      "tick_delay": 4200,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "features": [
+    [], [], [], [], [], [], [], [], [], ["veilreach:watcher_obelisk", "veilreach:silent_throne", "veilreach:echo_monolith"], [], []
+  ],
+  "spawn_costs": {},
+  "spawners": {
+    "monster": [
+      { "type": "veilreach:hushling", "weight": 40, "minCount": 1, "maxCount": 3 },
+      { "type": "veilreach:moonfallen_knight", "weight": 12, "minCount": 1, "maxCount": 1 },
+      { "type": "veilreach:veilbound_watcher", "weight": 22, "minCount": 1, "maxCount": 2 },
+      { "type": "veilreach:warden_of_silence", "weight": 8, "minCount": 1, "maxCount": 1 }
+    ],
+    "creature": [],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  }
+}

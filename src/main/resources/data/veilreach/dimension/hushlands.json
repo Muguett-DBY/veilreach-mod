@@ -1,0 +1,18 @@
+{
+  "type": "veilreach:hushlands",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "minecraft:overworld",
+    "biome_source": {
+      "type": "minecraft:checkerboard",
+      "scale": 2,
+      "biomes": [
+        "veilreach:hush_grove",
+        "veilreach:gloam_forest",
+        "veilreach:moonlit_thicket",
+        "veilreach:rift_meadows",
+        "veilreach:silent_badlands"
+      ]
+    }
+  }
+}

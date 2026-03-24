@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "GLG",
+    " G "
+  ],
+  "key": {
+    "S": "veilreach:starfragment",
+    "G": "minecraft:gold_ingot",
+    "L": "minecraft:lantern"
+  },
+  "result": {
+    "id": "veilreach:starlantern",
+    "count": 1
+  }
+}

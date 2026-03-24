@@ -1,0 +1,67 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "additions": {
+        "sound": "minecraft:ambient.warped_forest.additions",
+        "tick_chance": 0.01
+      },
+      "loop": "minecraft:ambient.warped_forest.loop",
+      "mood": {
+        "sound": "minecraft:ambient.warped_forest.mood",
+        "tick_delay": 4800,
+        "block_search_extent": 8,
+        "offset": 2.0
+      }
+    },
+    "minecraft:visual/ambient_particles": [
+      {
+        "particle": {
+          "type": "minecraft:glow"
+        },
+        "probability": 0.008
+      }
+    ]
+  },
+  "has_precipitation": false,
+  "temperature": 0.42,
+  "downfall": 0.0,
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "effects": {
+    "fog_color": 7300102,
+    "water_color": 5666020,
+    "water_fog_color": 2895967,
+    "sky_color": 5397472,
+    "grass_color": 7504302,
+    "foliage_color": 8298181,
+    "mood_sound": {
+      "sound": "minecraft:ambient.warped_forest.mood",
+      "tick_delay": 4800,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "features": [
+    [], [], [], [], [], [], [], [], ["veilreach:moonblossom_patch"], ["veilreach:moon_shrine", "veilreach:fallen_gateway", "veilreach:moonfall_cathedral", "veilreach:shimmerleaf_grove"], [], []
+  ],
+  "spawn_costs": {},
+  "spawners": {
+    "monster": [
+      { "type": "veilreach:hushling", "weight": 52, "minCount": 2, "maxCount": 3 },
+      { "type": "veilreach:veilbound_watcher", "weight": 18, "minCount": 1, "maxCount": 2 },
+      { "type": "veilreach:moonfallen_knight", "weight": 8, "minCount": 1, "maxCount": 1 }
+    ],
+    "creature": [
+      { "type": "veilreach:mirror_stag", "weight": 16, "minCount": 2, "maxCount": 3 }
+    ],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  }
+}

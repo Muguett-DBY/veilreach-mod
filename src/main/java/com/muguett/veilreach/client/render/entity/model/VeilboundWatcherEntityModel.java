@@ -1,0 +1,60 @@
+package com.muguett.veilreach.client.render.entity.model;
+
+import net.minecraft.client.model.ModelData;
+import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.ModelPartBuilder;
+import net.minecraft.client.model.ModelPartData;
+import net.minecraft.client.model.ModelTransform;
+import net.minecraft.client.model.TexturedModelData;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.state.LivingEntityRenderState;
+import net.minecraft.util.math.MathHelper;
+
+public final class VeilboundWatcherEntityModel extends EntityModel<LivingEntityRenderState> {
+    private final ModelPart core;
+    private final ModelPart head;
+    private final ModelPart leftArm;
+    private final ModelPart rightArm;
+    private final ModelPart lowerVeil;
+
+    public VeilboundWatcherEntityModel(ModelPart root) {
+        super(root);
+        this.core = root.getChild("core");
+        this.head = this.core.getChild("head");
+        this.leftArm = this.core.getChild("left_arm");
+        this.rightArm = this.core.getChild("right_arm");
+        this.lowerVeil = this.core.getChild("lower_veil");
+    }
+
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData root = modelData.getRoot();
+        ModelPartData core = root.addChild("core", ModelPartBuilder.create()
+                .uv(0, 12).cuboid(-4.0F, -8.0F, -2.0F, 8.0F, 12.0F, 4.0F)
+                .uv(24, 12).cuboid(-3.5F, 4.0F, -1.5F, 7.0F, 6.0F, 3.0F), ModelTransform.origin(0.0F, 8.0F, 0.0F));
+        core.addChild("head", ModelPartBuilder.create()
+                .uv(0, 0).cuboid(-4.0F, -6.0F, -4.0F, 8.0F, 6.0F, 8.0F)
+                .uv(24, 0).cuboid(-2.0F, -8.0F, -1.0F, 4.0F, 2.0F, 4.0F), ModelTransform.origin(0.0F, -7.0F, 0.0F));
+        core.addChild("left_arm", ModelPartBuilder.create()
+                .uv(44, 0).cuboid(-1.0F, 0.0F, -1.0F, 2.0F, 14.0F, 2.0F), ModelTransform.of(5.0F, -6.0F, 0.0F, 0.18F, 0.0F, -0.28F));
+        core.addChild("right_arm", ModelPartBuilder.create()
+                .uv(44, 0).cuboid(-1.0F, 0.0F, -1.0F, 2.0F, 14.0F, 2.0F), ModelTransform.of(-5.0F, -6.0F, 0.0F, 0.18F, 0.0F, 0.28F));
+        core.addChild("lower_veil", ModelPartBuilder.create()
+                .uv(36, 20).cuboid(-5.0F, 0.0F, -2.5F, 10.0F, 8.0F, 5.0F), ModelTransform.of(0.0F, 4.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+        return TexturedModelData.of(modelData, 64, 64);
+    }
+
+    @Override
+    public void setAngles(LivingEntityRenderState state) {
+        this.resetTransforms();
+        float sway = MathHelper.cos(state.age * 0.08F) * 0.08F;
+        this.core.originY = 8.0F + (MathHelper.cos(state.age * 0.12F) * 1.2F);
+        this.head.yaw = state.relativeHeadYaw * 0.017453292F * 0.75F;
+        this.head.pitch = state.pitch * 0.017453292F * 0.45F;
+        this.leftArm.pitch = -0.15F + sway;
+        this.rightArm.pitch = -0.15F - sway;
+        this.leftArm.roll = -0.28F - sway;
+        this.rightArm.roll = 0.28F + sway;
+        this.lowerVeil.yaw = sway * 1.6F;
+    }
+}

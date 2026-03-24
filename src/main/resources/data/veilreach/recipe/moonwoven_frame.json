@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PLP",
+    "L L",
+    "PLP"
+  ],
+  "key": {
+    "P": "veilreach:gloamwood_planks",
+    "L": "veilreach:lunar_fiber"
+  },
+  "result": {
+    "id": "veilreach:moonwoven_frame",
+    "count": 4
+  }
+}

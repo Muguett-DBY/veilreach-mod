@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MM",
+    "MS",
+    " S"
+  ],
+  "key": {
+    "M": "veilreach:mirror_ingot",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "veilreach:mirror_axe",
+    "count": 1
+  }
+}
