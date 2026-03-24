@@ -35,7 +35,7 @@ public class HushPortalBlock extends Block {
         if (player.hasPortalCooldown() || player.isSpectator()) {
             return;
         }
-        world.getServer().execute(() -> HushPortalManager.teleport(player, pos));
+        HushPortalManager.teleport(player, pos);
     }
 
     @Override

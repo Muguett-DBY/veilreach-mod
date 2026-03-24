@@ -8,8 +8,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 
 import java.util.Set;
@@ -64,6 +64,9 @@ public final class HushPortalManager {
 
         for (int x = preferred.getX() - PORTAL_SEARCH_RADIUS; x <= preferred.getX() + PORTAL_SEARCH_RADIUS; x++) {
             for (int z = preferred.getZ() - PORTAL_SEARCH_RADIUS; z <= preferred.getZ() + PORTAL_SEARCH_RADIUS; z++) {
+                if (!world.isChunkLoaded(ChunkPos.toLong(x >> 4, z >> 4))) {
+                    continue;
+                }
                 for (int y = world.getBottomY(); y <= world.getTopYInclusive(); y++) {
                     mutable.set(x, y, z);
                     if (!world.getBlockState(mutable).isOf(VeilreachBlocks.HUSH_PORTAL)) {

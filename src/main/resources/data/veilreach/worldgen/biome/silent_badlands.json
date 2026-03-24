@@ -45,7 +45,7 @@
     }
   },
   "features": [
-    [], [], [], [], [], [], [], [], ["veilreach:veilstone_pile"], ["veilreach:watcher_obelisk", "veilreach:silent_throne", "veilreach:echo_monolith"], [], []
+    [], [], [], [], [], [], [], [], ["veilreach:veilstone_pile"], ["veilreach:echo_monolith", "veilreach:watcher_obelisk", "veilreach:silent_throne"], [], []
   ],
   "spawn_costs": {},
   "spawners": {

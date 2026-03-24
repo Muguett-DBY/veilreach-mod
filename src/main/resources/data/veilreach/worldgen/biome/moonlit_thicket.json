@@ -45,7 +45,7 @@
     }
   },
   "features": [
-    [], [], [], [], [], [], [], [], ["veilreach:moonblossom_patch"], ["veilreach:moon_shrine", "veilreach:fallen_gateway", "veilreach:moonfall_cathedral", "veilreach:shimmerleaf_grove"], [], []
+    [], [], [], [], [], [], [], [], ["veilreach:moonblossom_patch"], ["veilreach:moon_shrine", "veilreach:shimmerleaf_grove", "veilreach:fallen_gateway", "veilreach:moonfall_cathedral"], [], []
   ],
   "spawn_costs": {},
   "spawners": {
