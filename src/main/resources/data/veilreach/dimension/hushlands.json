@@ -5,7 +5,7 @@
     "settings": "minecraft:overworld",
     "biome_source": {
       "type": "minecraft:checkerboard",
-      "scale": 2,
+      "scale": 5,
       "biomes": [
         "veilreach:hush_grove",
         "veilreach:gloam_forest",
