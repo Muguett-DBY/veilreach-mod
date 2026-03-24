@@ -203,16 +203,25 @@ function Normalize-TextureForPath([System.Drawing.Bitmap]$bmp, [string]$path) {
         $edgeBoost = if ($isItem) { 20 } else { 14 }
         Add-EdgeHighlights $normalized $edgeBoost
     } elseif ($path -like "*\textures\entity\*") {
-        if ($bmp.Width -lt $entitySheetSize -or $bmp.Height -lt $entitySheetSize) {
-            $canvas = [System.Drawing.Bitmap]::new($entitySheetSize, $entitySheetSize)
-            $graphics = [System.Drawing.Graphics]::FromImage($canvas)
-            $graphics.Clear([System.Drawing.Color]::FromArgb(0, 0, 0, 0))
-            $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
-            $graphics.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::Half
-            $graphics.DrawImage($bmp, 0, 0, $bmp.Width, $bmp.Height)
-            $graphics.Dispose()
+        $entityTargetWidth = $bmp.Width
+        $entityTargetHeight = $bmp.Height
+        $fileName = [System.IO.Path]::GetFileName($path)
+        switch ($fileName) {
+            "mirror_stag.png" { $entityTargetWidth = 96; $entityTargetHeight = 96; break }
+            "hushling.png" { $entityTargetWidth = 96; $entityTargetHeight = 96; break }
+            "veilbound_watcher.png" { $entityTargetWidth = 96; $entityTargetHeight = 96; break }
+            "moonfallen_knight.png" { $entityTargetWidth = 128; $entityTargetHeight = 96; break }
+            "lanternkeeper.png" { $entityTargetWidth = 128; $entityTargetHeight = 96; break }
+            "warden_of_silence.png" { $entityTargetWidth = 128; $entityTargetHeight = 96; break }
+            "hush_sovereign.png" { $entityTargetWidth = 128; $entityTargetHeight = 128; break }
+            default {
+                $entityTargetWidth = $entitySheetSize
+                $entityTargetHeight = $entitySheetSize
+            }
+        }
+        if ($bmp.Width -ne $entityTargetWidth -or $bmp.Height -ne $entityTargetHeight) {
+            $normalized = Resize-Nearest $bmp $entityTargetWidth $entityTargetHeight
             $bmp.Dispose()
-            $normalized = $canvas
         }
         Add-HiResSurfaceDetails $normalized ([Math]::Abs($path.GetHashCode()) % 1000)
     }
@@ -228,6 +237,22 @@ function Normalize-ExistingTextures([string]$directory) {
         $normalized.Dispose()
         Move-Item -Force $tempPath $_.FullName
     }
+}
+
+function Resize-TextureExact([string]$path, [int]$width, [int]$height) {
+    if (-not (Test-Path $path)) {
+        return
+    }
+    $source = [System.Drawing.Bitmap]::new($path)
+    $resized = Resize-Nearest $source $width $height
+    $source.Dispose()
+    $tempPath = "$path.tmp"
+    if (Test-Path $tempPath) {
+        Remove-Item $tempPath -Force
+    }
+    $resized.Save($tempPath, [System.Drawing.Imaging.ImageFormat]::Png)
+    $resized.Dispose()
+    Move-Item -Force $tempPath $path
 }
 
 function Save-Png([System.Drawing.Bitmap]$bmp, [string]$path) {
@@ -1271,6 +1296,13 @@ $warden = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/ske
 Recolor-Entity $warden (Color-Hex "#0a0e12") (Color-Hex "#4c5965") (Color-Hex "#d8e7ef") (Color-Hex "#b4edf0")
 Paint-WardenDetails $warden
 Save-Png $warden (Join-Path $entityDir "warden_of_silence.png")
+Resize-TextureExact (Join-Path $entityDir "mirror_stag.png") 96 96
+Resize-TextureExact (Join-Path $entityDir "hushling.png") 96 96
+Resize-TextureExact (Join-Path $entityDir "veilbound_watcher.png") 96 96
+Resize-TextureExact (Join-Path $entityDir "moonfallen_knight.png") 128 96
+Resize-TextureExact (Join-Path $entityDir "lanternkeeper.png") 128 96
+Resize-TextureExact (Join-Path $entityDir "warden_of_silence.png") 128 96
+Resize-TextureExact (Join-Path $entityDir "hush_sovereign.png") 128 128
 
 $humanoidDir = Join-Path $entityDir "equipment\humanoid"
 $leggingsDir = Join-Path $entityDir "equipment\humanoid_leggings"
@@ -1297,4 +1329,3 @@ Save-Png $iconLarge $iconPath
 
 Normalize-ExistingTextures $blockDir
 Normalize-ExistingTextures $itemDir
-Normalize-ExistingTextures $entityDir
