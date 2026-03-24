@@ -30,12 +30,12 @@ public final class HushlandsHudOverlay {
         int height = drawContext.getScaledWindowHeight();
         float pulse = 0.5F + (0.5F * (float) Math.sin((client.player.age + client.getRenderTickCounter().getTickProgress(false)) * 0.045F));
 
-        drawAlphaTexture(drawContext, FOG_STRIP, 0, Math.max(0, height - 42), width, 42, 0.35F + pulse * 0.12F, 256, 64);
-        drawAlphaTexture(drawContext, CORNER_CREST, 10, 10, 32, 32, 0.65F + pulse * 0.15F, 64, 64);
-        drawAlphaTexture(drawContext, HUD_FRAME, (width / 2) - 48, (height / 2) - 48, 96, 96, 0.18F + pulse * 0.08F, 256, 256);
+        drawAlphaTexture(drawContext, FOG_STRIP, 0, Math.max(0, height - 34), width, 34, 0.16F + pulse * 0.06F, 256, 64);
+        drawAlphaTexture(drawContext, CORNER_CREST, 12, 10, 28, 28, 0.30F + pulse * 0.1F, 64, 64);
+        drawAlphaTexture(drawContext, HUD_FRAME, width - 48, 10, 36, 36, 0.14F + pulse * 0.06F, 256, 256);
     }
 
     private static void drawAlphaTexture(DrawContext drawContext, Identifier texture, int x, int y, int width, int height, float alpha, int textureWidth, int textureHeight) {
-        drawContext.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, x, y, width, height, alpha);
+        drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, texture, x, y, 0.0F, 0.0F, width, height, textureWidth, textureHeight);
     }
 }

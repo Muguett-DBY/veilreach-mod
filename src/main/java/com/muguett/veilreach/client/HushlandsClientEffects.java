@@ -15,12 +15,16 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public final class HushlandsClientEffects {
     private static RegistryKey<World> lastWorldKey;
     private static int arrivalBurstTicks;
     private static int ambientPulseTicks;
     private static String lastBiomeId = "";
     private static int biomeTitleCooldown;
+    private static final Set<String> shownBiomeTitles = new HashSet<>();
 
     private HushlandsClientEffects() {
     }
@@ -37,6 +41,7 @@ public final class HushlandsClientEffects {
             ambientPulseTicks = 0;
             lastBiomeId = "";
             biomeTitleCooldown = 0;
+            shownBiomeTitles.clear();
             return;
         }
 
@@ -45,6 +50,7 @@ public final class HushlandsClientEffects {
             if (currentWorldKey.equals(VeilreachDimensions.HUSHLANDS_WORLD)) {
                 arrivalBurstTicks = 40;
                 ambientPulseTicks = 140;
+                shownBiomeTitles.clear();
                 showArrivalTitle(client);
                 playArrivalChime(world, client);
             }
@@ -68,11 +74,11 @@ public final class HushlandsClientEffects {
         if (biomeTitleCooldown > 0) {
             biomeTitleCooldown--;
         }
-        if (!biomeId.equals(lastBiomeId) && biomeTitleCooldown == 0) {
+        if (!biomeId.equals(lastBiomeId) && biomeTitleCooldown == 0 && shownBiomeTitles.add(biomeId)) {
             showBiomeTitle(client, biomeId);
-            biomeTitleCooldown = 120;
-            lastBiomeId = biomeId;
+            biomeTitleCooldown = 200;
         }
+        lastBiomeId = biomeId;
 
         if (arrivalBurstTicks > 0) {
             spawnArrivalBurst(world, client, origin, random, moonlit || rift);
