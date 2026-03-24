@@ -3,12 +3,10 @@ package com.muguett.veilreach.world.gen.feature;
 import com.mojang.serialization.Codec;
 import com.muguett.veilreach.registry.VeilreachBlocks;
 import com.muguett.veilreach.registry.VeilreachEntities;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
@@ -27,369 +25,199 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
             return false;
         }
 
-        BlockState polished = Blocks.POLISHED_DEEPSLATE.getDefaultState();
-        BlockState veilstone = Blocks.CALCITE.getDefaultState();
-        BlockState inlay = VeilreachBlocks.POLISHED_VEILSTONE.getDefaultState();
+        BlockState base = Blocks.POLISHED_DEEPSLATE.getDefaultState();
+        BlockState wall = Blocks.CALCITE.getDefaultState();
         BlockState trim = Blocks.CHISELED_DEEPSLATE.getDefaultState();
+        BlockState inlay = VeilreachBlocks.POLISHED_VEILSTONE.getDefaultState();
         BlockState frame = VeilreachBlocks.MOONWOVEN_FRAME.getDefaultState();
         BlockState lantern = VeilreachBlocks.STARLANTERN.getDefaultState();
-        BlockState glass = Blocks.IRON_BARS.getDefaultState();
-        BlockState chain = Blocks.END_ROD.getDefaultState();
+        BlockState bars = Blocks.IRON_BARS.getDefaultState();
         BlockState cache = VeilreachBlocks.STARLIGHT_CACHE.getDefaultState();
         BlockState altar = VeilreachBlocks.AWAKENED_ALTAR.getDefaultState();
 
-        HushStructureFeatureSupport.clearBox(world, center, 16, 26, 18);
-        HushStructureFeatureSupport.supportFootprint(world, center, -9, 9, -7, 7, -1, polished);
-        HushStructureFeatureSupport.supportFootprint(world, center, -11, 11, 8, 15, -1, polished);
-        HushStructureFeatureSupport.supportFootprint(world, center, -4, 4, -14, -8, -1, polished);
-        HushStructureFeatureSupport.supportFootprint(world, center, -14, -8, 8, 14, -1, polished);
-        HushStructureFeatureSupport.supportFootprint(world, center, 8, 14, 8, 14, -1, polished);
+        HushStructureFeatureSupport.clearBox(world, center, 24, 30, 30);
+        HushStructureFeatureSupport.supportFootprint(world, center, -10, 10, -25, 23, -1, base);
+        HushStructureFeatureSupport.supportFootprint(world, center, -18, 18, -7, 8, -1, base);
+        HushStructureFeatureSupport.supportFootprint(world, center, -20, -12, 12, 22, -1, base);
+        HushStructureFeatureSupport.supportFootprint(world, center, 12, 20, 12, 22, -1, base);
 
-        for (int dx = -9; dx <= 9; dx++) {
-            for (int dz = -7; dz <= 7; dz++) {
-                int ring = Math.max(Math.abs(dx), Math.abs(dz));
-                BlockState underfoot = ring >= 8 ? polished : trim;
-                world.setBlockState(center.add(dx, -1, dz), underfoot, HushStructureFeatureSupport.GEN_FLAGS);
-                if (Math.abs(dx) <= 8 && Math.abs(dz) <= 6) {
-                    BlockState floor = (dx == 0 || dz == 0 || Math.abs(dx) == 3 || Math.abs(dz) == 3) ? inlay : veilstone;
-                    world.setBlockState(center.add(dx, 0, dz), floor, HushStructureFeatureSupport.GEN_FLAGS);
-                }
-            }
-        }
+        buildFrontCourt(world, center, base, trim, frame, lantern);
+        buildMainNave(world, center, base, wall, trim, inlay, frame, lantern, bars);
+        buildTransepts(world, center, base, wall, trim, frame, lantern, bars);
+        buildUpperChoir(world, center, base, inlay, wall, lantern);
+        buildRearApse(world, center, base, wall, trim, frame, lantern, bars, altar);
+        buildTower(world, center.add(-16, 0, 17), base, wall, frame, lantern, bars, false);
+        buildTower(world, center.add(16, 0, 17), base, wall, frame, lantern, bars, true);
+        buildCrypt(world, center, base, wall, trim, lantern, cache);
+        buildReliquaryWing(world, center, base, wall, trim, frame, lantern, true);
+        buildReliquaryWing(world, center, base, wall, trim, frame, lantern, false);
 
-        for (int dy = 1; dy <= 9; dy++) {
-            for (int dx = -8; dx <= 8; dx++) {
-                for (int dz = -6; dz <= 6; dz++) {
-                    if (Math.abs(dx) != 8 && Math.abs(dz) != 6) {
-                        continue;
-                    }
-                    BlockPos pos = center.add(dx, dy, dz);
-                    if ((Math.abs(dx) == 8 && Math.abs(dz) == 6) || dx == -3 || dx == 3) {
-                        world.setBlockState(pos, frame, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else if (dy == 4 || dy == 9) {
-                        world.setBlockState(pos, polished, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else if ((Math.abs(dx) == 8 && dy <= 5) || (Math.abs(dz) == 6 && dy <= 3)) {
-                        world.setBlockState(pos, trim, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else if (Math.abs(dz) == 6 && Math.abs(dx) <= 5 && Math.abs(dx) >= 2 && dy >= 2 && dy <= 6) {
-                        world.setBlockState(pos, glass, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else {
-                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
-                    }
-                }
-            }
-        }
+        HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, 18), Direction.SOUTH, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(-6, 1, 10), Direction.SOUTH, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(6, 1, 10), Direction.SOUTH, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(-13, 1, 0), Direction.EAST, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(13, 1, 0), Direction.WEST, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, -16), Direction.SOUTH, "chests/moonfall_cathedral_vault");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(-16, 10, 17), Direction.SOUTH, "chests/moonfall_cathedral_vault");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(16, 10, 17), Direction.SOUTH, "chests/moonfall_cathedral_vault");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(0, -5, -2), Direction.NORTH, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(-15, 1, -2), Direction.EAST, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(15, 1, -2), Direction.WEST, "chests/moonfall_cathedral");
 
-        for (int dx = -7; dx <= 7; dx++) {
-            for (int dz = -5; dz <= 5; dz++) {
-                if (Math.abs(dx) <= 6 && Math.abs(dz) <= 4) {
-                    BlockState roof = (dx == 0 || dz == 0) ? inlay : polished;
-                    world.setBlockState(center.add(dx, 10, dz), roof, HushStructureFeatureSupport.GEN_FLAGS);
-                }
-            }
-        }
-
-        for (int layer = 0; layer <= 3; layer++) {
-            int radiusX = 8 - layer;
-            int radiusZ = 6 - layer;
-            for (int dx = -radiusX; dx <= radiusX; dx++) {
-                for (int dz = -radiusZ; dz <= radiusZ; dz++) {
-                    if (Math.abs(dx) == radiusX || Math.abs(dz) == radiusZ) {
-                        world.setBlockState(center.add(dx, 11 + layer, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
-                    }
-                }
-            }
-        }
-
-        for (int x = -6; x <= 6; x += 12) {
-            for (int z = -4; z <= 4; z += 8) {
-                for (int dy = 1; dy <= 13; dy++) {
-                    world.setBlockState(center.add(x, dy, z), dy <= 4 ? trim : frame, HushStructureFeatureSupport.GEN_FLAGS);
-                }
-                world.setBlockState(center.add(x, 14, z), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-            }
-        }
-
-        for (int side = -1; side <= 1; side += 2) {
-            for (int z = -4; z <= 4; z += 4) {
-                for (int y = 1; y <= 7; y++) {
-                    world.setBlockState(center.add(side * 9, y, z), trim, HushStructureFeatureSupport.GEN_FLAGS);
-                }
-            }
-        }
-
-        for (int x = -3; x <= 3; x += 3) {
-            world.setBlockState(center.add(x, 8, 0), chain, HushStructureFeatureSupport.GEN_FLAGS);
-            world.setBlockState(center.add(x, 7, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-        }
-
-        carveDoorway(world, center.south(6));
-        carveCrypt(world, center, polished, veilstone, lantern, altar);
-        carveSideChapels(world, center, polished, veilstone, glass, lantern);
-        carveReliquary(world, center, polished, veilstone, lantern);
-        carveHiddenSacristy(world, center, polished, veilstone, lantern, glass);
-        buildFrontApproach(world, center, polished, veilstone, frame, lantern, glass);
-        buildRearApse(world, center, polished, veilstone, frame, lantern, glass);
-        buildCathedralTower(world, center.add(-11, 0, 11), polished, veilstone, frame, lantern, glass);
-        buildCathedralTower(world, center.add(11, 0, 11), polished, veilstone, frame, lantern, glass);
-        openMainFloorArcades(world, center, polished, veilstone, lantern);
-        buildChoirStairs(world, center, polished, veilstone);
-
-        world.setBlockState(center.add(0, 1, -2), cache, HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(center.add(0, 1, 2), cache, HushStructureFeatureSupport.GEN_FLAGS);
-        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-2, 1, 1), VeilreachEntities.MOONFALLEN_KNIGHT);
-        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(2, 1, 1), VeilreachEntities.LANTERNKEEPER);
-        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(0, -4, 2), VeilreachEntities.MOONFALLEN_KNIGHT);
-        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-7, 1, 0), VeilreachEntities.VEILBOUND_WATCHER);
-        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(7, 1, 0), VeilreachEntities.WARDEN_OF_SILENCE);
-        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-11, 1, 11), VeilreachEntities.MOONFALLEN_KNIGHT);
-        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(11, 9, 11), VeilreachEntities.VEILBOUND_WATCHER);
-        HushStructureFeatureSupport.placeLootChest(world, center.add(-5, 1, -4), Direction.SOUTH, "chests/moonfall_cathedral");
-        HushStructureFeatureSupport.placeLootChest(world, center.add(5, 1, -4), Direction.SOUTH, "chests/moonfall_cathedral");
-        HushStructureFeatureSupport.placeLootChest(world, center.add(0, -4, 0), Direction.NORTH, "chests/moonfall_cathedral");
-        HushStructureFeatureSupport.placeLootChest(world, center.add(-7, 1, 4), Direction.WEST, "chests/moonfall_cathedral");
-        HushStructureFeatureSupport.placeLootChest(world, center.add(7, 1, 4), Direction.EAST, "chests/moonfall_cathedral");
-        HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, -11), Direction.SOUTH, "chests/moonfall_cathedral_vault");
-        HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, 13), Direction.NORTH, "chests/moonfall_cathedral");
-        HushStructureFeatureSupport.placeLootChest(world, center.add(-11, 9, 11), Direction.SOUTH, "chests/moonfall_cathedral_vault");
-        HushStructureFeatureSupport.placeLootChest(world, center.add(11, 1, 11), Direction.SOUTH, "chests/moonfall_cathedral");
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-4, 1, 11), VeilreachEntities.MOONFALLEN_KNIGHT);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(4, 1, 11), VeilreachEntities.MOONFALLEN_KNIGHT);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-13, 1, 0), VeilreachEntities.VEILBOUND_WATCHER);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(13, 1, 0), VeilreachEntities.WARDEN_OF_SILENCE);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(0, -5, -2), VeilreachEntities.MOONFALLEN_KNIGHT);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-16, 1, 17), VeilreachEntities.LANTERNKEEPER);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(16, 10, 17), VeilreachEntities.VEILBOUND_WATCHER);
         return true;
     }
 
-    private static void carveDoorway(StructureWorldAccess world, BlockPos doorBase) {
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = 0; dy <= 4; dy++) {
-                world.setBlockState(doorBase.add(dx, dy, 0), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+    private static void buildFrontCourt(StructureWorldAccess world, BlockPos center, BlockState base, BlockState trim, BlockState frame, BlockState lantern) {
+        for (int dz = 13; dz <= 23; dz++) {
+            int halfWidth = dz >= 19 ? 8 : 6;
+            for (int dx = -halfWidth; dx <= halfWidth; dx++) {
+                world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(dx, 0, dz), dx == 0 || Math.abs(dx) == 3 || dz == 18 ? trim : base, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
-    }
-
-    private static void carveCrypt(
-            StructureWorldAccess world,
-            BlockPos center,
-            BlockState polished,
-            BlockState veilstone,
-            BlockState lantern,
-            BlockState altar
-    ) {
-        BlockPos crypt = center.down(4);
-        for (int dx = -4; dx <= 4; dx++) {
-            for (int dz = -4; dz <= 4; dz++) {
-                for (int dy = -1; dy <= 4; dy++) {
-                    BlockPos pos = crypt.add(dx, dy, dz);
-                    if (dy == -1) {
-                        world.setBlockState(pos, polished, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else if (Math.abs(dx) == 4 || Math.abs(dz) == 4 || dy == 4) {
-                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                    }
-                }
-            }
-        }
-
-        for (int step = 0; step <= 4; step++) {
-            BlockPos tread = center.add(0, -1 - step, -2 - step);
-            for (int width = -1; width <= 1; width++) {
-                world.setBlockState(tread.add(width, 0, 0), polished, HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(tread.add(width, 1, 0), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(tread.add(width, 2, 0), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-            }
-        }
-
-        world.setBlockState(crypt, altar, HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(crypt.north(2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(crypt.south(2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-    }
-
-    private static void carveSideChapels(StructureWorldAccess world, BlockPos center, BlockState polished, BlockState veilstone, BlockState glass, BlockState lantern) {
         for (int side = -1; side <= 1; side += 2) {
-            BlockPos chapel = center.add(side * 10, 0, 0);
-            for (int dx = -2; dx <= 2; dx++) {
-                for (int dz = -3; dz <= 3; dz++) {
-                    for (int dy = 0; dy <= 6; dy++) {
-                        BlockPos pos = chapel.add(dx, dy, dz);
-                        if (Math.abs(dx) == 2 || Math.abs(dz) == 3 || dy == 6) {
-                            world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
+            for (int y = 1; y <= 8; y++) {
+                world.setBlockState(center.add(side * 8, y, 22), frame, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(side * 6, y, 14), frame, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+            world.setBlockState(center.add(side * 8, 9, 22), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        }
+        for (int step = 0; step <= 7; step++) {
+            for (int dx = -4; dx <= 4; dx++) {
+                world.setBlockState(center.add(dx, Math.max(-1, 3 - (step / 2)), 24 + step), base, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(dx, Math.max(0, 4 - (step / 2)), 24 + step), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+    }
+
+    private static void buildMainNave(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState inlay, BlockState frame, BlockState lantern, BlockState bars) {
+        for (int dz = -10; dz <= 16; dz++) {
+            for (int dx = -9; dx <= 9; dx++) {
+                world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(dx, 0, dz), dx == 0 || Math.abs(dx) == 4 || dz == 7 || dz == -6 ? inlay : wall, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+        for (int dy = 1; dy <= 12; dy++) {
+            for (int dx = -9; dx <= 9; dx++) {
+                for (int dz = -10; dz <= 16; dz++) {
+                    boolean outer = Math.abs(dx) == 9 || dz == -10 || dz == 16;
+                    boolean aisle = Math.abs(dx) == 4 || Math.abs(dx) == 5;
+                    BlockPos pos = center.add(dx, dy, dz);
+                    if (outer) {
+                        if (dz == 16 && Math.abs(dx) <= 2 && dy <= 5) {
+                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                        } else if ((Math.abs(dx) == 9 && dy >= 3 && dy <= 8 && Math.floorMod(dz + 10, 6) <= 1) || (dz == -10 && dy >= 3 && dy <= 7 && Math.abs(dx) <= 2)) {
+                            world.setBlockState(pos, bars, HushStructureFeatureSupport.GEN_FLAGS);
+                        } else {
+                            world.setBlockState(pos, dy >= 9 && Math.abs(dx) >= 7 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                        }
+                    } else if (aisle && dy <= 8 && dz >= -8 && dz <= 13) {
+                        world.setBlockState(pos, dy <= 5 && dz != 0 && dz != 7 && dz != -6 ? wall : Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
+            }
+        }
+        for (int dx = -8; dx <= 8; dx++) {
+            for (int dz = -9; dz <= 15; dz++) {
+                world.setBlockState(center.add(dx, 13, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+        for (int side = -1; side <= 1; side += 2) {
+            for (int z = -6; z <= 12; z += 6) {
+                world.setBlockState(center.add(side * 7, 3, z), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+    }
+
+    private static void buildTransepts(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState frame, BlockState lantern, BlockState bars) {
+        for (int side = -1; side <= 1; side += 2) {
+            BlockPos wing = center.add(side * 13, 0, 0);
+            for (int dx = -4; dx <= 4; dx++) {
+                for (int dz = -6; dz <= 6; dz++) {
+                    world.setBlockState(wing.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                    world.setBlockState(wing.add(dx, 0, dz), Math.abs(dz) == 5 ? trim : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                }
+            }
+            for (int dy = 1; dy <= 9; dy++) {
+                for (int dx = -4; dx <= 4; dx++) {
+                    for (int dz = -6; dz <= 6; dz++) {
+                        BlockPos pos = wing.add(dx, dy, dz);
+                        if (Math.abs(dx) == 4 || Math.abs(dz) == 6) {
+                            if (Math.abs(dz) <= 1 && dx == -side * 4 && dy <= 4) {
+                                world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                            } else if ((Math.abs(dz) == 6 && dy >= 3 && dy <= 6 && Math.abs(dx) <= 1) || (Math.abs(dx) == 4 && dy >= 3 && dy <= 6 && Math.abs(dz) <= 1)) {
+                                world.setBlockState(pos, bars, HushStructureFeatureSupport.GEN_FLAGS);
+                            } else {
+                                world.setBlockState(pos, dy >= 7 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                            }
                         } else {
                             world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                         }
                     }
-                    world.setBlockState(chapel.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
-            world.setBlockState(chapel.add(0, 2, -3), glass, HushStructureFeatureSupport.GEN_FLAGS);
-            world.setBlockState(chapel.add(0, 3, -3), glass, HushStructureFeatureSupport.GEN_FLAGS);
-            world.setBlockState(chapel.add(0, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-            for (int dy = 1; dy <= 4; dy++) {
-                world.setBlockState(chapel.add(side * -2, dy, 0), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(chapel.add(side * -2, dy, 1), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-            }
-        }
-    }
-
-    private static void carveReliquary(StructureWorldAccess world, BlockPos center, BlockState polished, BlockState veilstone, BlockState lantern) {
-        BlockPos reliquary = center.add(0, 0, -8);
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dz = -2; dz <= 2; dz++) {
-                for (int dy = 0; dy <= 4; dy++) {
-                    BlockPos pos = reliquary.add(dx, dy, dz);
-                    if (Math.abs(dx) == 2 || Math.abs(dz) == 2 || dy == 4) {
-                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                    }
-                }
-                world.setBlockState(reliquary.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
-            }
-        }
-        world.setBlockState(reliquary.add(0, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-        HushStructureFeatureSupport.placeDoor(world, reliquary.add(0, 0, 2), Direction.SOUTH);
-    }
-
-    private static void carveHiddenSacristy(StructureWorldAccess world, BlockPos center, BlockState polished, BlockState veilstone, BlockState lantern, BlockState glass) {
-        BlockPos sacristy = center.add(0, 1, -11);
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dz = -2; dz <= 2; dz++) {
-                for (int dy = 0; dy <= 4; dy++) {
-                    BlockPos pos = sacristy.add(dx, dy, dz);
-                    if (Math.abs(dx) == 2 || Math.abs(dz) == 2 || dy == 4) {
-                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                    }
-                }
-                world.setBlockState(sacristy.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
-            }
-        }
-        world.setBlockState(sacristy.add(0, 1, -2), glass, HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(sacristy.add(0, 2, -2), glass, HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(sacristy.add(0, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-        HushStructureFeatureSupport.placeDoor(world, sacristy.add(0, 0, 2), Direction.SOUTH);
-    }
-
-    private static void buildFrontApproach(
-            StructureWorldAccess world,
-            BlockPos center,
-            BlockState polished,
-            BlockState veilstone,
-            BlockState frame,
-            BlockState lantern,
-            BlockState glass
-    ) {
-        BlockPos nave = center.add(0, 0, 11);
-        for (int dx = -6; dx <= 6; dx++) {
-            for (int dz = -3; dz <= 4; dz++) {
-                world.setBlockState(nave.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(nave.add(dx, 0, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
-            }
-        }
-
-        for (int dy = 1; dy <= 8; dy++) {
-            for (int dx = -6; dx <= 6; dx++) {
-                for (int dz = -3; dz <= 4; dz++) {
-                    BlockPos pos = nave.add(dx, dy, dz);
-                    if (Math.abs(dx) == 6 && Math.abs(dz) == 4) {
-                        world.setBlockState(pos, frame, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else if (Math.abs(dx) == 6 || Math.abs(dz) == 4) {
-                        if (dz == 4 && Math.abs(dx) <= 1 && dy <= 4) {
-                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                        } else if ((Math.abs(dx) == 4 && dz == -4) || (Math.abs(dx) == 6 && dz == 0 && dy >= 3 && dy <= 6)) {
-                            world.setBlockState(pos, glass, HushStructureFeatureSupport.GEN_FLAGS);
-                        } else {
-                            world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
-                        }
-                    } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                    }
-                }
-            }
-        }
-
-        for (int dx = -5; dx <= 5; dx++) {
-            for (int dz = -3; dz <= 3; dz++) {
-                world.setBlockState(nave.add(dx, 9, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
-            }
-        }
-
-        for (int step = 0; step <= 6; step++) {
-            int z = 16 + step;
-            int y = -1 + Math.max(0, 3 - (step / 2));
             for (int dx = -3; dx <= 3; dx++) {
-                world.setBlockState(center.add(dx, y, z), polished, HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(center.add(dx, y + 1, z), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(center.add(dx, y + 2, z), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                for (int dz = -5; dz <= 5; dz++) {
+                    world.setBlockState(wing.add(dx, 10, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                }
             }
+            world.setBlockState(wing.add(0, 2, 4), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(wing.add(0, 2, -4), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         }
-
-        for (int dz = 15; dz <= 21; dz++) {
-            world.setBlockState(center.add(-4, 0, dz), frame, HushStructureFeatureSupport.GEN_FLAGS);
-            world.setBlockState(center.add(4, 0, dz), frame, HushStructureFeatureSupport.GEN_FLAGS);
-        }
-        world.setBlockState(nave.add(-3, 2, 2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(nave.add(3, 2, 2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
-    private static void buildRearApse(
-            StructureWorldAccess world,
-            BlockPos center,
-            BlockState polished,
-            BlockState veilstone,
-            BlockState frame,
-            BlockState lantern,
-            BlockState glass
-    ) {
-        BlockPos apse = center.add(0, 0, -11);
-        for (int dx = -3; dx <= 3; dx++) {
-            for (int dz = -3; dz <= 3; dz++) {
-                if (Math.abs(dx) + Math.abs(dz) > 4) {
+    private static void buildUpperChoir(StructureWorldAccess world, BlockPos center, BlockState base, BlockState inlay, BlockState wall, BlockState lantern) {
+        for (int side = -1; side <= 1; side += 2) {
+            for (int step = 0; step <= 6; step++) {
+                BlockPos tread = center.add(side * (8 - step), step, 11 - step);
+                for (int width = 0; width <= 1; width++) {
+                    world.setBlockState(tread.add(0, 0, width), base, HushStructureFeatureSupport.GEN_FLAGS);
+                    world.setBlockState(tread.add(0, 1, width), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                }
+            }
+            for (int dx = 0; dx <= 4; dx++) {
+                for (int dz = -1; dz <= 4; dz++) {
+                    BlockPos platform = center.add(side * (5 + dx), 7, dz);
+                    world.setBlockState(platform, dx == 4 || dz == -1 || dz == 4 ? base : inlay, HushStructureFeatureSupport.GEN_FLAGS);
+                    world.setBlockState(platform.up(), dx == 4 ? wall : Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                }
+            }
+            world.setBlockState(center.add(side * 7, 8, 1), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        }
+    }
+
+    private static void buildRearApse(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState frame, BlockState lantern, BlockState bars, BlockState altar) {
+        BlockPos apse = center.add(0, 0, -16);
+        for (int dx = -5; dx <= 5; dx++) {
+            for (int dz = -4; dz <= 4; dz++) {
+                if (Math.abs(dx) + Math.abs(dz) > 7) {
                     continue;
                 }
-                world.setBlockState(apse.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(apse.add(dx, 0, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(apse.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(apse.add(dx, 0, dz), Math.abs(dx) <= 1 ? trim : wall, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
-
-        for (int dy = 1; dy <= 7; dy++) {
-            for (int dx = -3; dx <= 3; dx++) {
-                for (int dz = -3; dz <= 3; dz++) {
-                    if (Math.abs(dx) + Math.abs(dz) > 4) {
+        for (int dy = 1; dy <= 9; dy++) {
+            for (int dx = -5; dx <= 5; dx++) {
+                for (int dz = -4; dz <= 4; dz++) {
+                    if (Math.abs(dx) + Math.abs(dz) > 7) {
                         continue;
                     }
                     BlockPos pos = apse.add(dx, dy, dz);
-                    if (Math.abs(dx) + Math.abs(dz) == 4) {
-                        world.setBlockState(pos, dy >= 4 ? frame : veilstone, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else if ((dx == 0 && dz == -3 && dy >= 2 && dy <= 5) || (Math.abs(dx) == 3 && dz == 0 && dy >= 3 && dy <= 5)) {
-                        world.setBlockState(pos, glass, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                    }
-                }
-            }
-        }
-        world.setBlockState(apse.add(0, 2, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-    }
-
-    private static void buildCathedralTower(
-            StructureWorldAccess world,
-            BlockPos center,
-            BlockState polished,
-            BlockState veilstone,
-            BlockState frame,
-            BlockState lantern,
-            BlockState glass
-    ) {
-        for (int dx = -3; dx <= 3; dx++) {
-            for (int dz = -3; dz <= 3; dz++) {
-                world.setBlockState(center.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
-                for (int dy = 0; dy <= 15; dy++) {
-                    BlockPos pos = center.add(dx, dy, dz);
-                    if (Math.abs(dx) == 3 && Math.abs(dz) == 3) {
-                        world.setBlockState(pos, frame, HushStructureFeatureSupport.GEN_FLAGS);
-                    } else if (Math.abs(dx) == 3 || Math.abs(dz) == 3) {
-                        if (dy >= 5 && dy <= 9 && ((dx == 0 && Math.abs(dz) == 3) || (dz == 0 && Math.abs(dx) == 3))) {
-                            world.setBlockState(pos, glass, HushStructureFeatureSupport.GEN_FLAGS);
+                    if (Math.abs(dx) + Math.abs(dz) >= 6) {
+                        if (dz == -4 && Math.abs(dx) <= 1 && dy >= 3 && dy <= 6) {
+                            world.setBlockState(pos, bars, HushStructureFeatureSupport.GEN_FLAGS);
                         } else {
-                            world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
+                            world.setBlockState(pos, dy >= 7 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
                         }
                     } else {
                         world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
@@ -397,83 +225,107 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
                 }
             }
         }
+        world.setBlockState(apse.add(0, 1, 0), altar, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(apse.add(-2, 2, 1), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(apse.add(2, 2, 1), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+    }
 
-        for (int layer = 0; layer <= 3; layer++) {
-            int radius = 4 - layer;
-            for (int dx = -radius; dx <= radius; dx++) {
-                for (int dz = -radius; dz <= radius; dz++) {
-                    if (Math.abs(dx) == radius || Math.abs(dz) == radius) {
-                        world.setBlockState(center.add(dx, 16 + layer, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
+    private static void buildTower(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState frame, BlockState lantern, BlockState bars, boolean clockwise) {
+        for (int dx = -4; dx <= 4; dx++) {
+            for (int dz = -4; dz <= 4; dz++) {
+                world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                for (int dy = 0; dy <= 17; dy++) {
+                    BlockPos pos = center.add(dx, dy, dz);
+                    if (Math.abs(dx) == 4 || Math.abs(dz) == 4) {
+                        if ((Math.abs(dx) == 4 && dy >= 4 && dy <= 12 && dz == 0) || (Math.abs(dz) == 4 && dy >= 7 && dy <= 11 && dx == 0)) {
+                            world.setBlockState(pos, bars, HushStructureFeatureSupport.GEN_FLAGS);
+                        } else {
+                            world.setBlockState(pos, dy >= 13 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                        }
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                     }
                 }
             }
         }
-        world.setBlockState(center.add(0, 20, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-    }
-
-    private static void openMainFloorArcades(
-            StructureWorldAccess world,
-            BlockPos center,
-            BlockState polished,
-            BlockState veilstone,
-            BlockState lantern
-    ) {
-        for (int dy = 1; dy <= 4; dy++) {
-            for (int dz = -1; dz <= 1; dz++) {
-                world.setBlockState(center.add(-8, dy, dz), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(center.add(8, dy, dz), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        for (int step = 0; step <= 11; step++) {
+            int x = clockwise ? 3 - Math.floorMod(step, 4) : -3 + Math.floorMod(step, 4);
+            int z = switch (Math.floorDiv(step, 3)) {
+                case 0 -> 2;
+                case 1 -> 0;
+                case 2 -> -2;
+                default -> -3;
+            };
+            BlockPos tread = center.add(x, step, z);
+            world.setBlockState(tread, base, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(tread.up(), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        }
+        for (int layer = 0; layer <= 3; layer++) {
+            int radius = 5 - layer;
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    if (Math.abs(dx) == radius || Math.abs(dz) == radius) {
+                        world.setBlockState(center.add(dx, 18 + layer, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
             }
         }
+        world.setBlockState(center.add(0, 22, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+    }
 
+    private static void buildCrypt(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState lantern, BlockState cache) {
+        BlockPos crypt = center.down(6);
         for (int dx = -6; dx <= 6; dx++) {
-            if (dx >= -1 && dx <= 1) {
-                continue;
+            for (int dz = -8; dz <= 3; dz++) {
+                world.setBlockState(crypt.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                for (int dy = 0; dy <= 5; dy++) {
+                    BlockPos pos = crypt.add(dx, dy, dz);
+                    if (Math.abs(dx) == 6 || dz == -8 || dz == 3 || dy == 5) {
+                        world.setBlockState(pos, wall, HushStructureFeatureSupport.GEN_FLAGS);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
             }
-            for (int dy = 1; dy <= 4; dy++) {
-                world.setBlockState(center.add(dx, dy, 3), veilstone, HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(center.add(dx, dy, -3), veilstone, HushStructureFeatureSupport.GEN_FLAGS);
-            }
-            world.setBlockState(center.add(dx, 0, 3), polished, HushStructureFeatureSupport.GEN_FLAGS);
-            world.setBlockState(center.add(dx, 0, -3), polished, HushStructureFeatureSupport.GEN_FLAGS);
         }
-
-        world.setBlockState(center.add(-5, 1, 2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(center.add(5, 1, 2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        for (int step = 0; step <= 6; step++) {
+            BlockPos tread = center.add(0, -1 - step, -2 + step);
+            for (int width = -1; width <= 1; width++) {
+                world.setBlockState(tread.add(width, 0, 0), base, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(tread.add(width, 1, 0), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+        for (int side = -1; side <= 1; side += 2) {
+            for (int dz = -6; dz <= 1; dz++) {
+                world.setBlockState(crypt.add(side * 3, 0, dz), trim, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+            world.setBlockState(crypt.add(side * 4, 1, -6), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(crypt.add(side * 4, 1, 0), cache, HushStructureFeatureSupport.GEN_FLAGS);
+        }
     }
 
-    private static void buildChoirStairs(
-            StructureWorldAccess world,
-            BlockPos center,
-            BlockState polished,
-            BlockState veilstone
-    ) {
-        for (int step = 0; step <= 4; step++) {
-            for (int width = 0; width <= 1; width++) {
-                BlockPos leftStep = center.add(-6 + step, step, 4 - step + width);
-                BlockPos rightStep = center.add(6 - step, step, 4 - step + width);
-                world.setBlockState(leftStep, polished, HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(rightStep, polished, HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(leftStep.up(), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(leftStep.up(2), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(rightStep.up(), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(rightStep.up(2), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+    private static void buildReliquaryWing(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState frame, BlockState lantern, boolean west) {
+        int side = west ? -1 : 1;
+        BlockPos wing = center.add(side * 16, 0, -2);
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dz = -4; dz <= 4; dz++) {
+                world.setBlockState(wing.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                for (int dy = 0; dy <= 6; dy++) {
+                    BlockPos pos = wing.add(dx, dy, dz);
+                    if (Math.abs(dx) == 3 || Math.abs(dz) == 4 || dy == 6) {
+                        world.setBlockState(pos, dy >= 5 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
             }
         }
-
-        for (int dx = -6; dx <= -3; dx++) {
-            for (int dz = -1; dz <= 2; dz++) {
-                world.setBlockState(center.add(dx, 5, dz), dx == -6 || dz == -1 || dz == 2 ? polished : veilstone, HushStructureFeatureSupport.GEN_FLAGS);
-            }
-        }
-        for (int dx = 3; dx <= 6; dx++) {
-            for (int dz = -1; dz <= 2; dz++) {
-                world.setBlockState(center.add(dx, 5, dz), dx == 6 || dz == -1 || dz == 2 ? polished : veilstone, HushStructureFeatureSupport.GEN_FLAGS);
-            }
-        }
+        HushStructureFeatureSupport.placeDoor(world, wing.add(-side * 3, 0, 0), west ? Direction.EAST : Direction.WEST);
+        world.setBlockState(wing.add(0, 1, -2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(wing.add(0, 0, 2), trim, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {
-        return HushStructureFeatureSupport.hasStableGround(world, center, 12, 14, 4, 24, 16);
+        return HushStructureFeatureSupport.hasStableGround(world, center, 20, 24, 4, 36, 18);
     }
 }
-
