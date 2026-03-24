@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "M M",
+    "M M"
+  ],
+  "key": {
+    "M": "veilreach:mirror_ingot"
+  },
+  "result": {
+    "id": "veilreach:mirror_boots",
+    "count": 1
+  }
+}

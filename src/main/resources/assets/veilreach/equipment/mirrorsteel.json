@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "veilreach:mirrorsteel"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "veilreach:mirrorsteel"
+      }
+    ]
+  }
+}

@@ -5,6 +5,7 @@ import com.muguett.veilreach.item.AstralSigilItem;
 import com.muguett.veilreach.item.HushWardCharmItem;
 import com.muguett.veilreach.item.SovereignWardItem;
 import net.minecraft.component.type.FoodComponent;
+import net.minecraft.item.equipment.EquipmentType;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ShovelItem;
@@ -27,6 +28,10 @@ public final class VeilreachItems {
     public static final Item MIRROR_PICKAXE = register("mirror_pickaxe", settings -> new Item(VeilreachToolMaterials.MIRRORSTEEL.applyToolSettings(settings, net.minecraft.registry.tag.BlockTags.PICKAXE_MINEABLE, 1.0F, -2.8F, 0.0F)));
     public static final Item MIRROR_AXE = register("mirror_axe", settings -> new AxeItem(VeilreachToolMaterials.MIRRORSTEEL, 5.5F, -3.0F, settings));
     public static final Item MIRROR_SHOVEL = register("mirror_shovel", settings -> new ShovelItem(VeilreachToolMaterials.MIRRORSTEEL, 1.5F, -3.0F, settings));
+    public static final Item MIRROR_HELMET = register("mirror_helmet", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.HELMET).maxDamage(EquipmentType.HELMET.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
+    public static final Item MIRROR_CHESTPLATE = register("mirror_chestplate", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.CHESTPLATE).maxDamage(EquipmentType.CHESTPLATE.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
+    public static final Item MIRROR_LEGGINGS = register("mirror_leggings", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.LEGGINGS).maxDamage(EquipmentType.LEGGINGS.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
+    public static final Item MIRROR_BOOTS = register("mirror_boots", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.BOOTS).maxDamage(EquipmentType.BOOTS.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
     public static final Item SOVEREIGN_GLAIVE = register("sovereign_glaive", settings -> new Item(VeilreachToolMaterials.SOVEREIGN.applySwordSettings(settings, 5.0F, -2.7F)));
     public static final Item STARFRAGMENT = register("starfragment", Item::new);
     public static final Item SOVEREIGN_CORE = register("sovereign_core", Item::new);
