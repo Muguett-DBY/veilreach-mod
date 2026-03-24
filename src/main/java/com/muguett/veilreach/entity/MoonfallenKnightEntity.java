@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.WitherSkeletonEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -50,6 +51,9 @@ public class MoonfallenKnightEntity extends WitherSkeletonEntity {
             if (this.getRandom().nextFloat() < 0.3F) {
                 this.dropStack(serverWorld, new ItemStack(VeilreachItems.MIRROR_INGOT, 1 + this.getRandom().nextInt(2)));
             }
+            serverWorld.spawnParticles(ParticleTypes.END_ROD, this.getX(), this.getBodyY(0.85D), this.getZ(), 18, 0.35D, 0.45D, 0.35D, 0.03D);
+            serverWorld.spawnParticles(ParticleTypes.SOUL, this.getX(), this.getBodyY(0.8D), this.getZ(), 12, 0.25D, 0.35D, 0.25D, 0.02D);
+            serverWorld.playSound(null, this.getBlockPos(), SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, this.getSoundCategory(), 0.8F, 0.7F);
         }
         super.onDeath(damageSource);
     }

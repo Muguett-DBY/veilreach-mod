@@ -21,6 +21,11 @@ public class AstralSigilItem extends Item {
     }
 
     @Override
+    public boolean hasGlint(ItemStack stack) {
+        return true;
+    }
+
+    @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         World world = context.getWorld();
         if (!(world instanceof ServerWorld serverWorld)) {

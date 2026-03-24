@@ -24,6 +24,11 @@ public class SovereignWardItem extends Item {
     }
 
     @Override
+    public boolean hasGlint(ItemStack stack) {
+        return true;
+    }
+
+    @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         if (!(world instanceof ServerWorld serverWorld)) {

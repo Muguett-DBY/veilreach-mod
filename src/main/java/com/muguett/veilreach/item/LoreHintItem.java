@@ -10,10 +10,21 @@ import java.util.function.Consumer;
 
 public class LoreHintItem extends Item {
     private final String[] tooltipKeys;
+    private final boolean hasGlint;
 
     public LoreHintItem(Settings settings, String... tooltipKeys) {
+        this(settings, false, tooltipKeys);
+    }
+
+    public LoreHintItem(Settings settings, boolean hasGlint, String... tooltipKeys) {
         super(settings);
+        this.hasGlint = hasGlint;
         this.tooltipKeys = tooltipKeys;
+    }
+
+    @Override
+    public boolean hasGlint(ItemStack stack) {
+        return this.hasGlint || super.hasGlint(stack);
     }
 
     @Override

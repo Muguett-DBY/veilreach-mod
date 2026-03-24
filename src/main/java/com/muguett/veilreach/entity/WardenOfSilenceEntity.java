@@ -8,6 +8,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.WitherSkeletonEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -44,6 +45,9 @@ public class WardenOfSilenceEntity extends WitherSkeletonEntity {
     public void onDeath(DamageSource damageSource) {
         if (this.getEntityWorld() instanceof ServerWorld serverWorld && !this.isRemoved()) {
             this.dropStack(serverWorld, new ItemStack(VeilreachItems.WARDEN_SIGIL));
+            serverWorld.spawnParticles(ParticleTypes.REVERSE_PORTAL, this.getX(), this.getBodyY(0.85D), this.getZ(), 36, 0.5D, 0.8D, 0.5D, 0.06D);
+            serverWorld.spawnParticles(ParticleTypes.END_ROD, this.getX(), this.getBodyY(1.1D), this.getZ(), 20, 0.35D, 0.65D, 0.35D, 0.04D);
+            serverWorld.playSound(null, this.getBlockPos(), SoundEvents.BLOCK_BEACON_DEACTIVATE, this.getSoundCategory(), 0.95F, 0.65F);
         }
         super.onDeath(damageSource);
     }

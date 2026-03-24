@@ -39,11 +39,11 @@ public final class VeilreachItems {
     public static final Item SOVEREIGN_LEGGINGS = register("sovereign_leggings", settings -> new Item(settings.armor(VeilreachArmorMaterials.SOVEREIGN, EquipmentType.LEGGINGS).maxDamage(EquipmentType.LEGGINGS.getMaxDamage(VeilreachArmorMaterials.SOVEREIGN.durability()))));
     public static final Item SOVEREIGN_BOOTS = register("sovereign_boots", settings -> new Item(settings.armor(VeilreachArmorMaterials.SOVEREIGN, EquipmentType.BOOTS).maxDamage(EquipmentType.BOOTS.getMaxDamage(VeilreachArmorMaterials.SOVEREIGN.durability()))));
     public static final Item SOVEREIGN_GLAIVE = register("sovereign_glaive", settings -> new Item(VeilreachToolMaterials.SOVEREIGN.applySwordSettings(settings, 5.0F, -2.7F)));
-    public static final Item STARFRAGMENT = register("starfragment", settings -> new LoreHintItem(settings.rarity(Rarity.UNCOMMON), "item.veilreach.starfragment.tooltip"));
-    public static final Item SOVEREIGN_CORE = register("sovereign_core", settings -> new LoreHintItem(settings.rarity(Rarity.EPIC), "item.veilreach.sovereign_core.tooltip", "item.veilreach.sovereign_core.tooltip2"));
-    public static final Item SANCTUM_KEY = register("sanctum_key", settings -> new LoreHintItem(settings.rarity(Rarity.UNCOMMON), "item.veilreach.sanctum_key.tooltip"));
-    public static final Item CATHEDRAL_SEAL = register("cathedral_seal", settings -> new LoreHintItem(settings.rarity(Rarity.UNCOMMON), "item.veilreach.cathedral_seal.tooltip"));
-    public static final Item WARDEN_SIGIL = register("warden_sigil", settings -> new LoreHintItem(settings.rarity(Rarity.RARE), "item.veilreach.warden_sigil.tooltip", "item.veilreach.warden_sigil.tooltip2"));
+    public static final Item STARFRAGMENT = register("starfragment", settings -> new LoreHintItem(settings.rarity(Rarity.UNCOMMON), true, "item.veilreach.starfragment.tooltip"));
+    public static final Item SOVEREIGN_CORE = register("sovereign_core", settings -> new LoreHintItem(settings.rarity(Rarity.EPIC), true, "item.veilreach.sovereign_core.tooltip", "item.veilreach.sovereign_core.tooltip2"));
+    public static final Item SANCTUM_KEY = register("sanctum_key", settings -> new LoreHintItem(settings.rarity(Rarity.UNCOMMON), true, "item.veilreach.sanctum_key.tooltip"));
+    public static final Item CATHEDRAL_SEAL = register("cathedral_seal", settings -> new LoreHintItem(settings.rarity(Rarity.UNCOMMON), true, "item.veilreach.cathedral_seal.tooltip"));
+    public static final Item WARDEN_SIGIL = register("warden_sigil", settings -> new LoreHintItem(settings.rarity(Rarity.RARE), true, "item.veilreach.warden_sigil.tooltip", "item.veilreach.warden_sigil.tooltip2"));
     public static final Item HUSH_WARD_CHARM = register("hush_ward_charm", HushWardCharmItem::new);
     public static final Item SOVEREIGN_WARD = register("sovereign_ward", SovereignWardItem::new);
     public static final Item ASTRAL_SIGIL = register("astral_sigil", settings -> new AstralSigilItem(settings.rarity(Rarity.UNCOMMON)));

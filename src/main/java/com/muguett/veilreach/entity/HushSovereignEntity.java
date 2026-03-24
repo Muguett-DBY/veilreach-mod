@@ -46,6 +46,11 @@ public class HushSovereignEntity extends WitherSkeletonEntity {
         if (this.getEntityWorld() instanceof ServerWorld serverWorld && !this.isRemoved()) {
             this.dropStack(serverWorld, new ItemStack(VeilreachItems.SOVEREIGN_CORE));
             this.dropStack(serverWorld, new ItemStack(VeilreachItems.STARFRAGMENT, 4));
+            serverWorld.spawnParticles(ParticleTypes.END_ROD, this.getX(), this.getBodyY(0.9D), this.getZ(), 48, 0.9D, 1.0D, 0.9D, 0.05D);
+            serverWorld.spawnParticles(ParticleTypes.SOUL_FIRE_FLAME, this.getX(), this.getBodyY(0.9D), this.getZ(), 64, 0.8D, 1.2D, 0.8D, 0.03D);
+            serverWorld.spawnParticles(ParticleTypes.TOTEM_OF_UNDYING, this.getX(), this.getBodyY(1.0D), this.getZ(), 24, 0.6D, 0.8D, 0.6D, 0.1D);
+            serverWorld.playSound(null, this.getBlockPos(), SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, this.getSoundCategory(), 1.0F, 0.7F);
+            serverWorld.playSound(null, this.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, this.getSoundCategory(), 1.0F, 0.6F);
         }
         super.onDeath(damageSource);
     }
