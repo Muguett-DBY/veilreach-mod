@@ -54,17 +54,29 @@ public final class MirrorStagEntityModel extends EntityModel<LivingEntityRenderS
                 .uv(26, 40).cuboid(0.0F, -10.0F, -1.0F, 1.0F, 10.0F, 1.0F)
                 .uv(30, 40).cuboid(1.0F, -9.0F, -1.0F, 4.0F, 1.0F, 1.0F)
                 .uv(30, 42).cuboid(2.0F, -6.0F, -1.0F, 3.0F, 1.0F, 1.0F)
-                .uv(30, 44).cuboid(3.0F, -3.0F, -1.0F, 2.0F, 1.0F, 1.0F), ModelTransform.of(1.8F, -4.0F, -1.0F, -0.12F, 0.28F, 0.22F));
+                .uv(30, 44).cuboid(3.0F, -3.0F, -1.0F, 2.0F, 1.0F, 1.0F)
+                .uv(38, 44).cuboid(1.5F, -8.0F, -1.0F, 1.0F, 3.0F, 1.0F)
+                .uv(38, 48).cuboid(3.4F, -5.0F, -1.0F, 1.0F, 3.0F, 1.0F), ModelTransform.of(1.8F, -4.0F, -1.0F, -0.12F, 0.28F, 0.22F));
         head.addChild("right_antler", ModelPartBuilder.create()
                 .uv(26, 40).mirrored().cuboid(-1.0F, -10.0F, -1.0F, 1.0F, 10.0F, 1.0F)
                 .uv(30, 40).mirrored().cuboid(-5.0F, -9.0F, -1.0F, 4.0F, 1.0F, 1.0F)
                 .uv(30, 42).mirrored().cuboid(-5.0F, -6.0F, -1.0F, 3.0F, 1.0F, 1.0F)
-                .uv(30, 44).mirrored().cuboid(-5.0F, -3.0F, -1.0F, 2.0F, 1.0F, 1.0F), ModelTransform.of(-1.8F, -4.0F, -1.0F, -0.12F, -0.28F, -0.22F));
+                .uv(30, 44).mirrored().cuboid(-5.0F, -3.0F, -1.0F, 2.0F, 1.0F, 1.0F)
+                .uv(38, 44).mirrored().cuboid(-2.5F, -8.0F, -1.0F, 1.0F, 3.0F, 1.0F)
+                .uv(38, 48).mirrored().cuboid(-4.4F, -5.0F, -1.0F, 1.0F, 3.0F, 1.0F), ModelTransform.of(-1.8F, -4.0F, -1.0F, -0.12F, -0.28F, -0.22F));
         head.addChild("beard", ModelPartBuilder.create()
                 .uv(40, 40).cuboid(-1.5F, 0.0F, -6.2F, 3.0F, 4.0F, 1.0F), ModelTransform.of(0.0F, 1.0F, 0.0F, 0.18F, 0.0F, 0.0F));
+        head.addChild("brow_crown", ModelPartBuilder.create()
+                .uv(48, 40).cuboid(-3.0F, -5.4F, -6.2F, 6.0F, 2.0F, 4.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.12F, 0.0F, 0.0F));
 
         body.addChild("tail", ModelPartBuilder.create()
                 .uv(48, 32).cuboid(-1.0F, 0.0F, 0.0F, 2.0F, 8.0F, 2.0F), ModelTransform.of(0.0F, -2.0F, 9.0F, 0.55F, 0.0F, 0.0F));
+        body.addChild("chest_ruff", ModelPartBuilder.create()
+                .uv(58, 16).cuboid(-3.5F, -2.0F, -10.2F, 7.0F, 8.0F, 2.0F), ModelTransform.of(0.0F, -0.5F, 0.0F, -0.1F, 0.0F, 0.0F));
+        body.addChild("left_flank_prism", ModelPartBuilder.create()
+                .uv(58, 26).mirrored().cuboid(0.0F, -1.5F, -3.0F, 2.0F, 6.0F, 6.0F), ModelTransform.of(4.4F, -0.2F, 0.0F, 0.0F, 0.0F, -0.16F));
+        body.addChild("right_flank_prism", ModelPartBuilder.create()
+                .uv(58, 26).cuboid(-2.0F, -1.5F, -3.0F, 2.0F, 6.0F, 6.0F), ModelTransform.of(-4.4F, -0.2F, 0.0F, 0.0F, 0.0F, 0.16F));
 
         root.addChild("front_left_leg", ModelPartBuilder.create()
                 .uv(56, 32).cuboid(-1.2F, 0.0F, -1.2F, 3.0F, 13.0F, 3.0F)

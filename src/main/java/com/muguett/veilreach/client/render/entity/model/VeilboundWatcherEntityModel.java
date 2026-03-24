@@ -46,6 +46,8 @@ public final class VeilboundWatcherEntityModel extends EntityModel<LivingEntityR
                 .uv(40, 8).cuboid(-0.5F, -9.0F, -0.5F, 1.0F, 4.0F, 1.0F), ModelTransform.of(0.0F, -3.0F, 0.0F, -0.25F, 0.0F, 0.0F));
         head.addChild("second_halo", ModelPartBuilder.create()
                 .uv(44, 10).cuboid(-4.0F, -3.0F, -0.5F, 8.0F, 1.0F, 1.0F), ModelTransform.of(0.0F, -4.5F, 0.0F, 0.42F, 0.0F, 0.0F));
+        head.addChild("crown_shard", ModelPartBuilder.create()
+                .uv(44, 13).cuboid(-1.0F, -5.0F, -1.0F, 2.0F, 5.0F, 2.0F), ModelTransform.of(0.0F, -6.8F, 0.0F, -0.4F, 0.0F, 0.0F));
         head.addChild("face_veil", ModelPartBuilder.create()
                 .uv(50, 5).cuboid(-4.0F, -1.0F, -5.0F, 8.0F, 8.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.18F, 0.0F, 0.0F));
         head.addChild("left_face_fin", ModelPartBuilder.create()
@@ -62,12 +64,18 @@ public final class VeilboundWatcherEntityModel extends EntityModel<LivingEntityR
                 .uv(52, 18).cuboid(-3.0F, -4.0F, -2.0F, 3.0F, 16.0F, 4.0F), ModelTransform.of(-4.0F, -3.0F, 0.0F, 0.0F, 0.0F, 0.28F));
         core.addChild("lower_veil", ModelPartBuilder.create()
                 .uv(24, 30).cuboid(-5.5F, 0.0F, -3.0F, 11.0F, 9.0F, 6.0F), ModelTransform.of(0.0F, 4.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+        core.addChild("left_streamer", ModelPartBuilder.create()
+                .uv(58, 30).mirrored().cuboid(0.0F, 0.0F, -0.5F, 2.0F, 15.0F, 1.0F), ModelTransform.of(4.8F, 5.0F, 0.0F, 0.28F, 0.0F, -0.22F));
+        core.addChild("right_streamer", ModelPartBuilder.create()
+                .uv(58, 30).cuboid(-2.0F, 0.0F, -0.5F, 2.0F, 15.0F, 1.0F), ModelTransform.of(-4.8F, 5.0F, 0.0F, 0.28F, 0.0F, 0.22F));
         core.addChild("left_tail", ModelPartBuilder.create()
                 .uv(0, 48).mirrored().cuboid(0.0F, 0.0F, -1.0F, 2.0F, 15.0F, 2.0F), ModelTransform.of(2.0F, 7.0F, 0.0F, 0.45F, 0.0F, -0.34F));
         core.addChild("right_tail", ModelPartBuilder.create()
                 .uv(0, 48).cuboid(-2.0F, 0.0F, -1.0F, 2.0F, 15.0F, 2.0F), ModelTransform.of(-2.0F, 7.0F, 0.0F, 0.45F, 0.0F, 0.34F));
         core.addChild("back_banner", ModelPartBuilder.create()
                 .uv(8, 48).cuboid(-4.0F, 0.0F, 0.0F, 8.0F, 13.0F, 1.0F), ModelTransform.of(0.0F, -1.0F, 2.5F, 0.22F, 0.0F, 0.0F));
+        core.addChild("chest_sigils", ModelPartBuilder.create()
+                .uv(28, 46).cuboid(-2.0F, -2.0F, -3.6F, 4.0F, 6.0F, 1.0F), ModelTransform.of(0.0F, -2.0F, 0.0F, -0.06F, 0.0F, 0.0F));
         return TexturedModelData.of(modelData, 96, 96);
     }
 

@@ -39,6 +39,8 @@ public final class LanternkeeperEntityModel extends EntityModel<LivingEntityRend
                 .uv(0, 18).cuboid(-3.5F, -3.0F, -6.0F, 7.0F, 4.0F, 1.0F), ModelTransform.origin(0.0F, 3.5F, 0.0F));
         head.addChild("hood_peak", ModelPartBuilder.create()
                 .uv(16, 18).cuboid(-2.0F, -4.0F, -1.0F, 4.0F, 4.0F, 4.0F), ModelTransform.of(0.0F, -9.0F, 1.5F, -0.25F, 0.0F, 0.0F));
+        head.addChild("hood_tassel", ModelPartBuilder.create()
+                .uv(40, 18).cuboid(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F), ModelTransform.of(0.0F, -7.5F, 4.2F, 0.42F, 0.0F, 0.0F));
         head.addChild("left_mask_flange", ModelPartBuilder.create()
                 .uv(32, 18).mirrored().cuboid(0.0F, -1.0F, -4.0F, 2.0F, 6.0F, 2.0F), ModelTransform.of(4.0F, -1.0F, 0.0F, 0.0F, 0.0F, -0.2F));
         head.addChild("right_mask_flange", ModelPartBuilder.create()
@@ -50,10 +52,14 @@ public final class LanternkeeperEntityModel extends EntityModel<LivingEntityRend
                 .uv(0, 50).cuboid(-6.0F, 0.0F, -3.5F, 12.0F, 5.0F, 1.0F), ModelTransform.of(0.0F, 4.0F, 0.0F, 0.08F, 0.0F, 0.0F));
         body.addChild("back_drape", ModelPartBuilder.create()
                 .uv(26, 50).cuboid(-5.5F, 0.0F, 0.0F, 11.0F, 15.0F, 1.0F), ModelTransform.of(0.0F, 1.0F, 3.0F, 0.16F, 0.0F, 0.0F));
+        body.addChild("chest_straps", ModelPartBuilder.create()
+                .uv(64, 50).cuboid(-4.0F, 0.0F, -3.6F, 8.0F, 8.0F, 1.0F), ModelTransform.of(0.0F, 0.8F, 0.0F, -0.04F, 0.0F, 0.0F));
         body.addChild("left_pack", ModelPartBuilder.create()
                 .uv(50, 50).mirrored().cuboid(0.0F, 0.0F, -2.0F, 3.0F, 9.0F, 4.0F), ModelTransform.of(4.5F, 4.0F, 0.0F, 0.0F, 0.0F, -0.18F));
         body.addChild("right_pack", ModelPartBuilder.create()
                 .uv(50, 50).cuboid(-3.0F, 0.0F, -2.0F, 3.0F, 9.0F, 4.0F), ModelTransform.of(-4.5F, 4.0F, 0.0F, 0.0F, 0.0F, 0.18F));
+        body.addChild("front_satchel", ModelPartBuilder.create()
+                .uv(82, 50).cuboid(-2.5F, 7.0F, -4.6F, 5.0F, 7.0F, 2.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.06F, 0.0F, 0.0F));
 
         root.addChild("right_arm", ModelPartBuilder.create()
                 .uv(68, 0).cuboid(-2.0F, -1.0F, -2.0F, 4.0F, 14.0F, 4.0F), ModelTransform.of(-6.5F, 5.5F, 0.0F, -0.18F, 0.0F, 0.12F));
@@ -62,7 +68,8 @@ public final class LanternkeeperEntityModel extends EntityModel<LivingEntityRend
         root.addChild("lantern", ModelPartBuilder.create()
                 .uv(84, 0).cuboid(-2.5F, 0.0F, -2.5F, 5.0F, 6.0F, 5.0F)
                 .uv(84, 11).cuboid(-1.5F, -3.0F, -1.5F, 3.0F, 3.0F, 3.0F)
-                .uv(84, 17).cuboid(-1.0F, 6.0F, -1.0F, 2.0F, 2.0F, 2.0F), ModelTransform.origin(6.8F, 16.5F, -2.0F));
+                .uv(84, 17).cuboid(-1.0F, 6.0F, -1.0F, 2.0F, 2.0F, 2.0F)
+                .uv(96, 17).cuboid(-0.5F, -5.0F, -0.5F, 1.0F, 2.0F, 1.0F), ModelTransform.origin(6.8F, 16.5F, -2.0F));
         root.addChild("right_leg", ModelPartBuilder.create()
                 .uv(0, 66).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 13.0F, 4.0F), ModelTransform.origin(-2.2F, 16.0F, 0.0F));
         root.addChild("left_leg", ModelPartBuilder.create()

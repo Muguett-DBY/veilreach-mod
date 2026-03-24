@@ -1067,6 +1067,7 @@ function Paint-HushlingDetails([System.Drawing.Bitmap]$bmp) {
     $eye = [System.Drawing.Color]::FromArgb(255, 214, 255, 242)
     $glow = [System.Drawing.Color]::FromArgb(220, 130, 232, 221)
     $scar = [System.Drawing.Color]::FromArgb(160, 78, 136, 132)
+    $bone = [System.Drawing.Color]::FromArgb(170, 210, 245, 236)
     Draw-BrushPoint $bmp 10 19 1 $eye
     Draw-BrushPoint $bmp 14 19 1 $eye
     Draw-BrushPoint $bmp 10 19 2 $glow
@@ -1074,29 +1075,45 @@ function Paint-HushlingDetails([System.Drawing.Bitmap]$bmp) {
     Draw-WideLine $bmp 8 22 16 26 $scar 1
     Draw-WideLine $bmp 9 31 14 37 $scar 1
     Draw-WideLine $bmp 18 35 23 49 ([System.Drawing.Color]::FromArgb(140, 180, 230, 225)) 1
+    Draw-WideLine $bmp 8 9 12 13 $bone 1
+    Draw-WideLine $bmp 16 9 20 13 $bone 1
+    Draw-WideLine $bmp 11 28 19 28 $bone 1
+    Draw-WideLine $bmp 8 42 15 52 $glow 1
+    Draw-WideLine $bmp 22 42 15 52 $glow 1
 }
 
 function Paint-WatcherDetails([System.Drawing.Bitmap]$bmp) {
     $eye = [System.Drawing.Color]::FromArgb(255, 181, 227, 255)
     $veil = [System.Drawing.Color]::FromArgb(120, 112, 173, 211)
     $rune = [System.Drawing.Color]::FromArgb(185, 214, 244, 255)
+    $halo = [System.Drawing.Color]::FromArgb(150, 198, 238, 255)
     Draw-BrushPoint $bmp 9 18 1 $eye
     Draw-BrushPoint $bmp 14 18 1 $eye
     Draw-WideLine $bmp 6 33 18 46 $veil 1
     Draw-WideLine $bmp 18 33 6 46 $veil 1
     Draw-WideLine $bmp 12 20 12 30 $rune 1
     Draw-WideLine $bmp 9 25 15 25 $rune 1
+    Draw-RingWide $bmp 12 10 7 $halo 1
+    Draw-WideLine $bmp 12 28 8 39 $rune 1
+    Draw-WideLine $bmp 12 28 16 39 $rune 1
+    Draw-WideLine $bmp 7 45 17 56 $veil 1
 }
 
 function Paint-StagDetails([System.Drawing.Bitmap]$bmp) {
     $glow = [System.Drawing.Color]::FromArgb(210, 218, 250, 238)
     $accent = [System.Drawing.Color]::FromArgb(165, 129, 209, 214)
+    $frost = [System.Drawing.Color]::FromArgb(160, 238, 247, 255)
     Draw-WideLine $bmp 7 9 3 1 $glow 1
     Draw-WideLine $bmp 9 9 7 1 $glow 1
     Draw-WideLine $bmp 24 9 28 1 $glow 1
     Draw-WideLine $bmp 22 9 24 1 $glow 1
     Draw-WideLine $bmp 10 21 21 21 $accent 1
     Draw-WideLine $bmp 12 31 20 44 $accent 1
+    Draw-WideLine $bmp 10 24 21 24 $frost 1
+    Draw-WideLine $bmp 11 35 19 35 $glow 1
+    Draw-WideLine $bmp 12 16 19 16 $frost 1
+    Draw-BrushPoint $bmp 12 18 2 $glow
+    Draw-BrushPoint $bmp 19 18 2 $glow
 }
 
 function Paint-SovereignDetails([System.Drawing.Bitmap]$bmp) {
@@ -1110,17 +1127,23 @@ function Paint-SovereignDetails([System.Drawing.Bitmap]$bmp) {
     Draw-WideLine $bmp 15 24 15 42 $rune 1
     Draw-WideLine $bmp 10 29 20 29 $rune 1
     Draw-WideLine $bmp 8 49 22 58 $rune 1
+    Draw-WideLine $bmp 7 40 23 40 $gold 1
+    Draw-WideLine $bmp 9 59 21 64 $gold 1
+    Draw-BrushPoint $bmp 15 20 2 $rune
 }
 
 function Paint-LanternkeeperDetails([System.Drawing.Bitmap]$bmp) {
     $warm = [System.Drawing.Color]::FromArgb(230, 255, 213, 132)
     $cold = [System.Drawing.Color]::FromArgb(170, 119, 170, 197)
+    $trim = [System.Drawing.Color]::FromArgb(150, 181, 217, 231)
     Draw-BrushPoint $bmp 12 19 1 $warm
     Draw-BrushPoint $bmp 19 19 1 $warm
     Draw-WideLine $bmp 10 8 21 8 $cold 1
     Draw-WideLine $bmp 15 23 15 47 $cold 1
     Draw-WideLine $bmp 8 44 22 44 $warm 1
     Draw-RingWide $bmp 15 49 6 $warm 1
+    Draw-WideLine $bmp 9 26 21 26 $trim 1
+    Draw-WideLine $bmp 7 52 23 52 $warm 1
 }
 
 function Paint-KnightDetails([System.Drawing.Bitmap]$bmp) {
@@ -1131,6 +1154,9 @@ function Paint-KnightDetails([System.Drawing.Bitmap]$bmp) {
     Draw-WideLine $bmp 15 20 15 48 $moon 1
     Draw-WideLine $bmp 10 28 20 28 $steel 1
     Draw-WideLine $bmp 8 49 22 58 $moon 1
+    Draw-WideLine $bmp 9 18 21 18 $steel 1
+    Draw-WideLine $bmp 11 39 19 39 $steel 1
+    Draw-WideLine $bmp 12 58 18 64 $steel 1
 }
 
 function Paint-WardenDetails([System.Drawing.Bitmap]$bmp) {
@@ -1142,6 +1168,9 @@ function Paint-WardenDetails([System.Drawing.Bitmap]$bmp) {
     Draw-BrushPoint $bmp 19 19 1 $horn
     Draw-WideLine $bmp 15 25 15 47 $frost 1
     Draw-WideLine $bmp 10 31 20 31 $frost 1
+    Draw-WideLine $bmp 8 18 22 18 $horn 1
+    Draw-WideLine $bmp 8 44 22 44 $frost 1
+    Draw-WideLine $bmp 10 55 20 61 $horn 1
 }
 
 Create-StoneBlock (Join-Path $blockDir "veilstone.png") "#20262f" "#495a66" "#7cc8d4"

@@ -45,6 +45,8 @@ public final class MoonfallenKnightEntityModel extends EntityModel<LivingEntityR
                 .uv(10, 17).mirrored().cuboid(-1.0F, -5.0F, -1.0F, 1.0F, 5.0F, 2.0F), ModelTransform.of(-2.8F, -8.8F, -0.8F, -0.55F, -0.15F, -0.4F));
         head.addChild("back_fin", ModelPartBuilder.create()
                 .uv(18, 17).cuboid(-1.5F, -5.0F, 0.0F, 3.0F, 5.0F, 2.0F), ModelTransform.of(0.0F, -8.8F, 3.0F, -0.18F, 0.0F, 0.0F));
+        head.addChild("visor_guard", ModelPartBuilder.create()
+                .uv(28, 17).cuboid(-3.0F, -2.0F, -5.8F, 6.0F, 3.0F, 1.0F), ModelTransform.of(0.0F, -1.2F, 0.0F, 0.08F, 0.0F, 0.0F));
 
         ModelPartData body = root.addChild("body", ModelPartBuilder.create()
                 .uv(0, 24).cuboid(-5.0F, 0.0F, -3.0F, 10.0F, 12.0F, 6.0F)
@@ -54,10 +56,16 @@ public final class MoonfallenKnightEntityModel extends EntityModel<LivingEntityR
                 .uv(20, 42).cuboid(-6.5F, 0.0F, 0.0F, 13.0F, 16.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 2.8F, 0.24F, 0.0F, 0.0F));
         body.addChild("tabard", ModelPartBuilder.create()
                 .uv(0, 59).cuboid(-2.5F, 0.0F, -4.2F, 5.0F, 13.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.06F, 0.0F, 0.0F));
+        body.addChild("back_pennant", ModelPartBuilder.create()
+                .uv(14, 59).cuboid(-2.0F, 0.0F, 0.0F, 4.0F, 14.0F, 1.0F), ModelTransform.of(0.0F, 2.0F, 3.2F, 0.18F, 0.0F, 0.0F));
         body.addChild("left_pauldron", ModelPartBuilder.create()
                 .uv(48, 42).mirrored().cuboid(0.0F, -1.0F, -3.5F, 3.0F, 6.0F, 7.0F), ModelTransform.of(5.0F, 0.5F, 0.0F, 0.0F, 0.0F, 0.22F));
         body.addChild("right_pauldron", ModelPartBuilder.create()
                 .uv(48, 42).cuboid(-3.0F, -1.0F, -3.5F, 3.0F, 6.0F, 7.0F), ModelTransform.of(-5.0F, 0.5F, 0.0F, 0.0F, 0.0F, -0.22F));
+        body.addChild("left_hip_guard", ModelPartBuilder.create()
+                .uv(68, 42).mirrored().cuboid(0.0F, 0.0F, -1.0F, 2.0F, 9.0F, 2.0F), ModelTransform.of(4.2F, 8.0F, 0.0F, 0.12F, 0.0F, -0.16F));
+        body.addChild("right_hip_guard", ModelPartBuilder.create()
+                .uv(68, 42).cuboid(-2.0F, 0.0F, -1.0F, 2.0F, 9.0F, 2.0F), ModelTransform.of(-4.2F, 8.0F, 0.0F, 0.12F, 0.0F, 0.16F));
 
         root.addChild("right_arm", ModelPartBuilder.create()
                 .uv(72, 0).cuboid(-2.0F, -1.0F, -2.0F, 4.0F, 15.0F, 4.0F)
@@ -67,10 +75,12 @@ public final class MoonfallenKnightEntityModel extends EntityModel<LivingEntityR
                 .uv(72, 19).mirrored().cuboid(-2.4F, 2.0F, -2.6F, 5.0F, 6.0F, 5.0F), ModelTransform.of(6.5F, 5.0F, 0.0F, -0.3F, 0.0F, -0.12F));
         root.addChild("right_leg", ModelPartBuilder.create()
                 .uv(92, 0).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 14.0F, 4.0F)
-                .uv(92, 18).cuboid(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F), ModelTransform.origin(-2.5F, 16.0F, 0.0F));
+                .uv(92, 18).cuboid(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F)
+                .uv(84, 30).cuboid(-1.5F, 8.0F, -3.0F, 3.0F, 4.0F, 1.0F), ModelTransform.origin(-2.5F, 16.0F, 0.0F));
         root.addChild("left_leg", ModelPartBuilder.create()
                 .uv(92, 0).mirrored().cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 14.0F, 4.0F)
-                .uv(92, 18).mirrored().cuboid(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F), ModelTransform.origin(2.5F, 16.0F, 0.0F));
+                .uv(92, 18).mirrored().cuboid(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F)
+                .uv(84, 30).mirrored().cuboid(-1.5F, 8.0F, -3.0F, 3.0F, 4.0F, 1.0F), ModelTransform.origin(2.5F, 16.0F, 0.0F));
 
         return TexturedModelData.of(modelData, 128, 96);
     }

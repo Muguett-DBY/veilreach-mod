@@ -51,6 +51,12 @@ public final class HushlingEntityModel extends EntityModel<LivingEntityRenderSta
                 .uv(18, 16).mirrored().cuboid(0.0F, -1.0F, -4.0F, 2.0F, 4.0F, 3.0F), ModelTransform.of(3.0F, -1.0F, 0.0F, 0.12F, 0.0F, 0.15F));
         head.addChild("right_jowl", ModelPartBuilder.create()
                 .uv(18, 16).cuboid(-2.0F, -1.0F, -4.0F, 2.0F, 4.0F, 3.0F), ModelTransform.of(-3.0F, -1.0F, 0.0F, 0.12F, 0.0F, -0.15F));
+        head.addChild("left_tendril", ModelPartBuilder.create()
+                .uv(28, 16).mirrored().cuboid(0.0F, 0.0F, -1.0F, 1.0F, 8.0F, 2.0F), ModelTransform.of(3.8F, 1.5F, -2.2F, 0.4F, 0.12F, -0.2F));
+        head.addChild("right_tendril", ModelPartBuilder.create()
+                .uv(28, 16).cuboid(-1.0F, 0.0F, -1.0F, 1.0F, 8.0F, 2.0F), ModelTransform.of(-3.8F, 1.5F, -2.2F, 0.4F, -0.12F, 0.2F));
+        head.addChild("brow_plate", ModelPartBuilder.create()
+                .uv(34, 16).cuboid(-3.5F, -8.8F, -5.4F, 7.0F, 2.0F, 4.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.16F, 0.0F, 0.0F));
 
         ModelPartData body = root.addChild("body", ModelPartBuilder.create()
                 .uv(0, 24).cuboid(-4.5F, 0.0F, -3.0F, 9.0F, 12.0F, 6.0F)
@@ -64,6 +70,12 @@ public final class HushlingEntityModel extends EntityModel<LivingEntityRenderSta
                 .uv(68, 31).cuboid(-2.0F, 7.0F, 0.6F, 4.0F, 7.0F, 1.0F), ModelTransform.of(0.0F, 7.0F, 2.8F, 0.58F, 0.0F, 0.0F));
         body.addChild("cloak", ModelPartBuilder.create()
                 .uv(20, 42).cuboid(-5.0F, 0.0F, 2.0F, 10.0F, 14.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 0.5F, 0.16F, 0.0F, 0.0F));
+        body.addChild("left_rib_fins", ModelPartBuilder.create()
+                .uv(60, 42).mirrored().cuboid(0.0F, 0.0F, -2.0F, 2.0F, 10.0F, 4.0F), ModelTransform.of(4.6F, 1.2F, 0.2F, 0.0F, 0.0F, -0.3F));
+        body.addChild("right_rib_fins", ModelPartBuilder.create()
+                .uv(60, 42).cuboid(-2.0F, 0.0F, -2.0F, 2.0F, 10.0F, 4.0F), ModelTransform.of(-4.6F, 1.2F, 0.2F, 0.0F, 0.0F, 0.3F));
+        body.addChild("hip_spikes", ModelPartBuilder.create()
+                .uv(72, 42).cuboid(-4.0F, 8.0F, 1.8F, 8.0F, 3.0F, 2.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.08F, 0.0F, 0.0F));
         body.addChild("left_shoulder", ModelPartBuilder.create()
                 .uv(42, 42).mirrored().cuboid(0.0F, -1.0F, -3.0F, 3.0F, 6.0F, 6.0F), ModelTransform.of(4.5F, 0.5F, 0.0F, 0.0F, 0.0F, 0.32F));
         body.addChild("right_shoulder", ModelPartBuilder.create()
@@ -74,12 +86,16 @@ public final class HushlingEntityModel extends EntityModel<LivingEntityRenderSta
                 .uv(64, 19).cuboid(-2.2F, 7.0F, -2.6F, 4.0F, 6.0F, 3.0F), ModelTransform.of(-5.5F, 6.0F, 0.0F, -0.42F, 0.0F, 0.18F));
         rightArm.addChild("right_claw", ModelPartBuilder.create()
                 .uv(52, 16).cuboid(-2.4F, 10.0F, -5.0F, 2.0F, 5.0F, 2.0F), ModelTransform.of(-0.2F, 0.0F, 0.0F, -0.28F, 0.0F, -0.2F));
+        rightArm.addChild("right_forefin", ModelPartBuilder.create()
+                .uv(78, 0).cuboid(-2.6F, 5.0F, 1.4F, 1.0F, 7.0F, 3.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.16F, 0.0F, -0.18F));
 
         ModelPartData leftArm = root.addChild("left_arm", ModelPartBuilder.create()
                 .uv(64, 0).mirrored().cuboid(-2.2F, -1.0F, -1.8F, 4.0F, 15.0F, 4.0F)
                 .uv(64, 19).mirrored().cuboid(-1.8F, 7.0F, -2.6F, 4.0F, 6.0F, 3.0F), ModelTransform.of(5.5F, 6.0F, 0.0F, -0.42F, 0.0F, -0.18F));
         leftArm.addChild("left_claw", ModelPartBuilder.create()
                 .uv(52, 16).mirrored().cuboid(0.4F, 10.0F, -5.0F, 2.0F, 5.0F, 2.0F), ModelTransform.of(0.2F, 0.0F, 0.0F, -0.28F, 0.0F, 0.2F));
+        leftArm.addChild("left_forefin", ModelPartBuilder.create()
+                .uv(78, 0).mirrored().cuboid(1.6F, 5.0F, 1.4F, 1.0F, 7.0F, 3.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.16F, 0.0F, 0.18F));
 
         ModelPartData rightLeg = root.addChild("right_leg", ModelPartBuilder.create()
                 .uv(0, 57).cuboid(-1.8F, 0.0F, -1.8F, 4.0F, 14.0F, 4.0F)
@@ -88,6 +104,8 @@ public final class HushlingEntityModel extends EntityModel<LivingEntityRenderSta
                 .uv(34, 57).cuboid(-1.0F, 4.0F, 1.8F, 2.0F, 5.0F, 1.0F), ModelTransform.NONE);
         rightLeg.addChild("right_heel", ModelPartBuilder.create()
                 .uv(40, 57).cuboid(-1.0F, 12.0F, 1.2F, 2.0F, 2.0F, 2.0F), ModelTransform.NONE);
+        rightLeg.addChild("right_thigh_blade", ModelPartBuilder.create()
+                .uv(48, 57).cuboid(-1.8F, 2.0F, -3.0F, 1.0F, 5.0F, 2.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.04F, 0.0F, -0.1F));
 
         ModelPartData leftLeg = root.addChild("left_leg", ModelPartBuilder.create()
                 .uv(0, 57).mirrored().cuboid(-2.2F, 0.0F, -1.8F, 4.0F, 14.0F, 4.0F)
@@ -96,6 +114,8 @@ public final class HushlingEntityModel extends EntityModel<LivingEntityRenderSta
                 .uv(34, 57).mirrored().cuboid(-1.0F, 4.0F, 1.8F, 2.0F, 5.0F, 1.0F), ModelTransform.NONE);
         leftLeg.addChild("left_heel", ModelPartBuilder.create()
                 .uv(40, 57).mirrored().cuboid(-1.0F, 12.0F, 1.2F, 2.0F, 2.0F, 2.0F), ModelTransform.NONE);
+        leftLeg.addChild("left_thigh_blade", ModelPartBuilder.create()
+                .uv(48, 57).mirrored().cuboid(0.8F, 2.0F, -3.0F, 1.0F, 5.0F, 2.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.04F, 0.0F, 0.1F));
         return TexturedModelData.of(modelData, 96, 96);
     }
 

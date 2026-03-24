@@ -47,6 +47,8 @@ public final class HushSovereignEntityModel extends EntityModel<LivingEntityRend
                 .uv(20, 20).cuboid(-1.5F, -7.0F, -1.5F, 3.0F, 7.0F, 3.0F), ModelTransform.of(0.0F, -10.5F, 1.0F, -0.3F, 0.0F, 0.0F));
         head.addChild("jaw_guard", ModelPartBuilder.create()
                 .uv(32, 20).cuboid(-4.0F, -1.0F, -6.0F, 8.0F, 4.0F, 1.0F), ModelTransform.of(0.0F, -1.0F, 0.0F, 0.12F, 0.0F, 0.0F));
+        head.addChild("face_veil", ModelPartBuilder.create()
+                .uv(50, 20).cuboid(-4.0F, -1.0F, -6.8F, 8.0F, 9.0F, 1.0F), ModelTransform.of(0.0F, -0.2F, 0.0F, 0.12F, 0.0F, 0.0F));
 
         ModelPartData body = root.addChild("body", ModelPartBuilder.create()
                 .uv(0, 32).cuboid(-6.0F, 0.0F, -3.5F, 12.0F, 15.0F, 7.0F)
@@ -59,19 +61,29 @@ public final class HushSovereignEntityModel extends EntityModel<LivingEntityRend
                 .uv(78, 18).mirrored().cuboid(0.0F, -2.0F, -4.0F, 4.0F, 8.0F, 8.0F), ModelTransform.of(6.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.22F));
         body.addChild("right_pauldron", ModelPartBuilder.create()
                 .uv(78, 18).cuboid(-4.0F, -2.0F, -4.0F, 4.0F, 8.0F, 8.0F), ModelTransform.of(-6.0F, 1.0F, 0.0F, 0.0F, 0.0F, -0.22F));
+        body.addChild("front_drape", ModelPartBuilder.create()
+                .uv(92, 42).cuboid(-3.5F, 0.0F, -4.2F, 7.0F, 18.0F, 1.0F), ModelTransform.of(0.0F, 3.0F, 0.0F, -0.04F, 0.0F, 0.0F));
+        body.addChild("left_side_curtain", ModelPartBuilder.create()
+                .uv(108, 42).mirrored().cuboid(0.0F, 0.0F, -0.5F, 2.0F, 16.0F, 1.0F), ModelTransform.of(6.8F, 4.0F, 0.0F, 0.18F, 0.0F, -0.14F));
+        body.addChild("right_side_curtain", ModelPartBuilder.create()
+                .uv(108, 42).cuboid(-2.0F, 0.0F, -0.5F, 2.0F, 16.0F, 1.0F), ModelTransform.of(-6.8F, 4.0F, 0.0F, 0.18F, 0.0F, 0.14F));
 
         root.addChild("right_arm", ModelPartBuilder.create()
                 .uv(96, 0).cuboid(-2.6F, -1.0F, -2.6F, 5.0F, 17.0F, 5.0F)
-                .uv(82, 34).cuboid(-3.2F, 4.0F, -3.2F, 6.0F, 7.0F, 6.0F), ModelTransform.of(-8.5F, 4.0F, 0.0F, -0.12F, 0.0F, 0.12F));
+                .uv(82, 34).cuboid(-3.2F, 4.0F, -3.2F, 6.0F, 7.0F, 6.0F)
+                .uv(114, 0).cuboid(-3.4F, 10.0F, -3.6F, 1.0F, 6.0F, 4.0F), ModelTransform.of(-8.5F, 4.0F, 0.0F, -0.12F, 0.0F, 0.12F));
         root.addChild("left_arm", ModelPartBuilder.create()
                 .uv(96, 0).mirrored().cuboid(-2.4F, -1.0F, -2.6F, 5.0F, 17.0F, 5.0F)
-                .uv(82, 34).mirrored().cuboid(-2.8F, 4.0F, -3.2F, 6.0F, 7.0F, 6.0F), ModelTransform.of(8.5F, 4.0F, 0.0F, -0.42F, 0.0F, -0.12F));
+                .uv(82, 34).mirrored().cuboid(-2.8F, 4.0F, -3.2F, 6.0F, 7.0F, 6.0F)
+                .uv(114, 0).mirrored().cuboid(2.4F, 10.0F, -3.6F, 1.0F, 6.0F, 4.0F), ModelTransform.of(8.5F, 4.0F, 0.0F, -0.42F, 0.0F, -0.12F));
         root.addChild("right_leg", ModelPartBuilder.create()
                 .uv(96, 22).cuboid(-2.8F, 0.0F, -2.8F, 5.0F, 15.0F, 5.0F)
-                .uv(78, 50).cuboid(-3.2F, 0.0F, -3.2F, 6.0F, 5.0F, 6.0F), ModelTransform.origin(-3.2F, 17.0F, 0.0F));
+                .uv(78, 50).cuboid(-3.2F, 0.0F, -3.2F, 6.0F, 5.0F, 6.0F)
+                .uv(114, 10).cuboid(-1.5F, 8.0F, -3.6F, 3.0F, 5.0F, 1.0F), ModelTransform.origin(-3.2F, 17.0F, 0.0F));
         root.addChild("left_leg", ModelPartBuilder.create()
                 .uv(96, 22).mirrored().cuboid(-2.2F, 0.0F, -2.8F, 5.0F, 15.0F, 5.0F)
-                .uv(78, 50).mirrored().cuboid(-2.8F, 0.0F, -3.2F, 6.0F, 5.0F, 6.0F), ModelTransform.origin(3.2F, 17.0F, 0.0F));
+                .uv(78, 50).mirrored().cuboid(-2.8F, 0.0F, -3.2F, 6.0F, 5.0F, 6.0F)
+                .uv(114, 10).mirrored().cuboid(-1.5F, 8.0F, -3.6F, 3.0F, 5.0F, 1.0F), ModelTransform.origin(3.2F, 17.0F, 0.0F));
         return TexturedModelData.of(modelData, 128, 128);
     }
 
