@@ -4,12 +4,12 @@ import com.muguett.veilreach.VeilreachMod;
 import com.muguett.veilreach.item.AstralSigilItem;
 import com.muguett.veilreach.item.HushWardCharmItem;
 import com.muguett.veilreach.item.SovereignWardItem;
+import com.muguett.veilreach.item.VeilreachSpawnEggItem;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.item.equipment.EquipmentType;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ShovelItem;
-import net.minecraft.item.SpawnEggItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -64,6 +64,6 @@ public final class VeilreachItems {
     }
 
     private static Item registerSpawnEgg(String path, net.minecraft.entity.EntityType<?> entityType) {
-        return register(path, settings -> new SpawnEggItem(settings.spawnEgg(entityType)));
+        return register(path, settings -> new VeilreachSpawnEggItem(entityType, settings));
     }
 }

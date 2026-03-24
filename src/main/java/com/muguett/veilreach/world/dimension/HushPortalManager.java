@@ -11,7 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.TeleportTarget;
+
+import java.util.Set;
 
 public final class HushPortalManager {
     private static final int FRAME_WIDTH = 4;
@@ -53,7 +54,7 @@ public final class HushPortalManager {
             arrival = ensureArrivalPlatform(targetWorld, preferred);
         }
         player.setPortalCooldown(PORTAL_COOLDOWN_TICKS);
-        player.teleportTo(new TeleportTarget(targetWorld, Vec3d.ofBottomCenter(arrival), Vec3d.ZERO, player.getYaw(), player.getPitch(), TeleportTarget.ADD_PORTAL_CHUNK_TICKET));
+        player.teleport(targetWorld, arrival.getX() + 0.5D, arrival.getY(), arrival.getZ() + 0.5D, Set.of(), player.getYaw(), player.getPitch(), false);
     }
 
     private static BlockPos findExistingPortal(ServerWorld world, BlockPos preferred) {
@@ -168,7 +169,7 @@ public final class HushPortalManager {
             }
         }
 
-        return portalBase.down();
+        return portalBase;
     }
 
     private static boolean isArrivalSpace(ServerWorld world, BlockPos pos) {
