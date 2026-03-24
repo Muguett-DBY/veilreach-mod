@@ -1256,12 +1256,6 @@ Create-SpawnEggItem (Join-Path $itemDir "moonfallen_knight_spawn_egg.png") "#2b2
 Create-SpawnEggItem (Join-Path $itemDir "veilbound_watcher_spawn_egg.png") "#111725" "#91c8f1"
 Create-SpawnEggItem (Join-Path $itemDir "warden_of_silence_spawn_egg.png") "#313941" "#d9edf3"
 
-$comfyPython = "E:\ComfyUISOFT\.venv\Scripts\python.exe"
-$weaponRedrawScript = Join-Path $PSScriptRoot "redraw_weapons_with_comfy.py"
-if ((Test-Path $comfyPython) -and (Test-Path $weaponRedrawScript)) {
-    & $comfyPython $weaponRedrawScript --repo-root $root
-}
-
 $mirrorStag = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/cow/temperate_cow.png"
 Recolor-Entity $mirrorStag (Color-Hex "#1a2025") (Color-Hex "#5b7f86") (Color-Hex "#dff5ee") (Color-Hex "#e7d18e")
 Paint-StagDetails $mirrorStag
