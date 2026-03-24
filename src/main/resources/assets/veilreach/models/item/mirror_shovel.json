@@ -1,5 +1,27 @@
 {
   "parent": "minecraft:item/handheld",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [0, -90, 38],
+      "translation": [0, 4, 0.5],
+      "scale": [0.88, 0.88, 0.88]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [0, 90, -38],
+      "translation": [0, 4, 0.5],
+      "scale": [0.88, 0.88, 0.88]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, -90, 15],
+      "translation": [1.16, 2.9, 1.1],
+      "scale": [1.02, 1.02, 1.02]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 90, -15],
+      "translation": [1.16, 2.9, 1.1],
+      "scale": [1.02, 1.02, 1.02]
+    }
+  },
   "textures": {
     "layer0": "veilreach:item/mirror_shovel"
   }
