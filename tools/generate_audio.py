@@ -162,6 +162,36 @@ def make_sovereign_pulse() -> np.ndarray:
     return pan_stereo(signal, 0.0)
 
 
+def make_hushlands_arrival_intro() -> np.ndarray:
+    duration = 3.2
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    signal = np.zeros_like(t)
+    notes = [
+        (0.00, 0.30, 293.66),
+        (0.34, 0.30, 329.63),
+        (0.68, 0.36, 392.00),
+        (1.10, 0.44, 329.63),
+        (1.60, 0.34, 493.88),
+        (1.98, 0.52, 440.00),
+    ]
+    for index, (start, note_duration, freq) in enumerate(notes):
+        start_index = int(start * SAMPLE_RATE)
+        note = layered_chime([freq, freq * 1.5, freq * 2.0], note_duration, 70 + index, drift=0.006) * 0.42
+        synth = sine(freq * 0.5, note_duration) * 0.18
+        pad = sine(freq * 0.25, note_duration, phase=index * 0.6) * 0.1
+        chunk = note + synth + pad
+        end_index = min(signal.size, start_index + chunk.size)
+        signal[start_index:end_index] += chunk[: end_index - start_index]
+
+    bass = 0.14 * np.sin(2 * math.pi * 73.42 * t + 0.15)
+    bass += 0.09 * np.sin(2 * math.pi * 110.0 * t * (1.0 + 0.002 * np.sin(2 * math.pi * 0.8 * t)))
+    shimmer = layered_chime([587.33, 783.99], duration, 90, drift=0.01) * 0.1
+    air = noise(duration, 91, "pink") * 0.012
+    sweep = np.sin(2 * math.pi * (180.0 + 120.0 * np.linspace(0.0, 1.0, t.size, dtype=np.float32)) * t) * np.linspace(0.0, 0.05, t.size, dtype=np.float32)
+    signal = apply_reverb(signal + bass + shimmer + air + sweep, 0.12, 0.52, 4)
+    return pan_stereo(signal * envelope(signal.size, 0.02, 0.24), 0.02)
+
+
 def make_music(seed: int, roots: list[float], duration: float, pan: float) -> np.ndarray:
     t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
     signal = np.zeros_like(t)
@@ -184,6 +214,7 @@ def make_music(seed: int, roots: list[float], duration: float, pan: float) -> np
 def main() -> None:
     write_ogg("ui/astral_sigil.ogg", make_ui_sigil())
     write_ogg("ui/sealed_altar_unlock.ogg", make_altar_unlock())
+    write_ogg("ui/hushlands_arrival_intro.ogg", make_hushlands_arrival_intro())
     write_ogg("block/hush_portal_loop.ogg", make_portal_hum())
     write_ogg("ambient/hushlands_whispers.ogg", make_whisper_ambient())
     write_ogg("ambient/rift_meadows_resonance.ogg", make_rift_ambient())

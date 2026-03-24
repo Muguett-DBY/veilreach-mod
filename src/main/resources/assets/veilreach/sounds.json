@@ -58,6 +58,14 @@
       }
     ]
   },
+  "ui.hushlands_arrival_intro": {
+    "sounds": [
+      {
+        "name": "veilreach:ui/hushlands_arrival_intro",
+        "volume": 0.92
+      }
+    ]
+  },
   "music.hushlands_dream": {
     "sounds": [
       {

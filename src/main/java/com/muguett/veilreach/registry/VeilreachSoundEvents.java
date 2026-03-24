@@ -14,6 +14,7 @@ public final class VeilreachSoundEvents {
     public static final SoundEvent HUSH_SOVEREIGN_PULSE = register("entity.hush_sovereign_pulse");
     public static final SoundEvent ASTRAL_SIGIL_USE = register("ui.astral_sigil");
     public static final SoundEvent SEALED_ALTAR_UNLOCK = register("ui.sealed_altar_unlock");
+    public static final SoundEvent HUSHLANDS_ARRIVAL_INTRO = register("ui.hushlands_arrival_intro");
     public static final SoundEvent HUSHLANDS_DREAM = register("music.hushlands_dream");
     public static final SoundEvent HUSHLANDS_DEPTHS = register("music.hushlands_depths");
     public static final SoundEvent HUSHLANDS_HUSH_GROVE = register("music.hushlands.hush_grove");

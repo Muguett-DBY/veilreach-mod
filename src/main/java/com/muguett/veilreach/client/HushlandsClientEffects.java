@@ -163,6 +163,7 @@ public final class HushlandsClientEffects {
     }
 
     private static void playArrivalChime(ClientWorld world, MinecraftClient client) {
+        world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), VeilreachSoundEvents.HUSHLANDS_ARRIVAL_INTRO, SoundCategory.MUSIC, 0.8F, 1.0F, false);
         world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), VeilreachSoundEvents.ASTRAL_SIGIL_USE, SoundCategory.AMBIENT, 0.65F, 0.88F, false);
         world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), VeilreachSoundEvents.HUSH_PORTAL_LOOP, SoundCategory.AMBIENT, 0.3F, 0.95F, false);
         world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), VeilreachSoundEvents.HUSHLANDS_WHISPERS, SoundCategory.AMBIENT, 0.2F, 1.0F, false);
