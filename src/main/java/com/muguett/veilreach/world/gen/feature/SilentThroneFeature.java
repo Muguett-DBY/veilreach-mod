@@ -52,6 +52,7 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         buildRearKeep(world, center, base, wall, dark, frame, lantern, stair, gold);
         buildUndercroft(world, center, base, wall, dark, lantern, barrier, stair);
         carveThroneFlow(world, center, dark, stair, slab);
+        buildThroneCanopy(world, center, frame, gold, lantern);
 
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, -18), Direction.SOUTH, "chests/silent_throne");
         HushStructureFeatureSupport.placeLootChest(world, center.add(-13, 1, 8), Direction.EAST, "chests/silent_throne");
@@ -324,6 +325,25 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
             }
         }
         world.setBlockState(center.add(0, 1, 18), dark, HushStructureFeatureSupport.GEN_FLAGS);
+    }
+
+    private static void buildThroneCanopy(StructureWorldAccess world, BlockPos center, BlockState frame, BlockState gold, BlockState lantern) {
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dz = -6; dz <= -2; dz++) {
+                if (Math.abs(dx) == 3 || dz == -6 || dz == -2) {
+                    world.setBlockState(center.add(dx, 12, dz), frame, HushStructureFeatureSupport.GEN_FLAGS);
+                } else {
+                    world.setBlockState(center.add(dx, 12, dz), gold, HushStructureFeatureSupport.GEN_FLAGS);
+                }
+            }
+        }
+        for (int side = -1; side <= 1; side += 2) {
+            for (int y = 8; y <= 12; y++) {
+                world.setBlockState(center.add(side * 3, y, -6), frame, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(side * 3, y, -2), frame, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+        world.setBlockState(center.add(0, 13, -4), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {

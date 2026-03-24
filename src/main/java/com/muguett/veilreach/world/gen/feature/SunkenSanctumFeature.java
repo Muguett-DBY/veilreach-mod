@@ -52,6 +52,7 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         buildRitualWing(world, chamber, base, wall, trim, frame, lantern, barrier, stair, tile);
         buildVaultBranch(world, chamber.add(10, 0, 10), base, wall, trim, lantern, glass, stair);
         carveSanctumFlow(world, chamber, trim, stair);
+        buildSanctumCage(world, chamber, bars, frame, lantern);
 
         HushStructureFeatureSupport.placeLootChest(world, chamber.add(-4, 0, -3), Direction.SOUTH, "chests/sunken_sanctum");
         HushStructureFeatureSupport.placeLootChest(world, chamber.add(4, 0, -3), Direction.SOUTH, "chests/sunken_sanctum");
@@ -241,6 +242,20 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
             }
         }
         world.setBlockState(chamber.add(0, 0, -9), trim, HushStructureFeatureSupport.GEN_FLAGS);
+    }
+
+    private static void buildSanctumCage(StructureWorldAccess world, BlockPos chamber, BlockState bars, BlockState frame, BlockState lantern) {
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                if (Math.abs(dx) == 2 || Math.abs(dz) == 2) {
+                    for (int y = 2; y <= 5; y++) {
+                        world.setBlockState(chamber.add(dx, y, dz), (y == 5 ? frame : bars), HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
+            }
+        }
+        world.setBlockState(chamber.add(-2, 6, -2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(chamber.add(2, 6, 2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {

@@ -57,6 +57,7 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         buildReliquaryWing(world, center, base, wall, trim, frame, lantern, true);
         buildReliquaryWing(world, center, base, wall, trim, frame, lantern, false);
         carveCathedralFlow(world, center, trim, stair, slab);
+        buildRoseFacade(world, center, frame, bars, lantern, pillar);
 
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, 18), Direction.SOUTH, "chests/moonfall_cathedral");
         HushStructureFeatureSupport.placeLootChest(world, center.add(-6, 1, 10), Direction.SOUTH, "chests/moonfall_cathedral");
@@ -260,6 +261,28 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
                 world.setBlockState(tread.up(), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
+    }
+
+    private static void buildRoseFacade(StructureWorldAccess world, BlockPos center, BlockState frame, BlockState bars, BlockState lantern, BlockState pillar) {
+        BlockPos facade = center.add(0, 7, 16);
+        for (int dx = -5; dx <= 5; dx++) {
+            for (int dy = -5; dy <= 5; dy++) {
+                if (dx * dx + dy * dy > 26) {
+                    continue;
+                }
+                BlockPos pos = facade.add(dx, dy, 0);
+                if (Math.abs(dx) <= 1 || Math.abs(dy) <= 1 || dx * dx + dy * dy >= 18) {
+                    world.setBlockState(pos, frame, HushStructureFeatureSupport.GEN_FLAGS);
+                } else {
+                    world.setBlockState(pos, bars, HushStructureFeatureSupport.GEN_FLAGS);
+                }
+            }
+        }
+        for (int y = 1; y <= 16; y++) {
+            world.setBlockState(center.add(-10, y, 16), pillar, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(10, y, 16), pillar, HushStructureFeatureSupport.GEN_FLAGS);
+        }
+        world.setBlockState(center.add(0, 13, 16), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
     private static void buildRearApse(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState frame, BlockState lantern, BlockState bars, BlockState altar) {
