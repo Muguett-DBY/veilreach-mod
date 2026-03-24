@@ -36,6 +36,8 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         BlockState trim = Blocks.POLISHED_BLACKSTONE_BRICKS.getDefaultState();
         BlockState stair = Blocks.POLISHED_BLACKSTONE_BRICK_STAIRS.getDefaultState();
         BlockState slab = Blocks.POLISHED_BLACKSTONE_BRICK_SLAB.getDefaultState();
+        BlockState tile = Blocks.DEEPSLATE_TILES.getDefaultState();
+        BlockState bars = Blocks.IRON_BARS.getDefaultState();
 
         HushStructureFeatureSupport.clearBox(world, center, 16, 20, 18);
         HushStructureFeatureSupport.supportFootprint(world, center, -8, 8, -16, 10, -1, base);
@@ -44,10 +46,10 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         buildDescendingHall(world, center, base, trim, stair);
 
         BlockPos chamber = center.down(10).add(0, 0, 3);
-        buildLowerSanctum(world, chamber, base, wall, trim, frame, lantern, altar, barrier, glass, stair);
-        buildCellWing(world, chamber.add(-9, 0, -1), base, wall, trim, lantern, true);
-        buildCellWing(world, chamber.add(9, 0, -1), base, wall, trim, lantern, false);
-        buildRitualWing(world, chamber, base, wall, trim, frame, lantern, barrier, stair);
+        buildLowerSanctum(world, chamber, base, wall, trim, frame, lantern, altar, barrier, glass, stair, tile, bars);
+        buildCellWing(world, chamber.add(-9, 0, -1), base, wall, trim, lantern, bars, true);
+        buildCellWing(world, chamber.add(9, 0, -1), base, wall, trim, lantern, bars, false);
+        buildRitualWing(world, chamber, base, wall, trim, frame, lantern, barrier, stair, tile);
         buildVaultBranch(world, chamber.add(10, 0, 10), base, wall, trim, lantern, glass, stair);
         carveSanctumFlow(world, chamber, trim, stair);
 
@@ -111,11 +113,15 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         }
     }
 
-    private static void buildLowerSanctum(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState frame, BlockState lantern, BlockState altar, BlockState barrier, BlockState glass, BlockState stair) {
+    private static void buildLowerSanctum(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState frame, BlockState lantern, BlockState altar, BlockState barrier, BlockState glass, BlockState stair, BlockState tile, BlockState bars) {
         for (int dx = -8; dx <= 8; dx++) {
             for (int dz = -10; dz <= 10; dz++) {
                 world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(center.add(dx, 0, dz), dx == 0 || dz == 0 ? trim : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                BlockState floor = dx == 0 || dz == 0 ? trim : wall;
+                if (Math.abs(dx) >= 5 && Math.abs(dz) <= 7) {
+                    floor = tile;
+                }
+                world.setBlockState(center.add(dx, 0, dz), floor, HushStructureFeatureSupport.GEN_FLAGS);
                 for (int dy = 1; dy <= 7; dy++) {
                     BlockPos pos = center.add(dx, dy, dz);
                     if (Math.abs(dx) == 8 || Math.abs(dz) == 10 || dy == 7) {
@@ -124,6 +130,8 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
                         } else {
                             world.setBlockState(pos, dy >= 6 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
                         }
+                    } else if (Math.abs(dx) == 3 && dz >= -7 && dz <= 7 && dy <= 4) {
+                        world.setBlockState(pos, dy == 1 || dy == 4 ? trim : bars, HushStructureFeatureSupport.GEN_FLAGS);
                     } else {
                         world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                     }
@@ -141,7 +149,7 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         }
     }
 
-    private static void buildCellWing(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState lantern, boolean west) {
+    private static void buildCellWing(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState lantern, BlockState bars, boolean west) {
         int side = west ? -1 : 1;
         for (int dx = -3; dx <= 3; dx++) {
             for (int dz = -5; dz <= 5; dz++) {
@@ -161,14 +169,18 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dy = 0; dy <= 3; dy++) {
                     BlockPos cell = center.add(dx, dy, dz);
-                    world.setBlockState(cell, Math.abs(dx) == 1 || Math.abs(dz) == 4 || dy == 3 ? trim : Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                    BlockState state = Math.abs(dx) == 1 || Math.abs(dz) == 4 || dy == 3 ? trim : Blocks.AIR.getDefaultState();
+                    if (Math.abs(dx) == 1 && dy <= 2) {
+                        state = bars;
+                    }
+                    world.setBlockState(cell, state, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
         world.setBlockState(center.add(0, 1, 3), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
-    private static void buildRitualWing(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState frame, BlockState lantern, BlockState barrier, BlockState stair) {
+    private static void buildRitualWing(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState frame, BlockState lantern, BlockState barrier, BlockState stair, BlockState tile) {
         BlockPos ritual = center.add(0, 0, -11);
         for (int dx = -4; dx <= 4; dx++) {
             for (int dz = -4; dz <= 4; dz++) {
@@ -184,7 +196,9 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
             }
         }
         HushStructureFeatureSupport.placeDoor(world, ritual.add(0, 0, 4), Direction.SOUTH);
-        world.setBlockState(ritual.add(0, 0, 0), trim, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(ritual.add(0, 0, 0), tile, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(ritual.add(-1, 0, 0), trim, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(ritual.add(1, 0, 0), trim, HushStructureFeatureSupport.GEN_FLAGS);
         world.setBlockState(ritual.add(0, 2, 0), barrier, HushStructureFeatureSupport.GEN_FLAGS);
         world.setBlockState(ritual.add(-2, 2, -2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         world.setBlockState(ritual.add(2, 2, -2), lantern, HushStructureFeatureSupport.GEN_FLAGS);

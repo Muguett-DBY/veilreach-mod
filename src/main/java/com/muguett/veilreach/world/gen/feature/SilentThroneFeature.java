@@ -35,6 +35,8 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         BlockState dark = Blocks.POLISHED_BLACKSTONE_BRICKS.getDefaultState();
         BlockState stair = Blocks.POLISHED_BLACKSTONE_BRICK_STAIRS.getDefaultState();
         BlockState slab = Blocks.POLISHED_BLACKSTONE_BRICK_SLAB.getDefaultState();
+        BlockState gold = Blocks.GILDED_BLACKSTONE.getDefaultState();
+        BlockState iron = Blocks.IRON_BARS.getDefaultState();
 
         HushStructureFeatureSupport.clearBox(world, center, 26, 28, 28);
         HushStructureFeatureSupport.supportFootprint(world, center, -10, 10, -26, 14, -1, base);
@@ -44,10 +46,10 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
 
         buildApproach(world, center, base, dark, frame, lantern, stair, slab);
         buildGateHall(world, center, base, wall, dark, frame, lantern, stair, slab);
-        buildThroneDais(world, center, base, wall, dark, frame, lantern, barrier, altar, stair);
-        buildSideFort(world, center.add(-13, 0, 4), base, wall, dark, frame, lantern, barrier, true);
-        buildSideFort(world, center.add(13, 0, 4), base, wall, dark, frame, lantern, barrier, false);
-        buildRearKeep(world, center, base, wall, dark, frame, lantern, stair);
+        buildThroneDais(world, center, base, wall, dark, frame, lantern, barrier, altar, stair, gold, iron);
+        buildSideFort(world, center.add(-13, 0, 4), base, wall, dark, frame, lantern, barrier, iron, true);
+        buildSideFort(world, center.add(13, 0, 4), base, wall, dark, frame, lantern, barrier, iron, false);
+        buildRearKeep(world, center, base, wall, dark, frame, lantern, stair, gold);
         buildUndercroft(world, center, base, wall, dark, lantern, barrier, stair);
         carveThroneFlow(world, center, dark, stair, slab);
 
@@ -138,10 +140,14 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         }
     }
 
-    private static void buildThroneDais(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState dark, BlockState frame, BlockState lantern, BlockState barrier, BlockState altar, BlockState stair) {
+    private static void buildThroneDais(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState dark, BlockState frame, BlockState lantern, BlockState barrier, BlockState altar, BlockState stair, BlockState gold, BlockState iron) {
         for (int dz = -3; dz <= 8; dz++) {
             for (int dx = -7; dx <= 7; dx++) {
-                world.setBlockState(center.add(dx, 0, dz), Math.abs(dx) <= 2 && dz <= 1 ? dark : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                BlockState floor = Math.abs(dx) <= 2 && dz <= 1 ? gold : wall;
+                if (Math.abs(dx) >= 5 && dz >= 1) {
+                    floor = dark;
+                }
+                world.setBlockState(center.add(dx, 0, dz), floor, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
         for (int step = 0; step <= 5; step++) {
@@ -160,6 +166,10 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
                 world.setBlockState(center.add(side * 7, y, -4), frame, HushStructureFeatureSupport.GEN_FLAGS);
                 world.setBlockState(center.add(side * 7, y, 8), frame, HushStructureFeatureSupport.GEN_FLAGS);
             }
+            for (int y = 2; y <= 6; y++) {
+                world.setBlockState(center.add(side * 4, y, 2), iron, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(side * 4, y, 5), iron, HushStructureFeatureSupport.GEN_FLAGS);
+            }
         }
         world.setBlockState(center.add(0, 8, -3), altar, HushStructureFeatureSupport.GEN_FLAGS);
         world.setBlockState(center.add(-2, 8, -4), lantern, HushStructureFeatureSupport.GEN_FLAGS);
@@ -177,7 +187,7 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         }
     }
 
-    private static void buildSideFort(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState dark, BlockState frame, BlockState lantern, BlockState barrier, boolean west) {
+    private static void buildSideFort(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState dark, BlockState frame, BlockState lantern, BlockState barrier, BlockState iron, boolean west) {
         int side = west ? -1 : 1;
         for (int dx = -4; dx <= 4; dx++) {
             for (int dz = -7; dz <= 7; dz++) {
@@ -201,9 +211,13 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.placeDoor(world, center.add(-side * 4, 0, 0), west ? Direction.EAST : Direction.WEST);
         world.setBlockState(center.add(0, 1, 4), barrier, HushStructureFeatureSupport.GEN_FLAGS);
         world.setBlockState(center.add(0, 5, -4), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        for (int y = 1; y <= 4; y++) {
+            world.setBlockState(center.add(0, y, -1), iron, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(0, y, 1), iron, HushStructureFeatureSupport.GEN_FLAGS);
+        }
     }
 
-    private static void buildRearKeep(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState dark, BlockState frame, BlockState lantern, BlockState stair) {
+    private static void buildRearKeep(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState dark, BlockState frame, BlockState lantern, BlockState stair, BlockState gold) {
         for (int dz = 15; dz <= 24; dz++) {
             for (int dx = -16; dx <= 16; dx++) {
                 world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
@@ -226,6 +240,9 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         for (int step = 0; step <= 4; step++) {
             world.setBlockState(center.add(-5, 1 + step, 20 - step), stair.with(StairsBlock.FACING, Direction.WEST), HushStructureFeatureSupport.GEN_FLAGS);
             world.setBlockState(center.add(5, 1 + step, 20 - step), stair.with(StairsBlock.FACING, Direction.EAST), HushStructureFeatureSupport.GEN_FLAGS);
+        }
+        for (int dx = -3; dx <= 3; dx++) {
+            world.setBlockState(center.add(dx, 0, 19), gold, HushStructureFeatureSupport.GEN_FLAGS);
         }
         for (int side = -1; side <= 1; side += 2) {
             buildKeepTower(world, center.add(side * 12, 0, 18), base, wall, frame, lantern);
