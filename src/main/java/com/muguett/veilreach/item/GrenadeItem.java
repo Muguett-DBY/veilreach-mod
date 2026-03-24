@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public final class GrenadeItem extends ThrowableGrenadeItem {
     public static final int DEFAULT_FUSE_TICKS = 60;
-    public static final float DEFAULT_THROW_SPEED = 1.05F;
+    public static final float DEFAULT_THROW_SPEED = 1.28F;
 
     public GrenadeItem(Settings settings) {
         super(settings);

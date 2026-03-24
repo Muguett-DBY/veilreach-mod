@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 
 public final class ImpactGrenadeItem extends ThrowableGrenadeItem {
-    public static final float DEFAULT_THROW_SPEED = 1.18F;
+    public static final float DEFAULT_THROW_SPEED = 1.42F;
 
     public ImpactGrenadeItem(Settings settings) {
         super(settings);
