@@ -3,6 +3,7 @@ package com.muguett.veilreach.registry;
 import com.muguett.veilreach.VeilreachMod;
 import com.muguett.veilreach.item.AstralSigilItem;
 import com.muguett.veilreach.item.HushWardCharmItem;
+import com.muguett.veilreach.item.LoreHintItem;
 import com.muguett.veilreach.item.SovereignWardItem;
 import com.muguett.veilreach.item.VeilreachSpawnEggItem;
 import net.minecraft.component.type.FoodComponent;
@@ -15,6 +16,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 
 import java.util.function.Function;
 
@@ -22,8 +24,8 @@ public final class VeilreachItems {
     public static final Item VEIL_SHARD = register("veil_shard", Item::new);
     public static final Item HUSHBERRY = register("hushberry", settings -> new Item(settings.food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.35F).build())));
     public static final Item MOONBROTH_TART = register("moonbroth_tart", settings -> new Item(settings.food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.85F).build())));
-    public static final Item LUNAR_FIBER = register("lunar_fiber", Item::new);
-    public static final Item MIRROR_INGOT = register("mirror_ingot", Item::new);
+    public static final Item LUNAR_FIBER = register("lunar_fiber", settings -> new LoreHintItem(settings, "item.veilreach.lunar_fiber.tooltip"));
+    public static final Item MIRROR_INGOT = register("mirror_ingot", settings -> new LoreHintItem(settings, "item.veilreach.mirror_ingot.tooltip"));
     public static final Item MIRROR_BLADE = register("mirror_blade", settings -> new Item(VeilreachToolMaterials.MIRRORSTEEL.applySwordSettings(settings, 3.0F, -2.4F)));
     public static final Item MIRROR_PICKAXE = register("mirror_pickaxe", settings -> new Item(VeilreachToolMaterials.MIRRORSTEEL.applyToolSettings(settings, net.minecraft.registry.tag.BlockTags.PICKAXE_MINEABLE, 1.0F, -2.8F, 0.0F)));
     public static final Item MIRROR_AXE = register("mirror_axe", settings -> new AxeItem(VeilreachToolMaterials.MIRRORSTEEL, 5.5F, -3.0F, settings));
@@ -37,14 +39,14 @@ public final class VeilreachItems {
     public static final Item SOVEREIGN_LEGGINGS = register("sovereign_leggings", settings -> new Item(settings.armor(VeilreachArmorMaterials.SOVEREIGN, EquipmentType.LEGGINGS).maxDamage(EquipmentType.LEGGINGS.getMaxDamage(VeilreachArmorMaterials.SOVEREIGN.durability()))));
     public static final Item SOVEREIGN_BOOTS = register("sovereign_boots", settings -> new Item(settings.armor(VeilreachArmorMaterials.SOVEREIGN, EquipmentType.BOOTS).maxDamage(EquipmentType.BOOTS.getMaxDamage(VeilreachArmorMaterials.SOVEREIGN.durability()))));
     public static final Item SOVEREIGN_GLAIVE = register("sovereign_glaive", settings -> new Item(VeilreachToolMaterials.SOVEREIGN.applySwordSettings(settings, 5.0F, -2.7F)));
-    public static final Item STARFRAGMENT = register("starfragment", Item::new);
-    public static final Item SOVEREIGN_CORE = register("sovereign_core", Item::new);
-    public static final Item SANCTUM_KEY = register("sanctum_key", Item::new);
-    public static final Item CATHEDRAL_SEAL = register("cathedral_seal", Item::new);
-    public static final Item WARDEN_SIGIL = register("warden_sigil", Item::new);
+    public static final Item STARFRAGMENT = register("starfragment", settings -> new LoreHintItem(settings.rarity(Rarity.UNCOMMON), "item.veilreach.starfragment.tooltip"));
+    public static final Item SOVEREIGN_CORE = register("sovereign_core", settings -> new LoreHintItem(settings.rarity(Rarity.EPIC), "item.veilreach.sovereign_core.tooltip", "item.veilreach.sovereign_core.tooltip2"));
+    public static final Item SANCTUM_KEY = register("sanctum_key", settings -> new LoreHintItem(settings.rarity(Rarity.UNCOMMON), "item.veilreach.sanctum_key.tooltip"));
+    public static final Item CATHEDRAL_SEAL = register("cathedral_seal", settings -> new LoreHintItem(settings.rarity(Rarity.UNCOMMON), "item.veilreach.cathedral_seal.tooltip"));
+    public static final Item WARDEN_SIGIL = register("warden_sigil", settings -> new LoreHintItem(settings.rarity(Rarity.RARE), "item.veilreach.warden_sigil.tooltip", "item.veilreach.warden_sigil.tooltip2"));
     public static final Item HUSH_WARD_CHARM = register("hush_ward_charm", HushWardCharmItem::new);
     public static final Item SOVEREIGN_WARD = register("sovereign_ward", SovereignWardItem::new);
-    public static final Item ASTRAL_SIGIL = register("astral_sigil", AstralSigilItem::new);
+    public static final Item ASTRAL_SIGIL = register("astral_sigil", settings -> new AstralSigilItem(settings.rarity(Rarity.UNCOMMON)));
     public static final Item GLOAMWOOD_SAP = register("gloamwood_sap", Item::new);
     public static final Item MIRROR_STAG_SPAWN_EGG = registerSpawnEgg("mirror_stag_spawn_egg", VeilreachEntities.MIRROR_STAG);
     public static final Item HUSHLING_SPAWN_EGG = registerSpawnEgg("hushling_spawn_egg", VeilreachEntities.HUSHLING);
