@@ -36,6 +36,7 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         BlockState glass = VeilreachBlocks.RIFTGLASS.getDefaultState();
 
         HushStructureFeatureSupport.clearBox(world, center, 9, 12, 9);
+        HushStructureFeatureSupport.supportFootprint(world, center, -6, 6, -6, 6, -1, polished);
 
         for (int dx = -6; dx <= 6; dx++) {
             for (int dz = -6; dz <= 6; dz++) {

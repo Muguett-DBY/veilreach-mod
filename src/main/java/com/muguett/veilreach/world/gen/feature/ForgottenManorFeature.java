@@ -42,7 +42,13 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
         BlockState cache = VeilreachBlocks.STARLIGHT_CACHE.getDefaultState();
         BlockState ladderNorth = Blocks.LADDER.getDefaultState().with(LadderBlock.FACING, Direction.NORTH);
 
-        HushStructureFeatureSupport.clearBox(world, center, 10, 13, 8);
+        HushStructureFeatureSupport.clearBox(world, center, 14, 17, 11);
+        HushStructureFeatureSupport.supportFootprint(world, center, -8, 8, -6, 6, -1, polished);
+        HushStructureFeatureSupport.supportFootprint(world, center, -13, -9, -8, -4, -1, polished);
+        HushStructureFeatureSupport.supportFootprint(world, center, 9, 13, -8, -4, -1, polished);
+        HushStructureFeatureSupport.supportFootprint(world, center, -13, -9, 4, 8, -1, polished);
+        HushStructureFeatureSupport.supportFootprint(world, center, 9, 13, 4, 8, -1, polished);
+        HushStructureFeatureSupport.supportFootprint(world, center, -4, 4, 7, 11, -1, polished);
 
         for (int dx = -8; dx <= 8; dx++) {
             for (int dz = -6; dz <= 6; dz++) {
@@ -59,6 +65,11 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
         buildInteriorRooms(world, center, planks, polished, lantern);
         buildManorBasement(world, center, polished, planks, lantern);
         buildUpperGallery(world, center, planks, polished, lantern, frame);
+        buildSouthWing(world, center, planks, log, frame, polished, glass, lantern);
+        buildCornerTower(world, center.add(-11, 0, -6), planks, log, frame, lantern, glass);
+        buildCornerTower(world, center.add(11, 0, -6), planks, log, frame, lantern, glass);
+        buildCornerTower(world, center.add(-11, 0, 6), planks, log, frame, lantern, glass);
+        buildCornerTower(world, center.add(11, 0, 6), planks, log, frame, lantern, glass);
 
         for (int dx = -7; dx <= 7; dx++) {
             for (int dz = -5; dz <= 5; dz++) {
@@ -115,8 +126,14 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, 6, -4), Direction.SOUTH, "chests/forgotten_manor");
         HushStructureFeatureSupport.placeLootChest(world, center.add(5, 6, 3), Direction.WEST, "chests/forgotten_manor");
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, -3, -4), Direction.SOUTH, "chests/forgotten_manor");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, 9), Direction.NORTH, "chests/forgotten_manor");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(-11, 1, -6), Direction.SOUTH, "chests/forgotten_manor");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(11, 7, -6), Direction.SOUTH, "chests/forgotten_manor");
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-4, -3, 0), VeilreachEntities.MOONFALLEN_KNIGHT);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(4, 6, 0), VeilreachEntities.LANTERNKEEPER);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(0, 1, 8), VeilreachEntities.MOONFALLEN_KNIGHT);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-11, 1, 6), VeilreachEntities.VEILBOUND_WATCHER);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(11, 1, 6), VeilreachEntities.WARDEN_OF_SILENCE);
         return true;
     }
 
@@ -239,6 +256,90 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
                 world.setBlockState(center.add(dx, 9, dz), lantern, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
+    }
+
+    private static void buildSouthWing(
+            StructureWorldAccess world,
+            BlockPos center,
+            BlockState planks,
+            BlockState log,
+            BlockState frame,
+            BlockState polished,
+            BlockState glass,
+            BlockState lantern
+    ) {
+        BlockPos wing = center.add(0, 0, 9);
+        for (int dx = -4; dx <= 4; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                world.setBlockState(wing.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(wing.add(dx, 0, dz), planks, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(wing.add(dx, 5, dz), planks, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+        for (int dy = 1; dy <= 4; dy++) {
+            for (int dx = -4; dx <= 4; dx++) {
+                for (int dz = -2; dz <= 2; dz++) {
+                    BlockPos pos = wing.add(dx, dy, dz);
+                    if (Math.abs(dx) == 4 && Math.abs(dz) == 2) {
+                        world.setBlockState(pos, log, HushStructureFeatureSupport.GEN_FLAGS);
+                    } else if (Math.abs(dx) == 4 || Math.abs(dz) == 2) {
+                        if (dz == 2 && Math.abs(dx) <= 1 && dy <= 3) {
+                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                        } else if (Math.abs(dx) == 2 && dz == -2 && dy >= 2) {
+                            world.setBlockState(pos, glass, HushStructureFeatureSupport.GEN_FLAGS);
+                        } else {
+                            world.setBlockState(pos, frame, HushStructureFeatureSupport.GEN_FLAGS);
+                        }
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
+            }
+        }
+        world.setBlockState(wing.add(-3, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(wing.add(3, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+    }
+
+    private static void buildCornerTower(
+            StructureWorldAccess world,
+            BlockPos center,
+            BlockState planks,
+            BlockState log,
+            BlockState frame,
+            BlockState lantern,
+            BlockState glass
+    ) {
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                world.setBlockState(center.add(dx, -1, dz), planks, HushStructureFeatureSupport.GEN_FLAGS);
+                for (int dy = 0; dy <= 11; dy++) {
+                    BlockPos pos = center.add(dx, dy, dz);
+                    if (Math.abs(dx) == 2 && Math.abs(dz) == 2) {
+                        world.setBlockState(pos, log, HushStructureFeatureSupport.GEN_FLAGS);
+                    } else if (Math.abs(dx) == 2 || Math.abs(dz) == 2) {
+                        if (dy >= 4 && dy <= 6 && ((dx == 0 && Math.abs(dz) == 2) || (dz == 0 && Math.abs(dx) == 2))) {
+                            world.setBlockState(pos, glass, HushStructureFeatureSupport.GEN_FLAGS);
+                        } else {
+                            world.setBlockState(pos, frame, HushStructureFeatureSupport.GEN_FLAGS);
+                        }
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
+            }
+        }
+
+        for (int layer = 0; layer <= 2; layer++) {
+            int radius = 3 - layer;
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    if (Math.abs(dx) == radius || Math.abs(dz) == radius) {
+                        world.setBlockState(center.add(dx, 12 + layer, dz), planks, HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
+            }
+        }
+        world.setBlockState(center.add(0, 15, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {

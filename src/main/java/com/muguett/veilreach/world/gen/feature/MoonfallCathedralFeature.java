@@ -36,6 +36,7 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         BlockState altar = VeilreachBlocks.AWAKENED_ALTAR.getDefaultState();
 
         HushStructureFeatureSupport.clearBox(world, center, 12, 18, 10);
+        HushStructureFeatureSupport.supportFootprint(world, center, -9, 9, -7, 7, -1, polished);
 
         for (int dx = -9; dx <= 9; dx++) {
             for (int dz = -7; dz <= 7; dz++) {

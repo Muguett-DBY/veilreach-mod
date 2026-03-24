@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.fluid.Fluids;
 
 final class HushStructureFeatureSupport {
     static final int GEN_FLAGS = Block.NOTIFY_LISTENERS | Block.FORCE_STATE;
@@ -60,13 +61,52 @@ final class HushStructureFeatureSupport {
                 BlockPos surface = findGenerationCenter(world, center.add(dx, 0, dz));
                 minY = Math.min(minY, surface.getY());
                 maxY = Math.max(maxY, surface.getY());
-                if (isHushGround(world, surface.down())) {
+                if (isHushGround(world, surface.down()) && !world.getFluidState(surface.down()).isOf(Fluids.WATER)) {
                     validSamples++;
                 }
             }
         }
 
         return validSamples >= minValidSamples && maxY - minY <= maxHeightVariance;
+    }
+
+    static void supportFootprint(
+            StructureWorldAccess world,
+            BlockPos center,
+            int minX,
+            int maxX,
+            int minZ,
+            int maxZ,
+            int floorOffsetY,
+            BlockState fillState
+    ) {
+        for (int dx = minX; dx <= maxX; dx++) {
+            for (int dz = minZ; dz <= maxZ; dz++) {
+                fillDown(world, center.add(dx, floorOffsetY, dz), fillState);
+            }
+        }
+    }
+
+    static void fillDown(StructureWorldAccess world, BlockPos start, BlockState fillState) {
+        for (int y = start.getY(); y > world.getBottomY() + 1; y--) {
+            BlockPos current = new BlockPos(start.getX(), y, start.getZ());
+            BlockState existing = world.getBlockState(current);
+            if (!needsFoundation(existing)) {
+                break;
+            }
+            world.setBlockState(current, fillState, GEN_FLAGS);
+        }
+    }
+
+    private static boolean needsFoundation(BlockState state) {
+        return state.isAir()
+                || state.isOf(Blocks.WATER)
+                || state.isOf(Blocks.SEAGRASS)
+                || state.isOf(Blocks.TALL_SEAGRASS)
+                || state.isOf(Blocks.KELP)
+                || state.isOf(Blocks.KELP_PLANT)
+                || state.getFluidState().isOf(Fluids.WATER)
+                || state.isReplaceable();
     }
 
     static void clearBox(StructureWorldAccess world, BlockPos center, int radiusX, int height, int radiusZ) {

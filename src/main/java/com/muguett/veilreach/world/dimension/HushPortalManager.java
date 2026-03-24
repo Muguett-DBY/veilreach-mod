@@ -28,7 +28,9 @@ public final class HushPortalManager {
     private static final int ARRIVAL_PLATFORM_RADIUS = 3;
     private static final int ARRIVAL_CLEARANCE_HEIGHT = 6;
     private static final int ARRIVAL_MIN_SURFACE_Y = 72;
-    private static final int ARRIVAL_LANDMARK_OFFSET = 40;
+    private static final int ARRIVAL_ISLAND_RADIUS_X = 18;
+    private static final int ARRIVAL_ISLAND_RADIUS_Z = 14;
+    private static final int ARRIVAL_LANDMARK_OFFSET = 24;
     private static final Map<UUID, BlockPos> OVERWORLD_RETURN_PORTALS = new ConcurrentHashMap<>();
 
     private HushPortalManager() {
@@ -160,6 +162,7 @@ public final class HushPortalManager {
 
     private static BlockPos ensureArrivalPlatform(ServerWorld world, BlockPos preferred) {
         BlockPos base = resolveArrivalBase(world, preferred);
+        buildArrivalIsland(world, base, ARRIVAL_ISLAND_RADIUS_X, ARRIVAL_ISLAND_RADIUS_Z, 5);
 
         for (int dx = -ARRIVAL_PLATFORM_RADIUS; dx <= ARRIVAL_PLATFORM_RADIUS; dx++) {
             for (int dz = -ARRIVAL_PLATFORM_RADIUS; dz <= ARRIVAL_PLATFORM_RADIUS; dz++) {
@@ -190,8 +193,40 @@ public final class HushPortalManager {
             return;
         }
 
-        BlockPos landmarkCenter = resolveArrivalBase(world, base.add(ARRIVAL_LANDMARK_OFFSET, 0, 0));
+        BlockPos landmarkCenter = base.add(ARRIVAL_LANDMARK_OFFSET, 0, 0);
+        buildArrivalIsland(world, landmarkCenter, ARRIVAL_ISLAND_RADIUS_X + 8, ARRIVAL_ISLAND_RADIUS_Z + 4, 7);
         ForgottenManorFeature.generateAt(world, landmarkCenter, false);
+    }
+
+    private static void buildArrivalIsland(ServerWorld world, BlockPos center, int radiusX, int radiusZ, int depth) {
+        BlockState top = VeilreachBlocks.MIRROR_GRASS.getDefaultState();
+        BlockState fill = VeilreachBlocks.VEILSTONE.getDefaultState();
+
+        for (int dx = -radiusX; dx <= radiusX; dx++) {
+            for (int dz = -radiusZ; dz <= radiusZ; dz++) {
+                double normalized = (dx * dx) / (double) (radiusX * radiusX) + (dz * dz) / (double) (radiusZ * radiusZ);
+                if (normalized > 1.0D) {
+                    continue;
+                }
+
+                int contourDrop = (int) Math.floor(normalized * depth);
+                BlockPos topPos = center.add(dx, -1 - contourDrop, dz);
+                world.setBlockState(topPos, top, Block.NOTIFY_ALL);
+
+                for (int y = topPos.getY() - 1; y > world.getBottomY() + 1; y--) {
+                    BlockPos current = new BlockPos(topPos.getX(), y, topPos.getZ());
+                    BlockState state = world.getBlockState(current);
+                    if (!state.isAir() && !state.isOf(Blocks.WATER) && !state.getFluidState().isStill()) {
+                        break;
+                    }
+                    world.setBlockState(current, fill, Block.NOTIFY_ALL);
+                }
+
+                for (int y = topPos.getY() + 1; y <= center.getY() + ARRIVAL_CLEARANCE_HEIGHT; y++) {
+                    world.setBlockState(new BlockPos(topPos.getX(), y, topPos.getZ()), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                }
+            }
+        }
     }
 
     private static void buildFrame(ServerWorld world, BlockPos base) {
