@@ -10,8 +10,8 @@ $itemDir = Join-Path $assetsRoot "textures\item"
 $entityDir = Join-Path $assetsRoot "textures\entity"
 $iconPath = Join-Path $assetsRoot "icon.png"
 $minecraftZipPath = "E:\MOD\minecraft-merged.zip"
-$tileSize = 128
-$entitySheetSize = 128
+$tileSize = 256
+$entitySheetSize = 256
 
 foreach ($dir in @($blockDir, $itemDir, $entityDir)) {
     if (-not (Test-Path $dir)) {

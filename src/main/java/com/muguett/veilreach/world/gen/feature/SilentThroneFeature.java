@@ -43,14 +43,19 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.supportFootprint(world, center, -17, -9, -3, 15, -1, base);
         HushStructureFeatureSupport.supportFootprint(world, center, 9, 17, -3, 15, -1, base);
         HushStructureFeatureSupport.supportFootprint(world, center, -16, 16, 15, 24, -1, base);
+        HushStructureFeatureSupport.supportFootprint(world, center, -22, 22, -32, -21, -1, base);
+        HushStructureFeatureSupport.supportFootprint(world, center, -22, -14, 16, 26, -1, base);
+        HushStructureFeatureSupport.supportFootprint(world, center, 14, 22, 16, 26, -1, base);
 
         buildApproach(world, center, base, dark, frame, lantern, stair, slab);
+        buildCurtainWall(world, center, base, wall, dark, frame, lantern, stair);
         buildOuterWard(world, center, base, wall, dark, frame, lantern);
         buildGateHall(world, center, base, wall, dark, frame, lantern, stair, slab);
         buildThroneDais(world, center, base, wall, dark, frame, lantern, barrier, altar, stair, gold, iron);
         buildSideFort(world, center.add(-13, 0, 4), base, wall, dark, frame, lantern, barrier, iron, true);
         buildSideFort(world, center.add(13, 0, 4), base, wall, dark, frame, lantern, barrier, iron, false);
         buildRearKeep(world, center, base, wall, dark, frame, lantern, stair, gold);
+        buildAudienceCrypt(world, center.add(0, 0, 18), base, wall, dark, frame, lantern, iron);
         buildUndercroft(world, center, base, wall, dark, lantern, barrier, stair);
         buildWarCrypt(world, center.add(0, 0, 25), base, wall, dark, frame, lantern);
         carveThroneFlow(world, center, dark, stair, slab);
@@ -66,6 +71,8 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.placeLootChest(world, center.add(12, 11, 18), Direction.SOUTH, "chests/silent_throne");
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, -5, 6), Direction.NORTH, "chests/silent_throne");
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, 24), Direction.NORTH, "chests/silent_throne");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(-18, 1, 20), Direction.EAST, "chests/silent_throne");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(18, 1, 20), Direction.WEST, "chests/silent_throne");
 
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-13, 1, 8), VeilreachEntities.MOONFALLEN_KNIGHT);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(13, 1, 8), VeilreachEntities.WARDEN_OF_SILENCE);
@@ -75,7 +82,50 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-12, 1, 18), VeilreachEntities.VEILBOUND_WATCHER);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(12, 11, 18), VeilreachEntities.LANTERNKEEPER);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(0, 1, 24), VeilreachEntities.WARDEN_OF_SILENCE);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-18, 1, 20), VeilreachEntities.MOONFALLEN_KNIGHT);
+        HushStructureFeatureSupport.spawnPersistentMob(world, center.add(18, 1, 20), VeilreachEntities.VEILBOUND_WATCHER);
         return true;
+    }
+
+    private static void buildCurtainWall(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState dark, BlockState frame, BlockState lantern, BlockState stair) {
+        for (int dz = -32; dz <= -21; dz++) {
+            for (int dx = -22; dx <= 22; dx++) {
+                world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                if (Math.abs(dx) == 22 || dz == -32 || dz == -21) {
+                    for (int dy = 0; dy <= 8; dy++) {
+                        world.setBlockState(center.add(dx, dy, dz), dy >= 6 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                } else if (Math.abs(dx) <= 4) {
+                    world.setBlockState(center.add(dx, 0, dz), dark, HushStructureFeatureSupport.GEN_FLAGS);
+                }
+            }
+        }
+        for (int dx = -3; dx <= 3; dx++) {
+            world.setBlockState(center.add(dx, 1, -21), stair.with(StairsBlock.FACING, Direction.NORTH), HushStructureFeatureSupport.GEN_FLAGS);
+        }
+        world.setBlockState(center.add(-22, 7, -26), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.add(22, 7, -26), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+    }
+
+    private static void buildAudienceCrypt(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState dark, BlockState frame, BlockState lantern, BlockState iron) {
+        for (int dx = -18; dx <= 18; dx++) {
+            for (int dz = 0; dz <= 8; dz++) {
+                world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
+                for (int dy = 0; dy <= 6; dy++) {
+                    BlockPos pos = center.add(dx, dy, dz);
+                    if (Math.abs(dx) == 18 || dz == 8 || dy == 6) {
+                        world.setBlockState(pos, dy >= 5 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
+                    } else if ((Math.abs(dx) == 9 || Math.abs(dx) == 3 || Math.abs(dx) == 15) && dy <= 4) {
+                        world.setBlockState(pos, dy == 1 ? dark : iron, HushStructureFeatureSupport.GEN_FLAGS);
+                    } else {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                    }
+                }
+            }
+        }
+        HushStructureFeatureSupport.placeDoor(world, center.add(0, 0, 0), Direction.SOUTH);
+        world.setBlockState(center.add(-12, 2, 4), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.add(12, 2, 4), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
     private static void buildOuterWard(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState dark, BlockState frame, BlockState lantern) {

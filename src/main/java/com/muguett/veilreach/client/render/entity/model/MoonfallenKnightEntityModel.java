@@ -18,6 +18,7 @@ public final class MoonfallenKnightEntityModel extends EntityModel<LivingEntityR
     private final ModelPart rightLeg;
     private final ModelPart leftLeg;
     private final ModelPart mantle;
+    private final ModelPart tabard;
 
     public MoonfallenKnightEntityModel(ModelPart root) {
         super(root);
@@ -28,6 +29,7 @@ public final class MoonfallenKnightEntityModel extends EntityModel<LivingEntityR
         this.rightLeg = root.getChild("right_leg");
         this.leftLeg = root.getChild("left_leg");
         this.mantle = this.body.getChild("mantle");
+        this.tabard = this.body.getChild("tabard");
     }
 
     public static TexturedModelData getTexturedModelData() {
@@ -50,6 +52,8 @@ public final class MoonfallenKnightEntityModel extends EntityModel<LivingEntityR
                 .uv(0, 42).cuboid(-4.5F, 4.0F, -4.6F, 9.0F, 5.0F, 1.0F), ModelTransform.origin(0.0F, 4.0F, 0.0F));
         body.addChild("mantle", ModelPartBuilder.create()
                 .uv(20, 42).cuboid(-6.5F, 0.0F, 0.0F, 13.0F, 16.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 2.8F, 0.24F, 0.0F, 0.0F));
+        body.addChild("tabard", ModelPartBuilder.create()
+                .uv(0, 59).cuboid(-2.5F, 0.0F, -4.2F, 5.0F, 13.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.06F, 0.0F, 0.0F));
         body.addChild("left_pauldron", ModelPartBuilder.create()
                 .uv(48, 42).mirrored().cuboid(0.0F, -1.0F, -3.5F, 3.0F, 6.0F, 7.0F), ModelTransform.of(5.0F, 0.5F, 0.0F, 0.0F, 0.0F, 0.22F));
         body.addChild("right_pauldron", ModelPartBuilder.create()
@@ -83,5 +87,8 @@ public final class MoonfallenKnightEntityModel extends EntityModel<LivingEntityR
         this.rightLeg.pitch = MathHelper.cos(swing) * 0.82F * stride;
         this.leftLeg.pitch = MathHelper.cos(swing + (float) Math.PI) * 0.82F * stride;
         this.mantle.pitch = 0.24F + (MathHelper.cos(swing) * 0.06F * stride);
+        this.tabard.pitch = -0.06F + (MathHelper.cos(swing + 0.4F) * 0.12F * stride);
+        this.rightArm.yaw = 0.08F;
+        this.leftArm.yaw = -0.12F;
     }
 }

@@ -18,6 +18,7 @@ public final class HushlingEntityModel extends EntityModel<LivingEntityRenderSta
     private final ModelPart rightLeg;
     private final ModelPart leftLeg;
     private final ModelPart spine;
+    private final ModelPart tail;
 
     public HushlingEntityModel(ModelPart root) {
         super(root);
@@ -28,6 +29,7 @@ public final class HushlingEntityModel extends EntityModel<LivingEntityRenderSta
         this.rightLeg = root.getChild("right_leg");
         this.leftLeg = root.getChild("left_leg");
         this.spine = this.body.getChild("spine");
+        this.tail = this.body.getChild("tail");
     }
 
     public static TexturedModelData getTexturedModelData() {
@@ -57,6 +59,9 @@ public final class HushlingEntityModel extends EntityModel<LivingEntityRenderSta
         ModelPartData spine = body.addChild("spine", ModelPartBuilder.create()
                 .uv(46, 24).cuboid(-1.0F, -2.0F, 2.0F, 2.0F, 14.0F, 2.0F)
                 .uv(54, 24).cuboid(-2.0F, -4.0F, 2.5F, 4.0F, 4.0F, 2.0F), ModelTransform.of(0.0F, 0.0F, 0.5F, -0.1F, 0.0F, 0.0F));
+        body.addChild("tail", ModelPartBuilder.create()
+                .uv(60, 31).cuboid(-1.0F, 0.0F, 0.0F, 2.0F, 12.0F, 2.0F)
+                .uv(68, 31).cuboid(-2.0F, 7.0F, 0.6F, 4.0F, 7.0F, 1.0F), ModelTransform.of(0.0F, 7.0F, 2.8F, 0.58F, 0.0F, 0.0F));
         body.addChild("cloak", ModelPartBuilder.create()
                 .uv(20, 42).cuboid(-5.0F, 0.0F, 2.0F, 10.0F, 14.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 0.5F, 0.16F, 0.0F, 0.0F));
         body.addChild("left_shoulder", ModelPartBuilder.create()
@@ -104,11 +109,17 @@ public final class HushlingEntityModel extends EntityModel<LivingEntityRenderSta
         this.head.pitch = state.pitch * 0.017453292F * 0.72F + 0.1F;
         this.body.pitch = 0.24F + idle * 0.6F;
         this.spine.pitch = -0.1F + idle;
+        this.tail.pitch = 0.62F + MathHelper.cos(state.age * 0.16F) * 0.12F + stride * 0.08F;
+        this.tail.yaw = MathHelper.cos(swing + 1.2F) * 0.14F * stride;
         this.rightArm.pitch = MathHelper.cos(swing + (float) Math.PI) * 1.02F * stride - 0.7F;
         this.leftArm.pitch = MathHelper.cos(swing) * 1.02F * stride - 0.7F;
         this.rightArm.roll = 0.2F - idle;
         this.leftArm.roll = -0.2F + idle;
+        this.rightArm.yaw = 0.08F;
+        this.leftArm.yaw = -0.08F;
         this.rightLeg.pitch = MathHelper.cos(swing) * 1.18F * stride - 0.15F;
         this.leftLeg.pitch = MathHelper.cos(swing + (float) Math.PI) * 1.18F * stride - 0.15F;
+        this.rightLeg.roll = -0.05F;
+        this.leftLeg.roll = 0.05F;
     }
 }

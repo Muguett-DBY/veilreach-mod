@@ -17,6 +17,7 @@ public final class VeilboundWatcherEntityModel extends EntityModel<LivingEntityR
     private final ModelPart rightArm;
     private final ModelPart lowerVeil;
     private final ModelPart halo;
+    private final ModelPart backBanner;
 
     public VeilboundWatcherEntityModel(ModelPart root) {
         super(root);
@@ -26,6 +27,7 @@ public final class VeilboundWatcherEntityModel extends EntityModel<LivingEntityR
         this.rightArm = this.core.getChild("right_arm");
         this.lowerVeil = this.core.getChild("lower_veil");
         this.halo = this.head.getChild("halo");
+        this.backBanner = this.core.getChild("back_banner");
     }
 
     public static TexturedModelData getTexturedModelData() {
@@ -42,6 +44,8 @@ public final class VeilboundWatcherEntityModel extends EntityModel<LivingEntityR
         head.addChild("halo", ModelPartBuilder.create()
                 .uv(40, 6).cuboid(-6.0F, -5.0F, -0.5F, 12.0F, 1.0F, 1.0F)
                 .uv(40, 8).cuboid(-0.5F, -9.0F, -0.5F, 1.0F, 4.0F, 1.0F), ModelTransform.of(0.0F, -3.0F, 0.0F, -0.25F, 0.0F, 0.0F));
+        head.addChild("second_halo", ModelPartBuilder.create()
+                .uv(44, 10).cuboid(-4.0F, -3.0F, -0.5F, 8.0F, 1.0F, 1.0F), ModelTransform.of(0.0F, -4.5F, 0.0F, 0.42F, 0.0F, 0.0F));
         head.addChild("face_veil", ModelPartBuilder.create()
                 .uv(50, 5).cuboid(-4.0F, -1.0F, -5.0F, 8.0F, 8.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.18F, 0.0F, 0.0F));
         head.addChild("left_face_fin", ModelPartBuilder.create()
@@ -80,5 +84,7 @@ public final class VeilboundWatcherEntityModel extends EntityModel<LivingEntityR
         this.rightArm.roll = 0.38F + sway;
         this.lowerVeil.yaw = sway * 1.7F;
         this.halo.roll = MathHelper.cos(state.age * 0.06F) * 0.12F;
+        this.backBanner.pitch = 0.22F + MathHelper.cos(state.age * 0.08F) * 0.06F;
+        this.backBanner.yaw = sway * 0.8F;
     }
 }
