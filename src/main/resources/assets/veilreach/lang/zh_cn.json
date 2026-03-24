@@ -97,6 +97,13 @@
   "subtitle.veilreach.biome.moonlit_thicket": "冰冷月辉正沿着每一片叶脉慢慢汇聚。",
   "subtitle.veilreach.biome.rift_meadows": "裂开的帷幕后，空气本身都在微微闪烁。",
   "subtitle.veilreach.biome.silent_badlands": "灰烬与石影吞没了所有遥远的回声。",
+  "subtitle.veilreach.sound.hushlands_whispers": "寂辉低语在银雾间缓缓回荡。",
+  "subtitle.veilreach.sound.rift_meadows_resonance": "裂隙的微鸣正与光一同颤动。",
+  "subtitle.veilreach.sound.hush_portal_loop": "寂辉门扉发出低沉而银亮的嗡鸣。",
+  "subtitle.veilreach.sound.hushling_lunge": "寂辉尸灵穿雾突袭。",
+  "subtitle.veilreach.sound.hush_sovereign_pulse": "寂主的脉响在远处回震。",
+  "subtitle.veilreach.sound.astral_sigil": "星仪符印作出了回应。",
+  "subtitle.veilreach.sound.sealed_altar_unlock": "祭坛封印应声破碎。",
   "itemGroup.veilreach.main": "帷境远界",
   "itemGroup.veilreach.materials": "帷境远界：材料",
   "itemGroup.veilreach.creatures": "帷境远界：生物"

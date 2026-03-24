@@ -1,6 +1,7 @@
 package com.muguett.veilreach.entity;
 
 import com.muguett.veilreach.registry.VeilreachItems;
+import com.muguett.veilreach.registry.VeilreachSoundEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
@@ -23,7 +24,7 @@ public class HushSovereignEntity extends WitherSkeletonEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_WITHER_AMBIENT;
+        return VeilreachSoundEvents.HUSH_SOVEREIGN_PULSE;
     }
 
     @Override
@@ -67,7 +68,7 @@ public class HushSovereignEntity extends WitherSkeletonEntity {
         if (this.getTarget() != null && this.age % 90 == 0) {
             this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 1));
             this.getTarget().addVelocity(this.getTarget().getX() > this.getX() ? 0.8D : -0.8D, 0.25D, this.getTarget().getZ() > this.getZ() ? 0.8D : -0.8D);
-            this.playSound(SoundEvents.ENTITY_WITHER_SHOOT, 0.85F, 0.55F);
+            this.playSound(VeilreachSoundEvents.HUSH_SOVEREIGN_PULSE, 0.95F, 0.72F);
         }
     }
 }

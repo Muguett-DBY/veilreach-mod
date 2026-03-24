@@ -5,6 +5,7 @@ import com.muguett.veilreach.registry.VeilreachBlocks;
 import com.muguett.veilreach.registry.VeilreachEntities;
 import com.muguett.veilreach.registry.VeilreachItemGroups;
 import com.muguett.veilreach.registry.VeilreachItems;
+import com.muguett.veilreach.registry.VeilreachSoundEvents;
 import com.muguett.veilreach.world.biome.HushlandsBiomes;
 import com.muguett.veilreach.world.dimension.VeilreachDimensions;
 import com.muguett.veilreach.world.gen.HushlandsWorldgen;
@@ -22,6 +23,7 @@ public final class VeilreachMod implements ModInitializer {
         VeilreachDimensions.initialize();
         VeilreachBlocks.initialize();
         VeilreachEntities.initialize();
+        VeilreachSoundEvents.initialize();
         VeilreachItems.initialize();
         VeilreachBlockItems.initialize();
         VeilreachItemGroups.initialize();

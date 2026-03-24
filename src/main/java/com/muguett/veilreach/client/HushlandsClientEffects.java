@@ -1,5 +1,6 @@
 package com.muguett.veilreach.client;
 
+import com.muguett.veilreach.registry.VeilreachSoundEvents;
 import com.muguett.veilreach.world.dimension.VeilreachDimensions;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -8,7 +9,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.registry.RegistryKey;
@@ -140,11 +140,9 @@ public final class HushlandsClientEffects {
         }
 
         if (random.nextInt(320) == 0) {
-            net.minecraft.sound.SoundEvent sound = badlands
-                    ? SoundEvents.AMBIENT_BASALT_DELTAS_MOOD.value()
-                    : (moonlit
-                    ? SoundEvents.AMBIENT_WARPED_FOREST_MOOD.value()
-                    : (rift ? SoundEvents.BLOCK_RESPAWN_ANCHOR_AMBIENT : (forest ? SoundEvents.BLOCK_SCULK_CATALYST_BLOOM : (grove ? SoundEvents.BLOCK_AMETHYST_CLUSTER_FALL : SoundEvents.BLOCK_AMETHYST_CLUSTER_HIT))));
+            net.minecraft.sound.SoundEvent sound = (rift || badlands)
+                    ? VeilreachSoundEvents.RIFT_MEADOWS_RESONANCE
+                    : VeilreachSoundEvents.HUSHLANDS_WHISPERS;
             world.playSoundClient(
                     client.player.getX(),
                     client.player.getY(),
@@ -159,9 +157,9 @@ public final class HushlandsClientEffects {
     }
 
     private static void playArrivalChime(ClientWorld world, MinecraftClient client) {
-        world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.AMBIENT, 0.55F, 0.7F, false);
-        world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.AMBIENT, 0.45F, 0.55F, false);
-        world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), SoundEvents.ENTITY_ENDERMAN_STARE, SoundCategory.AMBIENT, 0.18F, 0.45F, false);
+        world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), VeilreachSoundEvents.ASTRAL_SIGIL_USE, SoundCategory.AMBIENT, 0.65F, 0.88F, false);
+        world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), VeilreachSoundEvents.HUSH_PORTAL_LOOP, SoundCategory.AMBIENT, 0.3F, 0.95F, false);
+        world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), VeilreachSoundEvents.HUSHLANDS_WHISPERS, SoundCategory.AMBIENT, 0.2F, 1.0F, false);
     }
 
     private static void showArrivalTitle(MinecraftClient client) {

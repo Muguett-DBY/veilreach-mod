@@ -2,12 +2,12 @@
   "attributes": {
     "minecraft:audio/ambient_sounds": {
       "additions": {
-        "sound": "minecraft:ambient.soul_sand_valley.additions",
+        "sound": "veilreach:ambient.hushlands_whispers",
         "tick_chance": 0.009
       },
-      "loop": "minecraft:ambient.warped_forest.loop",
+      "loop": "veilreach:ambient.hushlands_whispers",
       "mood": {
-        "sound": "minecraft:ambient.soul_sand_valley.mood",
+        "sound": "veilreach:ambient.hushlands_whispers",
         "tick_delay": 6000,
         "block_search_extent": 8,
         "offset": 2.0
@@ -15,9 +15,9 @@
     },
     "minecraft:audio/background_music": {
       "default": {
-        "sound": "minecraft:music.end",
-        "min_delay": 10000,
-        "max_delay": 20000
+        "sound": "veilreach:music.hushlands.hush_grove",
+        "min_delay": 4000,
+        "max_delay": 9000
       }
     },
     "minecraft:visual/ambient_particles": [
@@ -45,7 +45,7 @@
     "grass_color": 5539748,
     "foliage_color": 6722218,
     "mood_sound": {
-      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "sound": "veilreach:ambient.hushlands_whispers",
       "tick_delay": 6000,
       "block_search_extent": 8,
       "offset": 2.0

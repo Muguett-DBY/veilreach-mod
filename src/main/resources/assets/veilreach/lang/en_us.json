@@ -97,6 +97,13 @@
   "subtitle.veilreach.biome.moonlit_thicket": "Cold light gathers across every leaf.",
   "subtitle.veilreach.biome.rift_meadows": "The air flickers with tears in the veil.",
   "subtitle.veilreach.biome.silent_badlands": "Ash and stone swallow every distant sound.",
+  "subtitle.veilreach.sound.hushlands_whispers": "The hush murmurs through the fog.",
+  "subtitle.veilreach.sound.rift_meadows_resonance": "The veil hums with fractured light.",
+  "subtitle.veilreach.sound.hush_portal_loop": "The Hush Portal sings in a low silver tone.",
+  "subtitle.veilreach.sound.hushling_lunge": "A hushling darts through the mist.",
+  "subtitle.veilreach.sound.hush_sovereign_pulse": "The Sovereign's pulse rings out.",
+  "subtitle.veilreach.sound.astral_sigil": "The Astral Sigil answers.",
+  "subtitle.veilreach.sound.sealed_altar_unlock": "The altar seal breaks open.",
   "itemGroup.veilreach.main": "Veilreach",
   "itemGroup.veilreach.materials": "Veilreach Materials",
   "itemGroup.veilreach.creatures": "Veilreach Creatures"

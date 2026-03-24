@@ -2,12 +2,12 @@
   "attributes": {
     "minecraft:audio/ambient_sounds": {
       "additions": {
-        "sound": "minecraft:ambient.soul_sand_valley.additions",
+        "sound": "veilreach:ambient.rift_meadows_resonance",
         "tick_chance": 0.007
       },
-      "loop": "minecraft:ambient.soul_sand_valley.loop",
+      "loop": "veilreach:ambient.rift_meadows_resonance",
       "mood": {
-        "sound": "minecraft:ambient.soul_sand_valley.mood",
+        "sound": "veilreach:ambient.rift_meadows_resonance",
         "tick_delay": 5600,
         "block_search_extent": 8,
         "offset": 2.0
@@ -15,9 +15,9 @@
     },
     "minecraft:audio/background_music": {
       "default": {
-        "sound": "minecraft:music.nether.soul_sand_valley",
-        "min_delay": 10000,
-        "max_delay": 22000
+        "sound": "veilreach:music.hushlands.rift_meadows",
+        "min_delay": 3500,
+        "max_delay": 7500
       }
     },
     "minecraft:visual/ambient_particles": [
@@ -45,7 +45,7 @@
     "grass_color": 5797060,
     "foliage_color": 6519743,
     "mood_sound": {
-      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "sound": "veilreach:ambient.rift_meadows_resonance",
       "tick_delay": 5600,
       "block_search_extent": 8,
       "offset": 2.0

@@ -1,5 +1,6 @@
 package com.muguett.veilreach.block;
 
+import com.muguett.veilreach.registry.VeilreachSoundEvents;
 import com.muguett.veilreach.world.dimension.HushPortalManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -8,7 +9,6 @@ import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -61,10 +61,10 @@ public class HushPortalBlock extends Block {
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (random.nextInt(18) == 0) {
-            world.playSound(null, pos, SoundEvents.BLOCK_PORTAL_AMBIENT, SoundCategory.BLOCKS, 0.45F, 0.8F + (random.nextFloat() * 0.35F));
+            world.playSound(null, pos, VeilreachSoundEvents.HUSH_PORTAL_LOOP, SoundCategory.BLOCKS, 0.45F, 0.88F + (random.nextFloat() * 0.2F));
         }
         if (random.nextInt(30) == 0) {
-            world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_AMBIENT, SoundCategory.BLOCKS, 0.18F, 0.7F + (random.nextFloat() * 0.15F));
+            world.playSound(null, pos, VeilreachSoundEvents.HUSHLANDS_WHISPERS, SoundCategory.BLOCKS, 0.18F, 0.82F + (random.nextFloat() * 0.08F));
         }
 
         for (int i = 0; i < 6; i++) {

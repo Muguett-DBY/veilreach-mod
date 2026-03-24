@@ -1,5 +1,6 @@
 package com.muguett.veilreach.entity;
 
+import com.muguett.veilreach.registry.VeilreachSoundEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
@@ -51,7 +52,7 @@ public class HushlingEntity extends ZombieEntity {
             double dz = this.getTarget().getZ() - this.getZ();
             double scale = 0.18D / Math.max(0.001D, Math.sqrt(dx * dx + dz * dz));
             this.addVelocity(dx * scale, 0.22D, dz * scale);
-            this.playSound(SoundEvents.ENTITY_ENDERMITE_STEP, 0.4F, 0.65F);
+            this.playSound(VeilreachSoundEvents.HUSHLING_LUNGE, 0.55F, 0.92F);
         }
     }
 }

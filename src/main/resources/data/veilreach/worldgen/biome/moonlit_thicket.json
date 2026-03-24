@@ -2,12 +2,12 @@
   "attributes": {
     "minecraft:audio/ambient_sounds": {
       "additions": {
-        "sound": "minecraft:ambient.warped_forest.additions",
+        "sound": "veilreach:ambient.hushlands_whispers",
         "tick_chance": 0.01
       },
-      "loop": "minecraft:ambient.warped_forest.loop",
+      "loop": "veilreach:ambient.hushlands_whispers",
       "mood": {
-        "sound": "minecraft:ambient.warped_forest.mood",
+        "sound": "veilreach:ambient.hushlands_whispers",
         "tick_delay": 4800,
         "block_search_extent": 8,
         "offset": 2.0
@@ -15,9 +15,9 @@
     },
     "minecraft:audio/background_music": {
       "default": {
-        "sound": "minecraft:music.end",
-        "min_delay": 9000,
-        "max_delay": 18000
+        "sound": "veilreach:music.hushlands.moonlit_thicket",
+        "min_delay": 3500,
+        "max_delay": 8000
       }
     },
     "minecraft:visual/ambient_particles": [
@@ -45,7 +45,7 @@
     "grass_color": 8231343,
     "foliage_color": 9349569,
     "mood_sound": {
-      "sound": "minecraft:ambient.warped_forest.mood",
+      "sound": "veilreach:ambient.hushlands_whispers",
       "tick_delay": 4800,
       "block_search_extent": 8,
       "offset": 2.0

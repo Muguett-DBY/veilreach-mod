@@ -3,6 +3,7 @@ package com.muguett.veilreach.block;
 import com.muguett.veilreach.registry.VeilreachBlocks;
 import com.muguett.veilreach.registry.VeilreachEntities;
 import com.muguett.veilreach.registry.VeilreachItems;
+import com.muguett.veilreach.registry.VeilreachSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -12,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -53,7 +53,7 @@ public class SealedAltarBlock extends Block {
                 boss.setPersistent();
             }
         }
-        serverWorld.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1.0F, 0.85F);
+        serverWorld.playSound(null, pos, VeilreachSoundEvents.SEALED_ALTAR_UNLOCK, SoundCategory.BLOCKS, 1.0F, 1.0F);
         player.sendMessage(Text.translatable("message.veilreach.sealed_altar.awakened"), true);
         if (!player.isCreative()) {
             held.decrement(1);

@@ -1,6 +1,7 @@
 package com.muguett.veilreach.item;
 
 import net.minecraft.component.type.TooltipDisplayComponent;
+import com.muguett.veilreach.registry.VeilreachSoundEvents;
 import com.muguett.veilreach.registry.VeilreachBlocks;
 import com.muguett.veilreach.world.dimension.HushPortalManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -8,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
@@ -41,8 +43,11 @@ public class AstralSigilItem extends Item {
         }
 
         PlayerEntity player = context.getPlayer();
-        if (player != null && HushPortalManager.tryActivate(serverWorld, context.getBlockPos(), player) && !player.isCreative()) {
-            context.getStack().decrement(1);
+        if (player != null && HushPortalManager.tryActivate(serverWorld, context.getBlockPos(), player)) {
+            serverWorld.playSound(null, context.getBlockPos(), VeilreachSoundEvents.ASTRAL_SIGIL_USE, SoundCategory.PLAYERS, 0.9F, 1.0F);
+            if (!player.isCreative()) {
+                context.getStack().decrement(1);
+            }
         }
         return ActionResult.SUCCESS;
     }

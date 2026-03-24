@@ -2,12 +2,12 @@
   "attributes": {
     "minecraft:audio/ambient_sounds": {
       "additions": {
-        "sound": "minecraft:ambient.basalt_deltas.additions",
+        "sound": "veilreach:ambient.hushlands_whispers",
         "tick_chance": 0.008
       },
-      "loop": "minecraft:ambient.crimson_forest.loop",
+      "loop": "veilreach:ambient.hushlands_whispers",
       "mood": {
-        "sound": "minecraft:ambient.crimson_forest.mood",
+        "sound": "veilreach:ambient.hushlands_whispers",
         "tick_delay": 5200,
         "block_search_extent": 8,
         "offset": 2.0
@@ -15,9 +15,9 @@
     },
     "minecraft:audio/background_music": {
       "default": {
-        "sound": "minecraft:music.nether.crimson_forest",
-        "min_delay": 10000,
-        "max_delay": 21000
+        "sound": "veilreach:music.hushlands.gloam_forest",
+        "min_delay": 4500,
+        "max_delay": 9500
       }
     },
     "minecraft:visual/ambient_particles": [
@@ -45,7 +45,7 @@
     "grass_color": 3225393,
     "foliage_color": 3815471,
     "mood_sound": {
-      "sound": "minecraft:ambient.crimson_forest.mood",
+      "sound": "veilreach:ambient.hushlands_whispers",
       "tick_delay": 5200,
       "block_search_extent": 8,
       "offset": 2.0

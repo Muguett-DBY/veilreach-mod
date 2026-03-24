@@ -2,12 +2,12 @@
   "attributes": {
     "minecraft:audio/ambient_sounds": {
       "additions": {
-        "sound": "minecraft:ambient.basalt_deltas.additions",
+        "sound": "veilreach:ambient.rift_meadows_resonance",
         "tick_chance": 0.006
       },
-      "loop": "minecraft:ambient.basalt_deltas.loop",
+      "loop": "veilreach:ambient.rift_meadows_resonance",
       "mood": {
-        "sound": "minecraft:ambient.basalt_deltas.mood",
+        "sound": "veilreach:ambient.rift_meadows_resonance",
         "tick_delay": 4200,
         "block_search_extent": 8,
         "offset": 2.0
@@ -15,9 +15,9 @@
     },
     "minecraft:audio/background_music": {
       "default": {
-        "sound": "minecraft:music.nether.basalt_deltas",
-        "min_delay": 8000,
-        "max_delay": 18000
+        "sound": "veilreach:music.hushlands.silent_badlands",
+        "min_delay": 5000,
+        "max_delay": 9000
       }
     },
     "minecraft:visual/ambient_particles": [
@@ -45,7 +45,7 @@
     "grass_color": 3157553,
     "foliage_color": 3421230,
     "mood_sound": {
-      "sound": "minecraft:ambient.basalt_deltas.mood",
+      "sound": "veilreach:ambient.rift_meadows_resonance",
       "tick_delay": 4200,
       "block_search_extent": 8,
       "offset": 2.0

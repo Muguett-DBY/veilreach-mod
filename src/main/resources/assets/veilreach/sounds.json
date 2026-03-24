@@ -1,0 +1,60 @@
+{
+  "ambient.hushlands_whispers": {
+    "sounds": [
+      {
+        "name": "veilreach:ambient_hushlands_whispers",
+        "stream": true,
+        "volume": 0.55
+      }
+    ]
+  },
+  "ambient.rift_meadows_resonance": {
+    "sounds": [
+      {
+        "name": "veilreach:ambient_rift_meadows_resonance",
+        "stream": true,
+        "volume": 0.58
+      }
+    ]
+  },
+  "music.hushlands.hush_grove": {
+    "sounds": [
+      {
+        "name": "veilreach:music/hushlands/hush_grove",
+        "stream": true
+      }
+    ]
+  },
+  "music.hushlands.gloam_forest": {
+    "sounds": [
+      {
+        "name": "veilreach:music/hushlands/gloam_forest",
+        "stream": true
+      }
+    ]
+  },
+  "music.hushlands.moonlit_thicket": {
+    "sounds": [
+      {
+        "name": "veilreach:music/hushlands/moonlit_thicket",
+        "stream": true
+      }
+    ]
+  },
+  "music.hushlands.rift_meadows": {
+    "sounds": [
+      {
+        "name": "veilreach:music/hushlands/rift_meadows",
+        "stream": true
+      }
+    ]
+  },
+  "music.hushlands.silent_badlands": {
+    "sounds": [
+      {
+        "name": "veilreach:music/hushlands/silent_badlands",
+        "stream": true
+      }
+    ]
+  }
+}
