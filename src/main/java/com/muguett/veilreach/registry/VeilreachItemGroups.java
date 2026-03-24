@@ -47,8 +47,10 @@ public final class VeilreachItemGroups {
                     entries.add(VeilreachBlocks.GLOAMWOOD_PLANKS);
                     entries.add(VeilreachBlocks.GLOAMWOOD_LOG);
                     entries.add(VeilreachBlocks.SHIMMERLEAF_LEAVES);
+                    entries.add(VeilreachBlocks.DUSKCAP);
                     entries.add(VeilreachBlocks.MOONBLOSSOM);
                     entries.add(VeilreachBlocks.RIFT_BLOOM);
+                    entries.add(VeilreachBlocks.VEILSTONE_PILE);
                     entries.add(VeilreachBlocks.RIFTGLASS);
                     entries.add(VeilreachBlocks.STARLANTERN);
                     entries.add(VeilreachBlocks.MOONWOVEN_FRAME);

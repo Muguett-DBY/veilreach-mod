@@ -631,8 +631,10 @@ Create-StoneBlock (Join-Path $blockDir "moonmoss.png") "#172824" "#4f7566" "#b7f
 Create-WoodPlanks (Join-Path $blockDir "gloamwood_planks.png") "#2f4959" "#6ca3bd"
 Create-WoodLog (Join-Path $blockDir "gloamwood_log.png")
 Create-Leaves (Join-Path $blockDir "shimmerleaf_leaves.png")
+Create-Flower (Join-Path $blockDir "duskcap.png") "#5f6f8d" "#d9ecff" "#31465c"
 Create-Flower (Join-Path $blockDir "moonblossom.png") "#cab8ff" "#fff2bb" "#92c99d"
 Create-Flower (Join-Path $blockDir "rift_bloom.png") "#95dfff" "#fff9dc" "#6fb5c9"
+Create-Flower (Join-Path $blockDir "veilstone_pile.png") "#8e95a1" "#dee3ef" "#566070"
 Create-Glass (Join-Path $blockDir "riftglass.png")
 Create-Lantern (Join-Path $blockDir "starlantern.png")
 Create-Frame (Join-Path $blockDir "moonwoven_frame.png")

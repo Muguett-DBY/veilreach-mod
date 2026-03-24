@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "veilreach:block/veilstone_pile"
+    }
+  }
+}

@@ -21,8 +21,10 @@ public final class VeilreachBlockItems {
         register("gloamwood_planks", VeilreachBlocks.GLOAMWOOD_PLANKS);
         register("gloamwood_log", VeilreachBlocks.GLOAMWOOD_LOG);
         register("shimmerleaf_leaves", VeilreachBlocks.SHIMMERLEAF_LEAVES);
+        register("duskcap", VeilreachBlocks.DUSKCAP);
         register("moonblossom", VeilreachBlocks.MOONBLOSSOM);
         register("rift_bloom", VeilreachBlocks.RIFT_BLOOM);
+        register("veilstone_pile", VeilreachBlocks.VEILSTONE_PILE);
         register("riftglass", VeilreachBlocks.RIFTGLASS);
         register("starlantern", VeilreachBlocks.STARLANTERN);
         register("moonwoven_frame", VeilreachBlocks.MOONWOVEN_FRAME);

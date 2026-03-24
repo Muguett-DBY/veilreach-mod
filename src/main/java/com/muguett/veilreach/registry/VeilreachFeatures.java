@@ -2,6 +2,7 @@ package com.muguett.veilreach.registry;
 
 import com.mojang.serialization.Codec;
 import com.muguett.veilreach.VeilreachMod;
+import com.muguett.veilreach.world.gen.feature.DuskcapPatchFeature;
 import com.muguett.veilreach.world.gen.feature.EchoMonolithFeature;
 import com.muguett.veilreach.world.gen.feature.FallenGatewayFeature;
 import com.muguett.veilreach.world.gen.feature.ForgottenManorFeature;
@@ -16,6 +17,7 @@ import com.muguett.veilreach.world.gen.feature.ShimmerleafGroveFeature;
 import com.muguett.veilreach.world.gen.feature.SilentThroneFeature;
 import com.muguett.veilreach.world.gen.feature.SilentArchiveFeature;
 import com.muguett.veilreach.world.gen.feature.SunkenSanctumFeature;
+import com.muguett.veilreach.world.gen.feature.VeilstonePileFeature;
 import com.muguett.veilreach.world.gen.feature.WatcherObeliskFeature;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -28,6 +30,11 @@ public final class VeilreachFeatures {
             Registries.FEATURE,
             Identifier.of(VeilreachMod.MOD_ID, "echo_monolith"),
             new EchoMonolithFeature(DefaultFeatureConfig.CODEC)
+    );
+    public static final Feature<DefaultFeatureConfig> DUSKCAP_PATCH = Registry.register(
+            Registries.FEATURE,
+            Identifier.of(VeilreachMod.MOD_ID, "duskcap_patch"),
+            new DuskcapPatchFeature(DefaultFeatureConfig.CODEC)
     );
     public static final Feature<DefaultFeatureConfig> MOON_SHRINE = Registry.register(
             Registries.FEATURE,
@@ -43,6 +50,11 @@ public final class VeilreachFeatures {
             Registries.FEATURE,
             Identifier.of(VeilreachMod.MOD_ID, "watcher_obelisk"),
             new WatcherObeliskFeature(DefaultFeatureConfig.CODEC)
+    );
+    public static final Feature<DefaultFeatureConfig> VEILSTONE_PILE = Registry.register(
+            Registries.FEATURE,
+            Identifier.of(VeilreachMod.MOD_ID, "veilstone_pile"),
+            new VeilstonePileFeature(DefaultFeatureConfig.CODEC)
     );
     public static final Feature<DefaultFeatureConfig> GLOAMWOOD_CAMP = Registry.register(
             Registries.FEATURE,
