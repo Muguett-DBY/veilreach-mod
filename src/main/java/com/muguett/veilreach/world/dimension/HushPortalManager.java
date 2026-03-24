@@ -70,50 +70,111 @@ public final class HushPortalManager {
 
         BlockPos preferred = enteringHushlands
                 ? HUSHLANDS_ENTRY_ANCHOR.withY(targetWorld.getSeaLevel())
-                : OVERWORLD_RETURN_PORTALS.getOrDefault(player.getUuid(), BlockPos.ORIGIN).withY(targetWorld.getSeaLevel());
-        BlockPos arrival = findExistingPortal(targetWorld, preferred);
-        if (arrival == null) {
-            arrival = ensureArrivalPlatform(targetWorld, preferred);
+                : OVERWORLD_RETURN_PORTALS.get(player.getUuid());
+        BlockPos arrival;
+
+        if (enteringHushlands) {
+            arrival = findExistingPortal(targetWorld, preferred);
+            if (arrival == null) {
+                arrival = ensureArrivalPlatform(targetWorld, preferred);
+            }
+        } else {
+            arrival = preferred != null ? findBoundReturnPortal(targetWorld, preferred) : null;
+            if (arrival == null) {
+                BlockPos fallbackAnchor = preferred != null ? preferred : new BlockPos(0, targetWorld.getSeaLevel(), 0);
+                arrival = findSurfaceArrival(targetWorld, fallbackAnchor);
+            }
         }
+
         player.setPortalCooldown(PORTAL_COOLDOWN_TICKS);
         player.teleport(targetWorld, arrival.getX() + 0.5D, arrival.getY(), arrival.getZ() + 0.5D, Set.of(), player.getYaw(), player.getPitch(), false);
     }
 
+    private static BlockPos findBoundReturnPortal(ServerWorld world, BlockPos boundPortal) {
+        world.getChunk(boundPortal.getX() >> 4, boundPortal.getZ() >> 4);
+
+        BlockPos directPortal = descendPortalColumn(world, boundPortal);
+        if (directPortal != null && isPortalLocationUsable(world, directPortal)) {
+            return findSafeArrival(world, directPortal);
+        }
+
+        return findExistingPortal(world, boundPortal, 6, true);
+    }
+
     private static BlockPos findExistingPortal(ServerWorld world, BlockPos preferred) {
+        return findExistingPortal(world, preferred, PORTAL_SEARCH_RADIUS, false);
+    }
+
+    private static BlockPos findExistingPortal(ServerWorld world, BlockPos preferred, int searchRadius, boolean forceLoad) {
+        if (preferred == null) {
+            return null;
+        }
+
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         double bestDistance = Double.MAX_VALUE;
         BlockPos bestPos = null;
 
-        for (int x = preferred.getX() - PORTAL_SEARCH_RADIUS; x <= preferred.getX() + PORTAL_SEARCH_RADIUS; x++) {
-            for (int z = preferred.getZ() - PORTAL_SEARCH_RADIUS; z <= preferred.getZ() + PORTAL_SEARCH_RADIUS; z++) {
-                if (!world.isChunkLoaded(ChunkPos.toLong(x >> 4, z >> 4))) {
-                    continue;
+        for (int x = preferred.getX() - searchRadius; x <= preferred.getX() + searchRadius; x++) {
+            for (int z = preferred.getZ() - searchRadius; z <= preferred.getZ() + searchRadius; z++) {
+                long chunkPos = ChunkPos.toLong(x >> 4, z >> 4);
+                if (!world.isChunkLoaded(chunkPos)) {
+                    if (!forceLoad) {
+                        continue;
+                    }
+                    world.getChunk(x >> 4, z >> 4);
                 }
+
                 for (int y = world.getBottomY(); y <= world.getTopYInclusive(); y++) {
                     mutable.set(x, y, z);
-                    if (!world.getBlockState(mutable).isOf(VeilreachBlocks.HUSH_PORTAL)) {
+                    BlockPos portalBase = descendPortalColumn(world, mutable);
+                    if (portalBase == null || !isPortalLocationUsable(world, portalBase)) {
                         continue;
                     }
 
-                    while (world.getBlockState(mutable.down()).isOf(VeilreachBlocks.HUSH_PORTAL)) {
-                        // Walk to the base of the portal opening so players always land at the same height.
-                        mutable.move(Direction.DOWN);
-                    }
-
-                    if (!isPortalLocationUsable(world, mutable)) {
-                        continue;
-                    }
-
-                    double distance = mutable.getSquaredDistance(preferred);
+                    double distance = portalBase.getSquaredDistance(preferred);
                     if (distance < bestDistance) {
                         bestDistance = distance;
-                        bestPos = findSafeArrival(world, mutable.toImmutable());
+                        bestPos = findSafeArrival(world, portalBase);
                     }
                 }
             }
         }
 
         return bestPos;
+    }
+
+    private static BlockPos descendPortalColumn(ServerWorld world, BlockPos pos) {
+        if (!world.getBlockState(pos).isOf(VeilreachBlocks.HUSH_PORTAL)) {
+            return null;
+        }
+
+        BlockPos.Mutable mutable = pos.mutableCopy();
+        while (world.getBlockState(mutable.down()).isOf(VeilreachBlocks.HUSH_PORTAL)) {
+            // Walk to the base of the portal opening so players always land at the same height.
+            mutable.move(Direction.DOWN);
+        }
+        return mutable.toImmutable();
+    }
+
+    private static BlockPos findSurfaceArrival(ServerWorld world, BlockPos anchor) {
+        BlockPos surface = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, anchor);
+        BlockPos base = new BlockPos(anchor.getX(), Math.max(surface.getY(), world.getSeaLevel() + 1), anchor.getZ());
+
+        for (Direction direction : Direction.Type.HORIZONTAL) {
+            BlockPos candidate = base.offset(direction);
+            if (isArrivalSpace(world, candidate)) {
+                return candidate;
+            }
+        }
+
+        for (int dy = 0; dy <= 3; dy++) {
+            BlockPos candidate = base.up(dy);
+            if (isArrivalSpace(world, candidate)) {
+                return candidate;
+            }
+        }
+
+        return base;
     }
 
     private static PortalFrame findFrame(ServerWorld world, BlockPos clickedPos) {
