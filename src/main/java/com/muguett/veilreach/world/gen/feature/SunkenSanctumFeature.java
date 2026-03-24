@@ -40,36 +40,36 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         for (int dx = -6; dx <= 6; dx++) {
             for (int dz = -6; dz <= 6; dz++) {
                 if (Math.abs(dx) == 6 || Math.abs(dz) == 6) {
-                    world.setBlockState(center.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
                 } else {
-                    world.setBlockState(center.add(dx, -1, dz), veilstone, Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(dx, -1, dz), veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
 
         for (int dx = -4; dx <= 4; dx++) {
-            world.setBlockState(center.add(dx, 0, -5), polished, Block.NOTIFY_ALL);
+            world.setBlockState(center.add(dx, 0, -5), polished, HushStructureFeatureSupport.GEN_FLAGS);
         }
         for (int dy = 0; dy <= 4; dy++) {
-            world.setBlockState(center.add(-4, dy, -5), frame, Block.NOTIFY_ALL);
-            world.setBlockState(center.add(4, dy, -5), frame, Block.NOTIFY_ALL);
+            world.setBlockState(center.add(-4, dy, -5), frame, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(4, dy, -5), frame, HushStructureFeatureSupport.GEN_FLAGS);
         }
         for (int dx = -4; dx <= 4; dx++) {
-            world.setBlockState(center.add(dx, 4, -5), frame, Block.NOTIFY_ALL);
+            world.setBlockState(center.add(dx, 4, -5), frame, HushStructureFeatureSupport.GEN_FLAGS);
         }
 
         for (int dx = -1; dx <= 1; dx++) {
-            world.setBlockState(center.add(dx, 1, -5), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
-            world.setBlockState(center.add(dx, 2, -5), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+            world.setBlockState(center.add(dx, 1, -5), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(dx, 2, -5), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
         }
 
         for (int step = 0; step <= 6; step++) {
             int y = -step;
             int z = -4 + step;
             for (int dx = -1; dx <= 1; dx++) {
-                world.setBlockState(center.add(dx, y - 1, z), polished, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(dx, y - 1, z), polished, HushStructureFeatureSupport.GEN_FLAGS);
                 for (int dy = 0; dy <= 3; dy++) {
-                    world.setBlockState(center.add(dx, y + dy, z), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(dx, y + dy, z), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
@@ -80,11 +80,11 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
                 for (int dy = -1; dy <= 5; dy++) {
                     BlockPos pos = chamberCenter.add(dx, dy, dz);
                     if (dy == -1) {
-                        world.setBlockState(pos, polished, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, polished, HushStructureFeatureSupport.GEN_FLAGS);
                     } else if (Math.abs(dx) == 6 || Math.abs(dz) == 6 || dy == 5) {
-                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                     } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                     }
                 }
             }
@@ -93,20 +93,20 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         for (int x = -5; x <= 5; x += 10) {
             for (int z = -5; z <= 5; z += 10) {
                 for (int dy = 0; dy <= 4; dy++) {
-                    world.setBlockState(chamberCenter.add(x, dy, z), frame, Block.NOTIFY_ALL);
+                    world.setBlockState(chamberCenter.add(x, dy, z), frame, HushStructureFeatureSupport.GEN_FLAGS);
                 }
-                world.setBlockState(chamberCenter.add(x, 4, z), lantern, Block.NOTIFY_ALL);
+                world.setBlockState(chamberCenter.add(x, 4, z), lantern, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
         for (int dx = -3; dx <= 3; dx++) {
-            world.setBlockState(chamberCenter.add(dx, 2, -6), glass, Block.NOTIFY_ALL);
-            world.setBlockState(chamberCenter.add(dx, 2, 6), glass, Block.NOTIFY_ALL);
+            world.setBlockState(chamberCenter.add(dx, 2, -6), glass, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(chamberCenter.add(dx, 2, 6), glass, HushStructureFeatureSupport.GEN_FLAGS);
         }
 
-        world.setBlockState(chamberCenter, altar, Block.NOTIFY_ALL);
-        world.setBlockState(chamberCenter.north(2), barrier, Block.NOTIFY_ALL);
-        world.setBlockState(chamberCenter.south(2), barrier, Block.NOTIFY_ALL);
+        world.setBlockState(chamberCenter, altar, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(chamberCenter.north(2), barrier, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(chamberCenter.south(2), barrier, HushStructureFeatureSupport.GEN_FLAGS);
         carveSideCells(world, chamberCenter, polished, veilstone, lantern);
         carveOuterRing(world, chamberCenter, polished, veilstone, lantern);
         carveDetentionHall(world, chamberCenter, polished, veilstone, lantern);
@@ -134,17 +134,17 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
                     for (int dy = 0; dy <= 3; dy++) {
                         BlockPos pos = roomCenter.add(dx, dy, dz);
                         if (Math.abs(dx) == 1 || Math.abs(dz) == 2 || dy == 3) {
-                            world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                            world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                         } else {
-                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                         }
                     }
-                    world.setBlockState(roomCenter.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                    world.setBlockState(roomCenter.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
-            world.setBlockState(roomCenter.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
-            world.setBlockState(roomCenter.add(0, 0, side * -2), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
-            world.setBlockState(roomCenter.add(0, 1, side * -2), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+            world.setBlockState(roomCenter.add(0, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(roomCenter.add(0, 0, side * -2), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(roomCenter.add(0, 1, side * -2), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
         }
     }
 
@@ -157,18 +157,18 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
                 for (int dy = 0; dy <= 4; dy++) {
                     BlockPos pos = chamberCenter.add(dx, dy, dz);
                     if (Math.abs(dx) == 8 || Math.abs(dz) == 8 || dy == 4) {
-                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                     } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                     }
                 }
-                world.setBlockState(chamberCenter.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                world.setBlockState(chamberCenter.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
-        world.setBlockState(chamberCenter.add(-8, 1, 0), lantern, Block.NOTIFY_ALL);
-        world.setBlockState(chamberCenter.add(8, 1, 0), lantern, Block.NOTIFY_ALL);
-        world.setBlockState(chamberCenter.add(0, 1, -8), lantern, Block.NOTIFY_ALL);
-        world.setBlockState(chamberCenter.add(0, 1, 8), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(chamberCenter.add(-8, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(chamberCenter.add(8, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(chamberCenter.add(0, 1, -8), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(chamberCenter.add(0, 1, 8), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
     private static void carveDetentionHall(StructureWorldAccess world, BlockPos chamberCenter, BlockState polished, BlockState veilstone, BlockState lantern) {
@@ -177,12 +177,12 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
                 for (int dy = 0; dy <= 3; dy++) {
                     BlockPos pos = chamberCenter.add(dx, dy, dz);
                     if (Math.abs(dx) == 3 || dz == -9 || dy == 3) {
-                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                     } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                     }
                 }
-                world.setBlockState(chamberCenter.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                world.setBlockState(chamberCenter.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
@@ -193,16 +193,16 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
                     for (int dy = 0; dy <= 3; dy++) {
                         BlockPos pos = cellBase.add(dx, dy, dz);
                         if (Math.abs(dx) == 1 || Math.abs(dz) == 1 || dy == 3) {
-                            world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                            world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                         } else {
-                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                         }
                     }
-                    world.setBlockState(cellBase.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                    world.setBlockState(cellBase.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
             HushStructureFeatureSupport.placeDoor(world, cellBase.add(0, 0, side == -1 ? 1 : -1), side == -1 ? Direction.SOUTH : Direction.NORTH);
-            world.setBlockState(cellBase.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
+            world.setBlockState(cellBase.add(0, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         }
     }
 
@@ -213,17 +213,17 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
                 for (int dy = 0; dy <= 4; dy++) {
                     BlockPos pos = vault.add(dx, dy, dz);
                     if (Math.abs(dx) == 2 || Math.abs(dz) == 2 || dy == 4) {
-                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                     } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                     }
                 }
-                world.setBlockState(vault.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                world.setBlockState(vault.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
-        world.setBlockState(vault.add(0, 1, -2), glass, Block.NOTIFY_ALL);
-        world.setBlockState(vault.add(0, 2, -2), glass, Block.NOTIFY_ALL);
-        world.setBlockState(vault.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(vault.add(0, 1, -2), glass, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(vault.add(0, 2, -2), glass, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(vault.add(0, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         HushStructureFeatureSupport.placeDoor(world, vault.add(-2, 0, 0), Direction.WEST);
     }
 
@@ -231,3 +231,4 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
         return HushStructureFeatureSupport.hasStableGround(world, center, 6, 6, 3, 12, 12);
     }
 }
+

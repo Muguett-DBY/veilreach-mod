@@ -39,9 +39,9 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
 
         for (int dx = -9; dx <= 9; dx++) {
             for (int dz = -7; dz <= 7; dz++) {
-                world.setBlockState(center.add(dx, -1, dz), Math.abs(dx) == 9 || Math.abs(dz) == 7 ? polished : veilstone, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(dx, -1, dz), Math.abs(dx) == 9 || Math.abs(dz) == 7 ? polished : veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                 if (Math.abs(dx) <= 8 && Math.abs(dz) <= 6) {
-                    world.setBlockState(center.add(dx, 0, dz), polished, Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(dx, 0, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
@@ -54,13 +54,13 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
                     }
                     BlockPos pos = center.add(dx, dy, dz);
                     if ((Math.abs(dx) == 8 && Math.abs(dz) == 6) || dx == -3 || dx == 3) {
-                        world.setBlockState(pos, frame, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, frame, HushStructureFeatureSupport.GEN_FLAGS);
                     } else if (dy == 4 || dy == 9) {
-                        world.setBlockState(pos, polished, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, polished, HushStructureFeatureSupport.GEN_FLAGS);
                     } else if (Math.abs(dz) == 6 && Math.abs(dx) <= 5 && Math.abs(dx) >= 2 && dy >= 2 && dy <= 6) {
-                        world.setBlockState(pos, glass, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, glass, HushStructureFeatureSupport.GEN_FLAGS);
                     } else {
-                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                     }
                 }
             }
@@ -69,7 +69,7 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         for (int dx = -7; dx <= 7; dx++) {
             for (int dz = -5; dz <= 5; dz++) {
                 if (Math.abs(dx) <= 6 && Math.abs(dz) <= 4) {
-                    world.setBlockState(center.add(dx, 10, dz), polished, Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(dx, 10, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
@@ -80,7 +80,7 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
             for (int dx = -radiusX; dx <= radiusX; dx++) {
                 for (int dz = -radiusZ; dz <= radiusZ; dz++) {
                     if (Math.abs(dx) == radiusX || Math.abs(dz) == radiusZ) {
-                        world.setBlockState(center.add(dx, 11 + layer, dz), polished, Block.NOTIFY_ALL);
+                        world.setBlockState(center.add(dx, 11 + layer, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
                     }
                 }
             }
@@ -89,9 +89,9 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         for (int x = -6; x <= 6; x += 12) {
             for (int z = -4; z <= 4; z += 8) {
                 for (int dy = 1; dy <= 13; dy++) {
-                    world.setBlockState(center.add(x, dy, z), frame, Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(x, dy, z), frame, HushStructureFeatureSupport.GEN_FLAGS);
                 }
-                world.setBlockState(center.add(x, 14, z), lantern, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(x, 14, z), lantern, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
@@ -101,8 +101,8 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         carveReliquary(world, center, polished, veilstone, lantern);
         carveHiddenSacristy(world, center, polished, veilstone, lantern, glass);
 
-        world.setBlockState(center.add(0, 1, -2), cache, Block.NOTIFY_ALL);
-        world.setBlockState(center.add(0, 1, 2), cache, Block.NOTIFY_ALL);
+        world.setBlockState(center.add(0, 1, -2), cache, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.add(0, 1, 2), cache, HushStructureFeatureSupport.GEN_FLAGS);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(-2, 1, 1), VeilreachEntities.MOONFALLEN_KNIGHT);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(2, 1, 1), VeilreachEntities.LANTERNKEEPER);
         HushStructureFeatureSupport.spawnPersistentMob(world, center.add(0, -4, 2), VeilreachEntities.MOONFALLEN_KNIGHT);
@@ -120,7 +120,7 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
     private static void carveDoorway(StructureWorldAccess world, BlockPos doorBase) {
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = 0; dy <= 4; dy++) {
-                world.setBlockState(doorBase.add(dx, dy, 0), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                world.setBlockState(doorBase.add(dx, dy, 0), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
     }
@@ -139,11 +139,11 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
                 for (int dy = -1; dy <= 4; dy++) {
                     BlockPos pos = crypt.add(dx, dy, dz);
                     if (dy == -1) {
-                        world.setBlockState(pos, polished, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, polished, HushStructureFeatureSupport.GEN_FLAGS);
                     } else if (Math.abs(dx) == 4 || Math.abs(dz) == 4 || dy == 4) {
-                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                     } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                     }
                 }
             }
@@ -151,14 +151,14 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
 
         for (int step = 0; step <= 4; step++) {
             BlockPos stair = center.add(0, -step, -1 - step);
-            world.setBlockState(stair.down(), polished, Block.NOTIFY_ALL);
-            world.setBlockState(stair, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
-            world.setBlockState(stair.up(), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+            world.setBlockState(stair.down(), polished, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(stair, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(stair.up(), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
         }
 
-        world.setBlockState(crypt, altar, Block.NOTIFY_ALL);
-        world.setBlockState(crypt.north(2), lantern, Block.NOTIFY_ALL);
-        world.setBlockState(crypt.south(2), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(crypt, altar, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(crypt.north(2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(crypt.south(2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 
     private static void carveSideChapels(StructureWorldAccess world, BlockPos center, BlockState polished, BlockState veilstone, BlockState glass, BlockState lantern) {
@@ -169,17 +169,17 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
                     for (int dy = 0; dy <= 6; dy++) {
                         BlockPos pos = chapel.add(dx, dy, dz);
                         if (Math.abs(dx) == 2 || Math.abs(dz) == 3 || dy == 6) {
-                            world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                            world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                         } else {
-                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                            world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                         }
                     }
-                    world.setBlockState(chapel.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                    world.setBlockState(chapel.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
-            world.setBlockState(chapel.add(0, 2, -3), glass, Block.NOTIFY_ALL);
-            world.setBlockState(chapel.add(0, 3, -3), glass, Block.NOTIFY_ALL);
-            world.setBlockState(chapel.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
+            world.setBlockState(chapel.add(0, 2, -3), glass, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(chapel.add(0, 3, -3), glass, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(chapel.add(0, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         }
     }
 
@@ -190,15 +190,15 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
                 for (int dy = 0; dy <= 4; dy++) {
                     BlockPos pos = reliquary.add(dx, dy, dz);
                     if (Math.abs(dx) == 2 || Math.abs(dz) == 2 || dy == 4) {
-                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                     } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                     }
                 }
-                world.setBlockState(reliquary.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                world.setBlockState(reliquary.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
-        world.setBlockState(reliquary.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(reliquary.add(0, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         HushStructureFeatureSupport.placeDoor(world, reliquary.add(0, 0, 2), Direction.SOUTH);
     }
 
@@ -209,17 +209,17 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
                 for (int dy = 0; dy <= 4; dy++) {
                     BlockPos pos = sacristy.add(dx, dy, dz);
                     if (Math.abs(dx) == 2 || Math.abs(dz) == 2 || dy == 4) {
-                        world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                        world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                     } else {
-                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                     }
                 }
-                world.setBlockState(sacristy.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                world.setBlockState(sacristy.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
-        world.setBlockState(sacristy.add(0, 1, -2), glass, Block.NOTIFY_ALL);
-        world.setBlockState(sacristy.add(0, 2, -2), glass, Block.NOTIFY_ALL);
-        world.setBlockState(sacristy.add(0, 1, 0), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(sacristy.add(0, 1, -2), glass, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(sacristy.add(0, 2, -2), glass, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(sacristy.add(0, 1, 0), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         HushStructureFeatureSupport.placeDoor(world, sacristy.add(0, 0, 2), Direction.SOUTH);
     }
 
@@ -227,3 +227,4 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         return HushStructureFeatureSupport.hasStableGround(world, center, 9, 7, 3, 20, 14);
     }
 }
+

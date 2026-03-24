@@ -30,10 +30,11 @@ public class RiftBloomPatchFeature extends Feature<DefaultFeatureConfig> {
             BlockPos pos = origin.add(context.getRandom().nextInt(10) - 5, 0, context.getRandom().nextInt(10) - 5);
             pos = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos);
             if (world.getBlockState(pos).isAir() && HushStructureFeatureSupport.isHushGround(world, pos.down())) {
-                world.setBlockState(pos, bloom, Block.NOTIFY_ALL);
+                world.setBlockState(pos, bloom, HushStructureFeatureSupport.GEN_FLAGS);
                 placed++;
             }
         }
         return placed > 0;
     }
 }
+

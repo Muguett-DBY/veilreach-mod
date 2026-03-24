@@ -37,25 +37,26 @@ public class EchoMonolithFeature extends Feature<DefaultFeatureConfig> {
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
                 BlockPos floor = center.add(dx, -1, dz);
-                world.setBlockState(floor, Math.abs(dx) == 2 || Math.abs(dz) == 2 ? polished : veilstone, Block.NOTIFY_ALL);
+                world.setBlockState(floor, Math.abs(dx) == 2 || Math.abs(dz) == 2 ? polished : veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                 for (int clearY = 0; clearY <= 4; clearY++) {
-                    world.setBlockState(center.add(dx, clearY, dz), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(dx, clearY, dz), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
 
         for (Direction direction : Direction.Type.HORIZONTAL) {
             BlockPos pillarBase = center.offset(direction, 2);
-            world.setBlockState(pillarBase, polished, Block.NOTIFY_ALL);
-            world.setBlockState(pillarBase.up(), polished, Block.NOTIFY_ALL);
-            world.setBlockState(pillarBase.up(2), lantern, Block.NOTIFY_ALL);
+            world.setBlockState(pillarBase, polished, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(pillarBase.up(), polished, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(pillarBase.up(2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         }
 
-        world.setBlockState(center, altar, Block.NOTIFY_ALL);
-        world.setBlockState(center.north(), barrier, Block.NOTIFY_ALL);
-        world.setBlockState(center.south(), barrier, Block.NOTIFY_ALL);
-        world.setBlockState(center.north(2), cache, Block.NOTIFY_ALL);
-        world.setBlockState(center.south(2), cache, Block.NOTIFY_ALL);
+        world.setBlockState(center, altar, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.north(), barrier, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.south(), barrier, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.north(2), cache, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.south(2), cache, HushStructureFeatureSupport.GEN_FLAGS);
         return true;
     }
 }
+

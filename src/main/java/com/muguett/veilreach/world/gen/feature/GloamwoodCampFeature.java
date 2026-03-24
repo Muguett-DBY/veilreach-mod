@@ -35,27 +35,28 @@ public class GloamwoodCampFeature extends Feature<DefaultFeatureConfig> {
 
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
-                world.setBlockState(center.add(dx, -1, dz), planks, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(dx, -1, dz), planks, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
         for (BlockPos pillar : new BlockPos[]{center.add(-2, 0, -2), center.add(2, 0, -2), center.add(-2, 0, 2), center.add(2, 0, 2)}) {
-            world.setBlockState(pillar, log, Block.NOTIFY_ALL);
-            world.setBlockState(pillar.up(), log, Block.NOTIFY_ALL);
-            world.setBlockState(pillar.up(2), log, Block.NOTIFY_ALL);
-            world.setBlockState(pillar.up(3), lantern, Block.NOTIFY_ALL);
+            world.setBlockState(pillar, log, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(pillar.up(), log, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(pillar.up(2), log, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(pillar.up(3), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         }
 
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
                 if (Math.abs(dx) == 2 || Math.abs(dz) == 2) {
-                    world.setBlockState(center.add(dx, 3, dz), leaves, Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(dx, 3, dz), leaves, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
 
         HushStructureFeatureSupport.placeLootChest(world, center, Direction.SOUTH, "chests/gloamwood_camp");
-        world.setBlockState(center.north(), VeilreachBlocks.STARLIGHT_CACHE.getDefaultState(), Block.NOTIFY_ALL);
+        world.setBlockState(center.north(), VeilreachBlocks.STARLIGHT_CACHE.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
         return true;
     }
 }
+

@@ -36,21 +36,22 @@ public class MoonShrineFeature extends Feature<DefaultFeatureConfig> {
         for (int dx = -3; dx <= 3; dx++) {
             for (int dz = -3; dz <= 3; dz++) {
                 BlockPos pos = center.add(dx, -1, dz);
-                world.setBlockState(pos, (Math.abs(dx) == 3 || Math.abs(dz) == 3) ? polished : veilstone, Block.NOTIFY_ALL);
+                world.setBlockState(pos, (Math.abs(dx) == 3 || Math.abs(dz) == 3) ? polished : veilstone, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
         for (BlockPos pillarBase : new BlockPos[]{center.add(-3, 0, -3), center.add(3, 0, -3), center.add(-3, 0, 3), center.add(3, 0, 3)}) {
-            world.setBlockState(pillarBase, polished, Block.NOTIFY_ALL);
-            world.setBlockState(pillarBase.up(), polished, Block.NOTIFY_ALL);
-            world.setBlockState(pillarBase.up(2), lantern, Block.NOTIFY_ALL);
+            world.setBlockState(pillarBase, polished, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(pillarBase.up(), polished, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(pillarBase.up(2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         }
 
-        world.setBlockState(center, altar, Block.NOTIFY_ALL);
-        world.setBlockState(center.north(), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), Block.NOTIFY_ALL);
-        world.setBlockState(center.south(), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), Block.NOTIFY_ALL);
+        world.setBlockState(center, altar, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.north(), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.south(), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
         HushStructureFeatureSupport.placeLootChest(world, center.east(2), Direction.WEST, "chests/moon_shrine");
         HushStructureFeatureSupport.placeLootChest(world, center.west(2), Direction.EAST, "chests/moon_shrine");
         return true;
     }
 }
+

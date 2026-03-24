@@ -37,18 +37,19 @@ public class RiftglassBasinFeature extends Feature<DefaultFeatureConfig> {
                 double dist = Math.sqrt((dx * dx) + (dz * dz));
                 BlockPos pos = center.add(dx, -1, dz);
                 if (dist <= 1.7) {
-                    world.setBlockState(pos, riftglass, Block.NOTIFY_ALL);
+                    world.setBlockState(pos, riftglass, HushStructureFeatureSupport.GEN_FLAGS);
                 } else if (dist <= 2.8) {
-                    world.setBlockState(pos, moonmoss, Block.NOTIFY_ALL);
+                    world.setBlockState(pos, moonmoss, HushStructureFeatureSupport.GEN_FLAGS);
                 } else {
-                    world.setBlockState(pos, veilstone, Block.NOTIFY_ALL);
+                    world.setBlockState(pos, veilstone, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
 
-        world.setBlockState(center, VeilreachBlocks.STARLIGHT_CACHE.getDefaultState(), Block.NOTIFY_ALL);
+        world.setBlockState(center, VeilreachBlocks.STARLIGHT_CACHE.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
         HushStructureFeatureSupport.placeLootChest(world, center.east(2), Direction.WEST, "chests/riftglass_basin");
-        world.setBlockState(center.west(2), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), Block.NOTIFY_ALL);
+        world.setBlockState(center.west(2), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
         return true;
     }
 }
+

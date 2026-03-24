@@ -35,21 +35,22 @@ public class WatcherObeliskFeature extends Feature<DefaultFeatureConfig> {
 
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
-                world.setBlockState(center.add(dx, -1, dz), (Math.abs(dx) == 2 || Math.abs(dz) == 2) ? polished : veilstone, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(dx, -1, dz), (Math.abs(dx) == 2 || Math.abs(dz) == 2) ? polished : veilstone, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
         for (int dy = 0; dy <= 4; dy++) {
-            world.setBlockState(center.up(dy), polished, Block.NOTIFY_ALL);
+            world.setBlockState(center.up(dy), polished, HushStructureFeatureSupport.GEN_FLAGS);
         }
-        world.setBlockState(center.up(5), lantern, Block.NOTIFY_ALL);
-        world.setBlockState(center.north(), barrier, Block.NOTIFY_ALL);
-        world.setBlockState(center.south(), barrier, Block.NOTIFY_ALL);
-        world.setBlockState(center.east(), barrier, Block.NOTIFY_ALL);
-        world.setBlockState(center.west(), barrier, Block.NOTIFY_ALL);
+        world.setBlockState(center.up(5), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.north(), barrier, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.south(), barrier, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.east(), barrier, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.west(), barrier, HushStructureFeatureSupport.GEN_FLAGS);
 
         HushStructureFeatureSupport.placeLootChest(world, center.south(2), Direction.NORTH, "chests/watcher_obelisk");
-        world.setBlockState(center.north(2), VeilreachBlocks.STARLIGHT_CACHE.getDefaultState(), Block.NOTIFY_ALL);
+        world.setBlockState(center.north(2), VeilreachBlocks.STARLIGHT_CACHE.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
         return true;
     }
 }
+

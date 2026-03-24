@@ -45,7 +45,7 @@
     }
   },
   "features": [
-    [], [], [], [], [], [], [], [], ["veilreach:duskcap_patch"], ["veilreach:gloamwood_camp", "veilreach:shimmerleaf_grove", "veilreach:forgotten_manor", "veilreach:sunken_sanctum"], [], []
+    [], [], [], [], [], [], [], [], ["veilreach:duskcap_patch"], ["veilreach:gloamwood_camp", "veilreach:shimmerleaf_grove"], [], []
   ],
   "spawn_costs": {},
   "spawners": {

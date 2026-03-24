@@ -34,7 +34,7 @@ public class FallenGatewayFeature extends Feature<DefaultFeatureConfig> {
 
         for (int dx = -3; dx <= 3; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
-                world.setBlockState(center.add(dx, -1, dz), polished, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
@@ -48,14 +48,15 @@ public class FallenGatewayFeature extends Feature<DefaultFeatureConfig> {
                 if ((w == 3 && h >= 3) || (w == 2 && h == 4)) {
                     continue;
                 }
-                world.setBlockState(origin.add(w, h, 0), frame, Block.NOTIFY_ALL);
+                world.setBlockState(origin.add(w, h, 0), frame, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
-        world.setBlockState(origin.add(-1, 1, 0), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), Block.NOTIFY_ALL);
-        world.setBlockState(origin.add(4, 0, 0), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), Block.NOTIFY_ALL);
-        world.setBlockState(origin.add(1, 4, -1), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(origin.add(-1, 1, 0), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(origin.add(4, 0, 0), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(origin.add(1, 4, -1), lantern, HushStructureFeatureSupport.GEN_FLAGS);
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, 0, 2), Direction.NORTH, "chests/fallen_gateway");
         return true;
     }
 }
+

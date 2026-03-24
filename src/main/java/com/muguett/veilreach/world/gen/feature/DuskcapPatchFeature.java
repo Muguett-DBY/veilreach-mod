@@ -30,10 +30,11 @@ public class DuskcapPatchFeature extends Feature<DefaultFeatureConfig> {
             BlockPos pos = origin.add(context.getRandom().nextInt(8) - 4, 0, context.getRandom().nextInt(8) - 4);
             pos = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos);
             if (world.getBlockState(pos).isAir() && HushStructureFeatureSupport.isHushGround(world, pos.down())) {
-                world.setBlockState(pos, cap, Block.NOTIFY_ALL);
+                world.setBlockState(pos, cap, HushStructureFeatureSupport.GEN_FLAGS);
                 placed++;
             }
         }
         return placed > 0;
     }
 }
+

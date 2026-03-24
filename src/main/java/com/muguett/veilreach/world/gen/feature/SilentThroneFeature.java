@@ -38,45 +38,45 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         for (int dx = -10; dx <= 10; dx++) {
             for (int dz = -10; dz <= 10; dz++) {
                 BlockState floor = (Math.abs(dx) == 10 || Math.abs(dz) == 10) ? polished : veilstone;
-                world.setBlockState(center.add(dx, -1, dz), floor, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(dx, -1, dz), floor, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
         for (int ring = 10; ring >= 4; ring -= 3) {
             for (int dx = -ring; dx <= ring; dx++) {
-                world.setBlockState(center.add(dx, 0, -ring), polished, Block.NOTIFY_ALL);
-                world.setBlockState(center.add(dx, 0, ring), polished, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(dx, 0, -ring), polished, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(dx, 0, ring), polished, HushStructureFeatureSupport.GEN_FLAGS);
             }
             for (int dz = -ring; dz <= ring; dz++) {
-                world.setBlockState(center.add(-ring, 0, dz), polished, Block.NOTIFY_ALL);
-                world.setBlockState(center.add(ring, 0, dz), polished, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(-ring, 0, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(center.add(ring, 0, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
         for (int x = -8; x <= 8; x += 16) {
             for (int z = -8; z <= 8; z += 16) {
                 for (int dy = 0; dy <= 9; dy++) {
-                    world.setBlockState(center.add(x, dy, z), frame, Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(x, dy, z), frame, HushStructureFeatureSupport.GEN_FLAGS);
                 }
-                world.setBlockState(center.add(x, 10, z), lantern, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(x, 10, z), lantern, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
         for (int step = 0; step <= 4; step++) {
             for (int x = -2; x <= 2; x++) {
-                world.setBlockState(center.add(x, step, -6 + step), polished, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(x, step, -6 + step), polished, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
         for (int x = -2; x <= 2; x++) {
             for (int y = 5; y <= 7; y++) {
-                world.setBlockState(center.add(x, y, -2), barrier, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(x, y, -2), barrier, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
-        world.setBlockState(center.add(0, 5, -4), altar, Block.NOTIFY_ALL);
-        world.setBlockState(center.add(-2, 5, -5), lantern, Block.NOTIFY_ALL);
-        world.setBlockState(center.add(2, 5, -5), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(center.add(0, 5, -4), altar, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.add(-2, 5, -5), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.add(2, 5, -5), lantern, HushStructureFeatureSupport.GEN_FLAGS);
 
         HushStructureFeatureSupport.placeLootChest(world, center.add(-6, 1, 6), Direction.NORTH, "chests/silent_throne");
         HushStructureFeatureSupport.placeLootChest(world, center.add(6, 1, 6), Direction.NORTH, "chests/silent_throne");
@@ -95,3 +95,4 @@ public class SilentThroneFeature extends Feature<DefaultFeatureConfig> {
         return true;
     }
 }
+

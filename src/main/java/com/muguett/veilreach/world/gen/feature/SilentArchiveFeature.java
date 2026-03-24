@@ -33,14 +33,14 @@ public class SilentArchiveFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.clearBox(world, center, 6, 9, 6);
         for (int dx = -4; dx <= 4; dx++) {
             for (int dz = -4; dz <= 4; dz++) {
-                world.setBlockState(center.add(dx, -1, dz), planks, Block.NOTIFY_ALL);
+                world.setBlockState(center.add(dx, -1, dz), planks, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
         for (int x = -4; x <= 4; x += 8) {
             for (int z = -4; z <= 4; z += 8) {
                 for (int dy = 0; dy <= 5; dy++) {
-                    world.setBlockState(center.add(x, dy, z), log, Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(x, dy, z), log, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
@@ -48,17 +48,18 @@ public class SilentArchiveFeature extends Feature<DefaultFeatureConfig> {
         for (int dx = -4; dx <= 4; dx++) {
             for (int dz = -4; dz <= 4; dz++) {
                 if (Math.abs(dx) == 4 || Math.abs(dz) == 4) {
-                    world.setBlockState(center.add(dx, 6, dz), leaves, Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(dx, 6, dz), leaves, HushStructureFeatureSupport.GEN_FLAGS);
                 } else {
-                    world.setBlockState(center.add(dx, 3, dz), planks, Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(dx, 3, dz), planks, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
 
-        world.setBlockState(center, barrier, Block.NOTIFY_ALL);
+        world.setBlockState(center, barrier, HushStructureFeatureSupport.GEN_FLAGS);
         HushStructureFeatureSupport.placeLootChest(world, center.east(3), Direction.WEST, "chests/silent_archive");
         HushStructureFeatureSupport.placeLootChest(world, center.west(3), Direction.EAST, "chests/silent_archive");
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, 4, -2), Direction.SOUTH, "chests/silent_archive");
         return true;
     }
 }
+

@@ -21,6 +21,8 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
 
 final class HushStructureFeatureSupport {
+    static final int GEN_FLAGS = Block.NOTIFY_LISTENERS | Block.FORCE_STATE;
+
     private HushStructureFeatureSupport() {
     }
 
@@ -71,14 +73,14 @@ final class HushStructureFeatureSupport {
         for (int dx = -radiusX; dx <= radiusX; dx++) {
             for (int dz = -radiusZ; dz <= radiusZ; dz++) {
                 for (int dy = 0; dy <= height; dy++) {
-                    world.setBlockState(center.add(dx, dy, dz), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    world.setBlockState(center.add(dx, dy, dz), Blocks.AIR.getDefaultState(), GEN_FLAGS);
                 }
             }
         }
     }
 
     static void placeLootChest(StructureWorldAccess world, BlockPos pos, Direction facing, String lootPath) {
-        world.setBlockState(pos, Blocks.CHEST.getDefaultState().with(ChestBlock.FACING, facing), Block.NOTIFY_ALL);
+        world.setBlockState(pos, Blocks.CHEST.getDefaultState().with(ChestBlock.FACING, facing), GEN_FLAGS);
         if (world.getBlockEntity(pos) instanceof ChestBlockEntity chest) {
             chest.setLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of(VeilreachMod.MOD_ID, lootPath)));
             chest.setLootTableSeed(world.getRandom().nextLong());
@@ -90,8 +92,8 @@ final class HushStructureFeatureSupport {
                 .with(DoorBlock.FACING, facing)
                 .with(DoorBlock.HALF, DoubleBlockHalf.LOWER);
         BlockState upper = lower.with(DoorBlock.HALF, DoubleBlockHalf.UPPER);
-        world.setBlockState(basePos, lower, Block.NOTIFY_ALL);
-        world.setBlockState(basePos.up(), upper, Block.NOTIFY_ALL);
+        world.setBlockState(basePos, lower, GEN_FLAGS);
+        world.setBlockState(basePos.up(), upper, GEN_FLAGS);
     }
 
     static <T extends MobEntity> void spawnPersistentMob(StructureWorldAccess world, BlockPos pos, EntityType<T> entityType) {

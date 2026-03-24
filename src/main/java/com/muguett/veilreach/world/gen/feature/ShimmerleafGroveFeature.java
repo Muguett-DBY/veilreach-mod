@@ -32,8 +32,8 @@ public class ShimmerleafGroveFeature extends Feature<DefaultFeatureConfig> {
             growTree(world, treeCenter);
         }
 
-        world.setBlockState(center.add(1, -1, -3), VeilreachBlocks.MOONMOSS.getDefaultState(), Block.NOTIFY_ALL);
-        world.setBlockState(center.add(-1, -1, 3), VeilreachBlocks.MIRROR_GRASS.getDefaultState(), Block.NOTIFY_ALL);
+        world.setBlockState(center.add(1, -1, -3), VeilreachBlocks.MOONMOSS.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.add(-1, -1, 3), VeilreachBlocks.MIRROR_GRASS.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, 0, 4), Direction.NORTH, "chests/shimmerleaf_grove");
         return true;
     }
@@ -44,7 +44,7 @@ public class ShimmerleafGroveFeature extends Feature<DefaultFeatureConfig> {
         BlockState lantern = VeilreachBlocks.STARLANTERN.getDefaultState();
 
         for (int dy = 0; dy <= 3; dy++) {
-            world.setBlockState(pos.up(dy), log, Block.NOTIFY_ALL);
+            world.setBlockState(pos.up(dy), log, HushStructureFeatureSupport.GEN_FLAGS);
         }
 
         BlockPos canopy = pos.up(4);
@@ -53,13 +53,14 @@ public class ShimmerleafGroveFeature extends Feature<DefaultFeatureConfig> {
                 if (Math.abs(dx) == 2 && Math.abs(dz) == 2) {
                     continue;
                 }
-                world.setBlockState(canopy.add(dx, 0, dz), leaves, Block.NOTIFY_ALL);
+                world.setBlockState(canopy.add(dx, 0, dz), leaves, HushStructureFeatureSupport.GEN_FLAGS);
                 if (Math.abs(dx) <= 1 && Math.abs(dz) <= 1) {
-                    world.setBlockState(canopy.add(dx, 1, dz), leaves, Block.NOTIFY_ALL);
+                    world.setBlockState(canopy.add(dx, 1, dz), leaves, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
 
-        world.setBlockState(canopy.down().north(), lantern, Block.NOTIFY_ALL);
+        world.setBlockState(canopy.down().north(), lantern, HushStructureFeatureSupport.GEN_FLAGS);
     }
 }
+
