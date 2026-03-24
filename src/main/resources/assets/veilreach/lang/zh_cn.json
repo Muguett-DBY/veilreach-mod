@@ -14,6 +14,8 @@
   "item.veilreach.mirror_pickaxe": "镜辉镐",
   "item.veilreach.mirror_axe": "镜辉斧",
   "item.veilreach.mirror_shovel": "镜辉铲",
+  "item.veilreach.grenade": "手雷",
+  "item.veilreach.impact_grenade": "触炸手雷",
   "item.veilreach.mirror_helmet": "镜辉钢头盔",
   "item.veilreach.mirror_chestplate": "镜辉钢胸甲",
   "item.veilreach.mirror_leggings": "镜辉钢护腿",
@@ -104,6 +106,7 @@
   "subtitle.veilreach.sound.hush_sovereign_pulse": "寂主的脉响在远处回震。",
   "subtitle.veilreach.sound.astral_sigil": "星仪符印作出了回应。",
   "subtitle.veilreach.sound.sealed_altar_unlock": "祭坛封印应声破碎。",
+  "hud.veilreach.grenade_timer": "引信：%s 秒",
   "itemGroup.veilreach.main": "帷境远界",
   "itemGroup.veilreach.materials": "帷境远界：材料",
   "itemGroup.veilreach.creatures": "帷境远界：生物"

@@ -1,5 +1,7 @@
 package com.muguett.veilreach;
 
+import com.muguett.veilreach.client.GrenadeHudOverlay;
+import com.muguett.veilreach.client.GrenadeTrajectoryPreview;
 import com.muguett.veilreach.client.HushlandsClientEffects;
 import com.muguett.veilreach.client.HushlandsHudOverlay;
 import com.muguett.veilreach.client.render.entity.HushlingEntityRenderer;
@@ -21,12 +23,15 @@ import com.muguett.veilreach.registry.VeilreachEntities;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 
 public final class VeilreachModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         HushlandsClientEffects.initialize();
         HushlandsHudOverlay.initialize();
+        GrenadeHudOverlay.initialize();
+        GrenadeTrajectoryPreview.initialize();
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.MIRROR_STAG, MirrorStagEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.HUSHLING, HushlingEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.HUSH_SOVEREIGN, HushSovereignEntityModel::getTexturedModelData);
@@ -35,6 +40,8 @@ public final class VeilreachModClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.VEILBOUND_WATCHER, VeilboundWatcherEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.WARDEN_OF_SILENCE, WardenOfSilenceEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(VeilreachEntities.MIRROR_STAG, MirrorStagEntityRenderer::new);
+        EntityRendererRegistry.register(VeilreachEntities.GRENADE, FlyingItemEntityRenderer::new);
+        EntityRendererRegistry.register(VeilreachEntities.IMPACT_GRENADE, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.HUSHLING, HushlingEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.HUSH_SOVEREIGN, HushSovereignEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.LANTERNKEEPER, LanternkeeperEntityRenderer::new);

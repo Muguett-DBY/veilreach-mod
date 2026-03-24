@@ -34,6 +34,8 @@ public final class VeilreachItemGroups {
                     entries.add(VeilreachItems.MIRROR_PICKAXE);
                     entries.add(VeilreachItems.MIRROR_AXE);
                     entries.add(VeilreachItems.MIRROR_SHOVEL);
+                    entries.add(VeilreachItems.GRENADE);
+                    entries.add(VeilreachItems.IMPACT_GRENADE);
                     entries.add(VeilreachItems.MIRROR_HELMET);
                     entries.add(VeilreachItems.MIRROR_CHESTPLATE);
                     entries.add(VeilreachItems.MIRROR_LEGGINGS);

@@ -3,6 +3,8 @@ package com.muguett.veilreach.registry;
 import com.muguett.veilreach.VeilreachMod;
 import com.muguett.veilreach.entity.HushlingEntity;
 import com.muguett.veilreach.entity.HushSovereignEntity;
+import com.muguett.veilreach.entity.GrenadeEntity;
+import com.muguett.veilreach.entity.ImpactGrenadeEntity;
 import com.muguett.veilreach.entity.LanternkeeperEntity;
 import com.muguett.veilreach.entity.MoonfallenKnightEntity;
 import com.muguett.veilreach.entity.MirrorStagEntity;
@@ -26,6 +28,10 @@ import net.minecraft.util.Identifier;
 public final class VeilreachEntities {
     public static final EntityType<MirrorStagEntity> MIRROR_STAG = register("mirror_stag",
             EntityType.Builder.create(MirrorStagEntity::new, SpawnGroup.CREATURE).dimensions(0.9F, 1.4F));
+    public static final EntityType<GrenadeEntity> GRENADE = register("grenade",
+            EntityType.Builder.<GrenadeEntity>create(GrenadeEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(6).trackingTickInterval(1));
+    public static final EntityType<ImpactGrenadeEntity> IMPACT_GRENADE = register("impact_grenade",
+            EntityType.Builder.<ImpactGrenadeEntity>create(ImpactGrenadeEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(6).trackingTickInterval(1));
 
     public static final EntityType<HushlingEntity> HUSHLING = register("hushling",
             EntityType.Builder.create(HushlingEntity::new, SpawnGroup.MONSTER).dimensions(0.6F, 1.95F));
