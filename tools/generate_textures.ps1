@@ -11,7 +11,7 @@ $entityDir = Join-Path $assetsRoot "textures\entity"
 $iconPath = Join-Path $assetsRoot "icon.png"
 $minecraftZipPath = "E:\MOD\minecraft-merged.zip"
 $tileSize = 128
-$entitySheetSize = 64
+$entitySheetSize = 128
 
 foreach ($dir in @($blockDir, $itemDir, $entityDir)) {
     if (-not (Test-Path $dir)) {
@@ -232,8 +232,13 @@ function Normalize-ExistingTextures([string]$directory) {
 
 function Save-Png([System.Drawing.Bitmap]$bmp, [string]$path) {
     $finalBmp = Normalize-TextureForPath $bmp $path
-    $finalBmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
+    $tempPath = "$path.tmp"
+    if (Test-Path $tempPath) {
+        Remove-Item $tempPath -Force
+    }
+    $finalBmp.Save($tempPath, [System.Drawing.Imaging.ImageFormat]::Png)
     $finalBmp.Dispose()
+    Move-Item -Force $tempPath $path
 }
 
 function Draw-Line([System.Drawing.Bitmap]$bmp, [int]$x1, [int]$y1, [int]$x2, [int]$y2, [System.Drawing.Color]$color) {
@@ -958,6 +963,62 @@ function Paint-WatcherDetails([System.Drawing.Bitmap]$bmp) {
     Draw-WideLine $bmp 9 25 15 25 $rune 1
 }
 
+function Paint-StagDetails([System.Drawing.Bitmap]$bmp) {
+    $glow = [System.Drawing.Color]::FromArgb(210, 218, 250, 238)
+    $accent = [System.Drawing.Color]::FromArgb(165, 129, 209, 214)
+    Draw-WideLine $bmp 7 9 3 1 $glow 1
+    Draw-WideLine $bmp 9 9 7 1 $glow 1
+    Draw-WideLine $bmp 24 9 28 1 $glow 1
+    Draw-WideLine $bmp 22 9 24 1 $glow 1
+    Draw-WideLine $bmp 10 21 21 21 $accent 1
+    Draw-WideLine $bmp 12 31 20 44 $accent 1
+}
+
+function Paint-SovereignDetails([System.Drawing.Bitmap]$bmp) {
+    $eye = [System.Drawing.Color]::FromArgb(255, 255, 244, 182)
+    $rune = [System.Drawing.Color]::FromArgb(210, 145, 215, 255)
+    $gold = [System.Drawing.Color]::FromArgb(185, 248, 232, 166)
+    Draw-BrushPoint $bmp 12 19 1 $eye
+    Draw-BrushPoint $bmp 19 19 1 $eye
+    Draw-WideLine $bmp 15 4 15 13 $gold 1
+    Draw-WideLine $bmp 9 7 21 7 $gold 1
+    Draw-WideLine $bmp 15 24 15 42 $rune 1
+    Draw-WideLine $bmp 10 29 20 29 $rune 1
+    Draw-WideLine $bmp 8 49 22 58 $rune 1
+}
+
+function Paint-LanternkeeperDetails([System.Drawing.Bitmap]$bmp) {
+    $warm = [System.Drawing.Color]::FromArgb(230, 255, 213, 132)
+    $cold = [System.Drawing.Color]::FromArgb(170, 119, 170, 197)
+    Draw-BrushPoint $bmp 12 19 1 $warm
+    Draw-BrushPoint $bmp 19 19 1 $warm
+    Draw-WideLine $bmp 10 8 21 8 $cold 1
+    Draw-WideLine $bmp 15 23 15 47 $cold 1
+    Draw-WideLine $bmp 8 44 22 44 $warm 1
+    Draw-RingWide $bmp 15 49 6 $warm 1
+}
+
+function Paint-KnightDetails([System.Drawing.Bitmap]$bmp) {
+    $steel = [System.Drawing.Color]::FromArgb(185, 214, 232, 246)
+    $moon = [System.Drawing.Color]::FromArgb(180, 132, 204, 255)
+    Draw-WideLine $bmp 15 4 15 12 $steel 1
+    Draw-WideLine $bmp 10 8 20 8 $steel 1
+    Draw-WideLine $bmp 15 20 15 48 $moon 1
+    Draw-WideLine $bmp 10 28 20 28 $steel 1
+    Draw-WideLine $bmp 8 49 22 58 $moon 1
+}
+
+function Paint-WardenDetails([System.Drawing.Bitmap]$bmp) {
+    $horn = [System.Drawing.Color]::FromArgb(210, 212, 245, 246)
+    $frost = [System.Drawing.Color]::FromArgb(170, 143, 224, 226)
+    Draw-WideLine $bmp 10 7 7 0 $horn 1
+    Draw-WideLine $bmp 21 7 24 0 $horn 1
+    Draw-BrushPoint $bmp 12 19 1 $horn
+    Draw-BrushPoint $bmp 19 19 1 $horn
+    Draw-WideLine $bmp 15 25 15 47 $frost 1
+    Draw-WideLine $bmp 10 31 20 31 $frost 1
+}
+
 Create-StoneBlock (Join-Path $blockDir "veilstone.png") "#20262f" "#495a66" "#7cc8d4"
 Create-StoneBlock (Join-Path $blockDir "polished_veilstone.png") "#2a323c" "#718291" "#cfe8ef"
 Create-StoneBlock (Join-Path $blockDir "mirror_grass.png") "#183034" "#4b7775" "#b1f1d3"
@@ -1014,6 +1075,7 @@ Create-SpawnEggItem (Join-Path $itemDir "warden_of_silence_spawn_egg.png") "#313
 
 $mirrorStag = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/cow/temperate_cow.png"
 Recolor-Entity $mirrorStag (Color-Hex "#1a2025") (Color-Hex "#5b7f86") (Color-Hex "#dff5ee") (Color-Hex "#e7d18e")
+Paint-StagDetails $mirrorStag
 Save-Png $mirrorStag (Join-Path $entityDir "mirror_stag.png")
 
 $hushling = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/zombie/zombie.png"
@@ -1023,14 +1085,17 @@ Save-Png $hushling (Join-Path $entityDir "hushling.png")
 
 $hushSovereign = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/skeleton/wither_skeleton.png"
 Recolor-Entity $hushSovereign (Color-Hex "#05070c") (Color-Hex "#3d4c61") (Color-Hex "#b7d9f5") (Color-Hex "#fff1b0")
+Paint-SovereignDetails $hushSovereign
 Save-Png $hushSovereign (Join-Path $entityDir "hush_sovereign.png")
 
 $lanternkeeper = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/illager/pillager.png"
 Recolor-Entity $lanternkeeper (Color-Hex "#12161c") (Color-Hex "#566a76") (Color-Hex "#d8e5ea") (Color-Hex "#ffd88d")
+Paint-LanternkeeperDetails $lanternkeeper
 Save-Png $lanternkeeper (Join-Path $entityDir "lanternkeeper.png")
 
 $moonfallenKnight = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/skeleton/wither_skeleton.png"
 Recolor-Entity $moonfallenKnight (Color-Hex "#0d1117") (Color-Hex "#556271") (Color-Hex "#dce7ef") (Color-Hex "#9dd4ff")
+Paint-KnightDetails $moonfallenKnight
 Save-Png $moonfallenKnight (Join-Path $entityDir "moonfallen_knight.png")
 
 $watcher = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/enderman/enderman.png"
@@ -1040,6 +1105,7 @@ Save-Png $watcher (Join-Path $entityDir "veilbound_watcher.png")
 
 $warden = Load-ZipBitmap $minecraftZipPath "assets/minecraft/textures/entity/skeleton/wither_skeleton.png"
 Recolor-Entity $warden (Color-Hex "#0a0e12") (Color-Hex "#4c5965") (Color-Hex "#d8e7ef") (Color-Hex "#b4edf0")
+Paint-WardenDetails $warden
 Save-Png $warden (Join-Path $entityDir "warden_of_silence.png")
 
 $humanoidDir = Join-Path $entityDir "equipment\humanoid"

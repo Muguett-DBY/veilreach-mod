@@ -33,26 +33,41 @@ public final class LanternkeeperEntityModel extends EntityModel<LivingEntityRend
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
-        root.addChild("head", ModelPartBuilder.create()
-                .uv(0, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F)
-                .uv(32, 0).cuboid(-5.0F, -9.0F, -5.0F, 10.0F, 10.0F, 10.0F)
-                .uv(0, 18).cuboid(-3.0F, -3.0F, -5.5F, 6.0F, 4.0F, 1.0F), ModelTransform.origin(0.0F, 3.5F, 0.0F));
-        root.addChild("body", ModelPartBuilder.create()
-                .uv(0, 29).cuboid(-4.5F, 0.0F, -2.5F, 9.0F, 12.0F, 5.0F)
-                .uv(28, 29).cuboid(-5.0F, 9.0F, -3.0F, 10.0F, 7.0F, 6.0F)
-                .uv(20, 20).cuboid(-5.5F, 0.0F, -3.0F, 11.0F, 4.0F, 1.0F), ModelTransform.of(0.0F, 4.0F, 0.0F, 0.08F, 0.0F, 0.0F));
+        ModelPartData head = root.addChild("head", ModelPartBuilder.create()
+                .uv(0, 0).cuboid(-4.5F, -8.0F, -4.5F, 9.0F, 8.0F, 9.0F)
+                .uv(36, 0).cuboid(-5.5F, -9.0F, -5.5F, 11.0F, 10.0F, 11.0F)
+                .uv(0, 18).cuboid(-3.5F, -3.0F, -6.0F, 7.0F, 4.0F, 1.0F), ModelTransform.origin(0.0F, 3.5F, 0.0F));
+        head.addChild("hood_peak", ModelPartBuilder.create()
+                .uv(16, 18).cuboid(-2.0F, -4.0F, -1.0F, 4.0F, 4.0F, 4.0F), ModelTransform.of(0.0F, -9.0F, 1.5F, -0.25F, 0.0F, 0.0F));
+        head.addChild("left_mask_flange", ModelPartBuilder.create()
+                .uv(32, 18).mirrored().cuboid(0.0F, -1.0F, -4.0F, 2.0F, 6.0F, 2.0F), ModelTransform.of(4.0F, -1.0F, 0.0F, 0.0F, 0.0F, -0.2F));
+        head.addChild("right_mask_flange", ModelPartBuilder.create()
+                .uv(32, 18).cuboid(-2.0F, -1.0F, -4.0F, 2.0F, 6.0F, 2.0F), ModelTransform.of(-4.0F, -1.0F, 0.0F, 0.0F, 0.0F, 0.2F));
+
+        ModelPartData body = root.addChild("body", ModelPartBuilder.create()
+                .uv(0, 32).cuboid(-5.0F, 0.0F, -3.0F, 10.0F, 12.0F, 6.0F)
+                .uv(32, 32).cuboid(-6.0F, 9.0F, -3.5F, 12.0F, 8.0F, 7.0F)
+                .uv(0, 50).cuboid(-6.0F, 0.0F, -3.5F, 12.0F, 5.0F, 1.0F), ModelTransform.of(0.0F, 4.0F, 0.0F, 0.08F, 0.0F, 0.0F));
+        body.addChild("back_drape", ModelPartBuilder.create()
+                .uv(26, 50).cuboid(-5.5F, 0.0F, 0.0F, 11.0F, 15.0F, 1.0F), ModelTransform.of(0.0F, 1.0F, 3.0F, 0.16F, 0.0F, 0.0F));
+        body.addChild("left_pack", ModelPartBuilder.create()
+                .uv(50, 50).mirrored().cuboid(0.0F, 0.0F, -2.0F, 3.0F, 9.0F, 4.0F), ModelTransform.of(4.5F, 4.0F, 0.0F, 0.0F, 0.0F, -0.18F));
+        body.addChild("right_pack", ModelPartBuilder.create()
+                .uv(50, 50).cuboid(-3.0F, 0.0F, -2.0F, 3.0F, 9.0F, 4.0F), ModelTransform.of(-4.5F, 4.0F, 0.0F, 0.0F, 0.0F, 0.18F));
+
         root.addChild("right_arm", ModelPartBuilder.create()
-                .uv(44, 0).cuboid(-2.0F, -1.0F, -2.0F, 4.0F, 13.0F, 4.0F), ModelTransform.of(-6.0F, 5.5F, 0.0F, -0.2F, 0.0F, 0.1F));
+                .uv(68, 0).cuboid(-2.0F, -1.0F, -2.0F, 4.0F, 14.0F, 4.0F), ModelTransform.of(-6.5F, 5.5F, 0.0F, -0.18F, 0.0F, 0.12F));
         root.addChild("left_arm", ModelPartBuilder.create()
-                .uv(44, 0).mirrored().cuboid(-2.0F, -1.0F, -2.0F, 4.0F, 13.0F, 4.0F), ModelTransform.of(6.0F, 5.5F, 0.0F, -0.45F, 0.0F, -0.1F));
+                .uv(68, 18).mirrored().cuboid(-2.0F, -1.0F, -2.0F, 4.0F, 14.0F, 4.0F), ModelTransform.of(6.5F, 5.5F, 0.0F, -0.55F, 0.0F, -0.12F));
         root.addChild("lantern", ModelPartBuilder.create()
-                .uv(44, 17).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 5.0F, 4.0F)
-                .uv(56, 17).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 2.0F, 2.0F), ModelTransform.origin(6.0F, 16.0F, -2.0F));
+                .uv(84, 0).cuboid(-2.5F, 0.0F, -2.5F, 5.0F, 6.0F, 5.0F)
+                .uv(84, 11).cuboid(-1.5F, -3.0F, -1.5F, 3.0F, 3.0F, 3.0F)
+                .uv(84, 17).cuboid(-1.0F, 6.0F, -1.0F, 2.0F, 2.0F, 2.0F), ModelTransform.origin(6.8F, 16.5F, -2.0F));
         root.addChild("right_leg", ModelPartBuilder.create()
-                .uv(0, 46).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F), ModelTransform.origin(-2.2F, 16.0F, 0.0F));
+                .uv(0, 66).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 13.0F, 4.0F), ModelTransform.origin(-2.2F, 16.0F, 0.0F));
         root.addChild("left_leg", ModelPartBuilder.create()
-                .uv(0, 46).mirrored().cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F), ModelTransform.origin(2.2F, 16.0F, 0.0F));
-        return TexturedModelData.of(modelData, 64, 64);
+                .uv(16, 66).mirrored().cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 13.0F, 4.0F), ModelTransform.origin(2.2F, 16.0F, 0.0F));
+        return TexturedModelData.of(modelData, 128, 96);
     }
 
     @Override
@@ -64,10 +79,10 @@ public final class LanternkeeperEntityModel extends EntityModel<LivingEntityRend
         this.head.pitch = state.pitch * 0.017453292F * 0.45F;
         this.body.pitch = 0.08F + MathHelper.cos(state.age * 0.06F) * 0.02F;
         this.rightArm.pitch = MathHelper.cos(swing + (float) Math.PI) * 0.55F * stride - 0.2F;
-        this.leftArm.pitch = -0.65F + MathHelper.cos(state.age * 0.12F) * 0.05F;
+        this.leftArm.pitch = -0.75F + MathHelper.cos(state.age * 0.12F) * 0.05F;
         this.rightLeg.pitch = MathHelper.cos(swing) * 0.9F * stride;
         this.leftLeg.pitch = MathHelper.cos(swing + (float) Math.PI) * 0.9F * stride;
-        this.lantern.pitch = 0.12F + MathHelper.cos(state.age * 0.18F) * 0.08F;
-        this.lantern.roll = MathHelper.cos(state.age * 0.16F) * 0.05F;
+        this.lantern.pitch = 0.18F + MathHelper.cos(state.age * 0.18F) * 0.1F;
+        this.lantern.roll = MathHelper.cos(state.age * 0.16F) * 0.08F;
     }
 }
