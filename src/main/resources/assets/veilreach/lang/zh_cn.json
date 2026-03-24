@@ -87,6 +87,7 @@
   "message.veilreach.portal.invalid_frame": "星仪符印需要一座完整的月织门框。",
   "message.veilreach.portal.opened": "空气被缓缓撕开，一道通往寂辉荒境的门就此开启。",
   "message.veilreach.sealed_altar.locked": "沉寂的守护拒绝了你。祭坛需要守望者印记。",
+  "message.veilreach.sealed_altar.missing_rite": "祭坛仍旧沉默。它还渴求沉殿钥匙与大教堂封印的完整仪式。",
   "message.veilreach.sealed_altar.awakened": "封印已经破碎，寂主回应了你的呼唤。",
   "message.veilreach.starlight_cache.opened": "一匣星辉金属从储匣中倾泻而出。",
   "title.veilreach.hushlands": "寂辉荒境",

@@ -18,6 +18,7 @@ import com.muguett.veilreach.world.gen.feature.RiftSpireFeature;
 import com.muguett.veilreach.world.gen.feature.ShimmerleafGroveFeature;
 import com.muguett.veilreach.world.gen.feature.SilentThroneFeature;
 import com.muguett.veilreach.world.gen.feature.SilentArchiveFeature;
+import com.muguett.veilreach.world.gen.feature.ShatteredCausewayFeature;
 import com.muguett.veilreach.world.gen.feature.SunkenSanctumFeature;
 import com.muguett.veilreach.world.gen.feature.VeilstonePileFeature;
 import com.muguett.veilreach.world.gen.feature.WatcherObeliskFeature;
@@ -117,6 +118,11 @@ public final class VeilreachFeatures {
             Registries.FEATURE,
             Identifier.of(VeilreachMod.MOD_ID, "silent_archive"),
             new SilentArchiveFeature(DefaultFeatureConfig.CODEC)
+    );
+    public static final Feature<DefaultFeatureConfig> SHATTERED_CAUSEWAY = Registry.register(
+            Registries.FEATURE,
+            Identifier.of(VeilreachMod.MOD_ID, "shattered_causeway"),
+            new ShatteredCausewayFeature(DefaultFeatureConfig.CODEC)
     );
     public static final Feature<DefaultFeatureConfig> SUNKEN_SANCTUM = Registry.register(
             Registries.FEATURE,

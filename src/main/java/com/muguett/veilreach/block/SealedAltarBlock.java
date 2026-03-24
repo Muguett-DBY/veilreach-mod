@@ -34,6 +34,12 @@ public class SealedAltarBlock extends Block {
             }
             return ActionResult.SUCCESS;
         }
+        if (!player.isCreative() && (!containsItem(player, VeilreachItems.SANCTUM_KEY) || !containsItem(player, VeilreachItems.CATHEDRAL_SEAL))) {
+            if (!world.isClient()) {
+                player.sendMessage(Text.translatable("message.veilreach.sealed_altar.missing_rite"), true);
+            }
+            return ActionResult.SUCCESS;
+        }
 
         if (!(world instanceof ServerWorld serverWorld)) {
             return ActionResult.SUCCESS;
@@ -51,7 +57,29 @@ public class SealedAltarBlock extends Block {
         player.sendMessage(Text.translatable("message.veilreach.sealed_altar.awakened"), true);
         if (!player.isCreative()) {
             held.decrement(1);
+            consumeOne(player, VeilreachItems.SANCTUM_KEY);
+            consumeOne(player, VeilreachItems.CATHEDRAL_SEAL);
         }
         return ActionResult.SUCCESS;
+    }
+
+    private static boolean containsItem(PlayerEntity player, net.minecraft.item.Item item) {
+        for (int i = 0; i < player.getInventory().size(); i++) {
+            ItemStack stack = player.getInventory().getStack(i);
+            if (stack.isOf(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void consumeOne(PlayerEntity player, net.minecraft.item.Item item) {
+        for (int i = 0; i < player.getInventory().size(); i++) {
+            ItemStack stack = player.getInventory().getStack(i);
+            if (stack.isOf(item)) {
+                stack.decrement(1);
+                return;
+            }
+        }
     }
 }

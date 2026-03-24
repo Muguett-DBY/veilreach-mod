@@ -23,17 +23,17 @@ public class LanternkeeperEntity extends ZombieEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_PILLAGER_AMBIENT;
+        return SoundEvents.BLOCK_LANTERN_FALL;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_PILLAGER_HURT;
+        return SoundEvents.BLOCK_CHAIN_HIT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_PILLAGER_DEATH;
+        return SoundEvents.BLOCK_LANTERN_BREAK;
     }
 
     @Override
@@ -58,9 +58,14 @@ public class LanternkeeperEntity extends ZombieEntity {
         if (this.getTarget() != null && this.age % 70 == 0) {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 60, 0));
             this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 80, 0));
+            this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 50, 0));
+            this.playSound(SoundEvents.BLOCK_LANTERN_PLACE, 0.7F, 0.8F);
         }
         if (this.getEntityWorld() instanceof ServerWorld serverWorld && this.age % 10 == 0) {
             serverWorld.spawnParticles(ParticleTypes.GLOW, this.getX(), this.getBodyY(0.7D), this.getZ(), 1, 0.1D, 0.1D, 0.1D, 0.0D);
+            if (this.age % 30 == 0) {
+                serverWorld.spawnParticles(ParticleTypes.END_ROD, this.getX(), this.getBodyY(1.0D), this.getZ(), 2, 0.15D, 0.2D, 0.15D, 0.01D);
+            }
         }
     }
 }

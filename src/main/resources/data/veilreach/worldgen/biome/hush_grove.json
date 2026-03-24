@@ -52,7 +52,7 @@
     }
   },
   "features": [
-    [], [], [], [], [], [], [], [], [], ["veilreach:echo_monolith", "veilreach:moon_shrine", "veilreach:watcher_obelisk", "veilreach:gloamwood_camp", "veilreach:shimmerleaf_grove", "veilreach:riftglass_basin", "veilreach:fallen_gateway", "veilreach:moonwoven_arch"], [], []
+    [], [], [], [], [], [], [], [], [], ["veilreach:echo_monolith", "veilreach:moon_shrine", "veilreach:watcher_obelisk", "veilreach:gloamwood_camp", "veilreach:shimmerleaf_grove", "veilreach:riftglass_basin", "veilreach:fallen_gateway", "veilreach:moonwoven_arch", "veilreach:shattered_causeway"], [], []
   ],
   "spawn_costs": {},
   "spawners": {
