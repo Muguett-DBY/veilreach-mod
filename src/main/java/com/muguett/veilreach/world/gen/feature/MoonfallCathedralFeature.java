@@ -5,6 +5,7 @@ import com.muguett.veilreach.registry.VeilreachBlocks;
 import com.muguett.veilreach.registry.VeilreachEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.StructureWorldAccess;
@@ -32,6 +33,8 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         BlockState frame = VeilreachBlocks.MOONWOVEN_FRAME.getDefaultState();
         BlockState lantern = VeilreachBlocks.STARLANTERN.getDefaultState();
         BlockState bars = Blocks.IRON_BARS.getDefaultState();
+        BlockState stair = Blocks.POLISHED_DEEPSLATE_STAIRS.getDefaultState();
+        BlockState slab = Blocks.POLISHED_DEEPSLATE_SLAB.getDefaultState();
         BlockState cache = VeilreachBlocks.STARLIGHT_CACHE.getDefaultState();
         BlockState altar = VeilreachBlocks.AWAKENED_ALTAR.getDefaultState();
 
@@ -41,16 +44,17 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         HushStructureFeatureSupport.supportFootprint(world, center, -20, -12, 12, 22, -1, base);
         HushStructureFeatureSupport.supportFootprint(world, center, 12, 20, 12, 22, -1, base);
 
-        buildFrontCourt(world, center, base, trim, frame, lantern);
-        buildMainNave(world, center, base, wall, trim, inlay, frame, lantern, bars);
+        buildFrontCourt(world, center, base, trim, frame, lantern, stair, slab);
+        buildMainNave(world, center, base, wall, trim, inlay, frame, lantern, bars, stair, slab);
         buildTransepts(world, center, base, wall, trim, frame, lantern, bars);
-        buildUpperChoir(world, center, base, inlay, wall, lantern);
+        buildUpperChoir(world, center, base, inlay, wall, lantern, stair);
         buildRearApse(world, center, base, wall, trim, frame, lantern, bars, altar);
         buildTower(world, center.add(-16, 0, 17), base, wall, frame, lantern, bars, false);
         buildTower(world, center.add(16, 0, 17), base, wall, frame, lantern, bars, true);
         buildCrypt(world, center, base, wall, trim, lantern, cache);
         buildReliquaryWing(world, center, base, wall, trim, frame, lantern, true);
         buildReliquaryWing(world, center, base, wall, trim, frame, lantern, false);
+        carveCathedralFlow(world, center, trim, stair, slab);
 
         HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, 18), Direction.SOUTH, "chests/moonfall_cathedral");
         HushStructureFeatureSupport.placeLootChest(world, center.add(-6, 1, 10), Direction.SOUTH, "chests/moonfall_cathedral");
@@ -74,7 +78,7 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         return true;
     }
 
-    private static void buildFrontCourt(StructureWorldAccess world, BlockPos center, BlockState base, BlockState trim, BlockState frame, BlockState lantern) {
+    private static void buildFrontCourt(StructureWorldAccess world, BlockPos center, BlockState base, BlockState trim, BlockState frame, BlockState lantern, BlockState stair, BlockState slab) {
         for (int dz = 13; dz <= 23; dz++) {
             int halfWidth = dz >= 19 ? 8 : 6;
             for (int dx = -halfWidth; dx <= halfWidth; dx++) {
@@ -95,9 +99,13 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
                 world.setBlockState(center.add(dx, Math.max(0, 4 - (step / 2)), 24 + step), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
+        for (int dx = -3; dx <= 3; dx++) {
+            world.setBlockState(center.add(dx, 1, 20), stair.with(StairsBlock.FACING, Direction.NORTH), HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(dx, 1, 19), slab, HushStructureFeatureSupport.GEN_FLAGS);
+        }
     }
 
-    private static void buildMainNave(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState inlay, BlockState frame, BlockState lantern, BlockState bars) {
+    private static void buildMainNave(StructureWorldAccess world, BlockPos center, BlockState base, BlockState wall, BlockState trim, BlockState inlay, BlockState frame, BlockState lantern, BlockState bars, BlockState stair, BlockState slab) {
         for (int dz = -10; dz <= 16; dz++) {
             for (int dx = -9; dx <= 9; dx++) {
                 world.setBlockState(center.add(dx, -1, dz), base, HushStructureFeatureSupport.GEN_FLAGS);
@@ -135,6 +143,21 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
             for (int z = -6; z <= 12; z += 6) {
                 world.setBlockState(center.add(side * 7, 3, z), lantern, HushStructureFeatureSupport.GEN_FLAGS);
             }
+        }
+        for (int dz = 8; dz <= 14; dz++) {
+            world.setBlockState(center.add(-1, 0, dz), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(0, 0, dz), trim, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(1, 0, dz), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        }
+        for (int side = -1; side <= 1; side += 2) {
+            for (int dz = -8; dz <= 13; dz += 7) {
+                HushStructureFeatureSupport.placeDoor(world, center.add(side * 4, 0, dz), side < 0 ? Direction.WEST : Direction.EAST);
+            }
+        }
+        for (int dx = -2; dx <= 2; dx++) {
+            world.setBlockState(center.add(dx, 1, 15), stair.with(StairsBlock.FACING, Direction.SOUTH), HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(dx, 2, 14), stair.with(StairsBlock.FACING, Direction.SOUTH), HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(dx, 3, 13), slab, HushStructureFeatureSupport.GEN_FLAGS);
         }
     }
 
@@ -175,7 +198,7 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
         }
     }
 
-    private static void buildUpperChoir(StructureWorldAccess world, BlockPos center, BlockState base, BlockState inlay, BlockState wall, BlockState lantern) {
+    private static void buildUpperChoir(StructureWorldAccess world, BlockPos center, BlockState base, BlockState inlay, BlockState wall, BlockState lantern, BlockState stair) {
         for (int side = -1; side <= 1; side += 2) {
             for (int step = 0; step <= 6; step++) {
                 BlockPos tread = center.add(side * (8 - step), step, 11 - step);
@@ -192,6 +215,30 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
                 }
             }
             world.setBlockState(center.add(side * 7, 8, 1), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+            for (int rise = 0; rise <= 3; rise++) {
+                world.setBlockState(center.add(side * 6, 4 + rise, -1 - rise), stair.with(StairsBlock.FACING, side < 0 ? Direction.WEST : Direction.EAST), HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+    }
+
+    private static void carveCathedralFlow(StructureWorldAccess world, BlockPos center, BlockState trim, BlockState stair, BlockState slab) {
+        for (int dz = -8; dz <= 12; dz++) {
+            world.setBlockState(center.add(-1, 1, dz), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(0, 1, dz), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(center.add(1, 1, dz), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        }
+        for (int side = -1; side <= 1; side += 2) {
+            for (int dz = -5; dz <= 9; dz += 7) {
+                for (int dx = 5; dx <= 8; dx++) {
+                    world.setBlockState(center.add(side * dx, 0, dz), dx == 5 ? trim : slab, HushStructureFeatureSupport.GEN_FLAGS);
+                    world.setBlockState(center.add(side * dx, 1, dz), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+                }
+            }
+            for (int step = 0; step <= 4; step++) {
+                BlockPos tread = center.add(side * 8, 1 + step, 5 - step);
+                world.setBlockState(tread, stair.with(StairsBlock.FACING, side < 0 ? Direction.WEST : Direction.EAST), HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(tread.up(), Blocks.AIR.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+            }
         }
     }
 
