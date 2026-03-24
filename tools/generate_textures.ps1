@@ -10,7 +10,7 @@ $itemDir = Join-Path $assetsRoot "textures\item"
 $entityDir = Join-Path $assetsRoot "textures\entity"
 $iconPath = Join-Path $assetsRoot "icon.png"
 $minecraftZipPath = "E:\MOD\minecraft-merged.zip"
-$tileSize = 64
+$tileSize = 128
 $entitySheetSize = 64
 
 foreach ($dir in @($blockDir, $itemDir, $entityDir)) {
@@ -94,6 +94,92 @@ function Add-HiResSurfaceDetails([System.Drawing.Bitmap]$bmp, [int]$seedOffset =
     }
 }
 
+function Add-EdgeHighlights([System.Drawing.Bitmap]$bmp, [int]$boost = 16) {
+    for ($x = 1; $x -lt ($bmp.Width - 1); $x++) {
+        for ($y = 1; $y -lt ($bmp.Height - 1); $y++) {
+            $px = $bmp.GetPixel($x, $y)
+            if ($px.A -eq 0) {
+                continue
+            }
+
+            $touchesTransparent = $false
+            foreach ($offset in @(@(-1, 0), @(1, 0), @(0, -1), @(0, 1))) {
+                $neighbor = $bmp.GetPixel($x + $offset[0], $y + $offset[1])
+                if ($neighbor.A -eq 0) {
+                    $touchesTransparent = $true
+                    break
+                }
+            }
+
+            if ($touchesTransparent) {
+                $highlight = Shade-Color $px $boost
+                $bmp.SetPixel($x, $y, ([System.Drawing.Color]::FromArgb($px.A, $highlight.R, $highlight.G, $highlight.B)))
+            }
+        }
+    }
+}
+
+function Set-PixelIfOpaque([System.Drawing.Bitmap]$bmp, [int]$x, [int]$y, [System.Drawing.Color]$color) {
+    if ($x -lt 0 -or $x -ge $bmp.Width -or $y -lt 0 -or $y -ge $bmp.Height) {
+        return
+    }
+    if ($bmp.GetPixel($x, $y).A -eq 0) {
+        return
+    }
+    $bmp.SetPixel($x, $y, $color)
+}
+
+function Add-FiligreeOverlay([System.Drawing.Bitmap]$bmp, [int]$seedOffset = 0, [bool]$itemMode = $false) {
+    $localRandom = [System.Random]::new(4242 + $seedOffset)
+    $lineCount = if ($itemMode) { 10 } else { 7 }
+    $glow = if ($itemMode) {
+        [System.Drawing.Color]::FromArgb(72, 244, 248, 255)
+    } else {
+        [System.Drawing.Color]::FromArgb(56, 208, 228, 235)
+    }
+
+    for ($i = 0; $i -lt $lineCount; $i++) {
+        $x1 = $localRandom.Next(0, $bmp.Width)
+        $y1 = $localRandom.Next(0, $bmp.Height)
+        $x2 = [Math]::Min($bmp.Width - 1, [Math]::Max(0, $x1 + $localRandom.Next(-18, 19)))
+        $y2 = [Math]::Min($bmp.Height - 1, [Math]::Max(0, $y1 + $localRandom.Next(-18, 19)))
+        $dx = [Math]::Abs($x2 - $x1)
+        $dy = -[Math]::Abs($y2 - $y1)
+        $sx = if ($x1 -lt $x2) { 1 } else { -1 }
+        $sy = if ($y1 -lt $y2) { 1 } else { -1 }
+        $err = $dx + $dy
+        $cx = $x1
+        $cy = $y1
+        while ($true) {
+            Set-PixelIfOpaque $bmp $cx $cy $glow
+            if ($cx -eq $x2 -and $cy -eq $y2) {
+                break
+            }
+            $e2 = 2 * $err
+            if ($e2 -ge $dy) {
+                $err += $dy
+                $cx += $sx
+            }
+            if ($e2 -le $dx) {
+                $err += $dx
+                $cy += $sy
+            }
+        }
+    }
+
+    $sparkleCount = if ($itemMode) { 18 } else { 10 }
+    for ($i = 0; $i -lt $sparkleCount; $i++) {
+        $x = $localRandom.Next(2, $bmp.Width - 2)
+        $y = $localRandom.Next(2, $bmp.Height - 2)
+        $spark = [System.Drawing.Color]::FromArgb(110, 255, 250, 214)
+        Set-PixelIfOpaque $bmp $x $y $spark
+        Set-PixelIfOpaque $bmp ($x - 1) $y ([System.Drawing.Color]::FromArgb(60, 214, 238, 255))
+        Set-PixelIfOpaque $bmp ($x + 1) $y ([System.Drawing.Color]::FromArgb(60, 214, 238, 255))
+        Set-PixelIfOpaque $bmp $x ($y - 1) ([System.Drawing.Color]::FromArgb(60, 214, 238, 255))
+        Set-PixelIfOpaque $bmp $x ($y + 1) ([System.Drawing.Color]::FromArgb(60, 214, 238, 255))
+    }
+}
+
 function Normalize-TextureForPath([System.Drawing.Bitmap]$bmp, [string]$path) {
     $normalized = $bmp
     if ($path -like "*\textures\block\hush_portal.png" -or $path -like "*\textures\block\starlantern.png" -or $path -like "*\textures\block\starlight_cache.png") {
@@ -102,6 +188,8 @@ function Normalize-TextureForPath([System.Drawing.Bitmap]$bmp, [string]$path) {
             $bmp.Dispose()
         }
         Add-HiResSurfaceDetails $normalized ([Math]::Abs($path.GetHashCode()) % 1000)
+        Add-FiligreeOverlay $normalized ([Math]::Abs($path.GetHashCode()) % 1200) $false
+        Add-EdgeHighlights $normalized 12
         return $normalized
     }
     if ($path -like "*\textures\block\*" -or $path -like "*\textures\item\*") {
@@ -110,6 +198,10 @@ function Normalize-TextureForPath([System.Drawing.Bitmap]$bmp, [string]$path) {
             $bmp.Dispose()
         }
         Add-HiResSurfaceDetails $normalized ([Math]::Abs($path.GetHashCode()) % 1000)
+        $isItem = $path -like "*\textures\item\*"
+        Add-FiligreeOverlay $normalized ([Math]::Abs($path.GetHashCode()) % 1500) $isItem
+        $edgeBoost = if ($isItem) { 20 } else { 14 }
+        Add-EdgeHighlights $normalized $edgeBoost
     } elseif ($path -like "*\textures\entity\*") {
         if ($bmp.Width -lt $entitySheetSize -or $bmp.Height -lt $entitySheetSize) {
             $canvas = [System.Drawing.Bitmap]::new($entitySheetSize, $entitySheetSize)

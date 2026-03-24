@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCollisionHandler;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -61,6 +62,19 @@ public class HushPortalBlock extends Block {
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (random.nextInt(18) == 0) {
             world.playSound(null, pos, SoundEvents.BLOCK_PORTAL_AMBIENT, SoundCategory.BLOCKS, 0.45F, 0.8F + (random.nextFloat() * 0.35F));
+        }
+
+        for (int i = 0; i < 3; i++) {
+            double x = pos.getX() + 0.15D + (random.nextDouble() * 0.7D);
+            double y = pos.getY() + 0.15D + (random.nextDouble() * 0.7D);
+            double z = pos.getZ() + 0.15D + (random.nextDouble() * 0.7D);
+            double velocityX = (random.nextDouble() - 0.5D) * 0.05D;
+            double velocityY = 0.01D + (random.nextDouble() * 0.03D);
+            double velocityZ = (random.nextDouble() - 0.5D) * 0.05D;
+            world.addParticleClient(ParticleTypes.REVERSE_PORTAL, x, y, z, velocityX, velocityY, velocityZ);
+            if (random.nextBoolean()) {
+                world.addParticleClient(ParticleTypes.END_ROD, x, y + 0.1D, z, velocityX * 0.3D, velocityY * 0.5D, velocityZ * 0.3D);
+            }
         }
     }
 }

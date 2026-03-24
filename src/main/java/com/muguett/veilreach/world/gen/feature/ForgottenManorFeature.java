@@ -32,10 +32,11 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
             return false;
         }
 
-        BlockState planks = VeilreachBlocks.GLOAMWOOD_PLANKS.getDefaultState();
-        BlockState log = VeilreachBlocks.GLOAMWOOD_LOG.getDefaultState();
+        BlockState planks = Blocks.DARK_OAK_PLANKS.getDefaultState();
+        BlockState log = Blocks.STRIPPED_DARK_OAK_LOG.getDefaultState();
         BlockState frame = VeilreachBlocks.MOONWOVEN_FRAME.getDefaultState();
-        BlockState polished = VeilreachBlocks.POLISHED_VEILSTONE.getDefaultState();
+        BlockState polished = Blocks.DEEPSLATE_BRICKS.getDefaultState();
+        BlockState trim = VeilreachBlocks.POLISHED_VEILSTONE.getDefaultState();
         BlockState lantern = VeilreachBlocks.STARLANTERN.getDefaultState();
         BlockState glass = VeilreachBlocks.RIFTGLASS.getDefaultState();
         BlockState leaves = VeilreachBlocks.SHIMMERLEAF_LEAVES.getDefaultState();
@@ -52,10 +53,12 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
 
         for (int dx = -8; dx <= 8; dx++) {
             for (int dz = -6; dz <= 6; dz++) {
-                world.setBlockState(center.add(dx, -1, dz), polished, HushStructureFeatureSupport.GEN_FLAGS);
+                BlockState foundation = Math.max(Math.abs(dx), Math.abs(dz)) >= 6 ? polished : trim;
+                world.setBlockState(center.add(dx, -1, dz), foundation, HushStructureFeatureSupport.GEN_FLAGS);
                 if (Math.abs(dx) <= 7 && Math.abs(dz) <= 5) {
-                    world.setBlockState(center.add(dx, 0, dz), planks, HushStructureFeatureSupport.GEN_FLAGS);
-                    world.setBlockState(center.add(dx, 5, dz), planks, HushStructureFeatureSupport.GEN_FLAGS);
+                    BlockState floor = (dx == 0 || dz == 0) ? trim : planks;
+                    world.setBlockState(center.add(dx, 0, dz), floor, HushStructureFeatureSupport.GEN_FLAGS);
+                    world.setBlockState(center.add(dx, 5, dz), dz == 0 ? trim : planks, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }

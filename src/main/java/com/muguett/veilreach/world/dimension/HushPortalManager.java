@@ -28,9 +28,11 @@ public final class HushPortalManager {
     private static final int ARRIVAL_PLATFORM_RADIUS = 3;
     private static final int ARRIVAL_CLEARANCE_HEIGHT = 6;
     private static final int ARRIVAL_MIN_SURFACE_Y = 72;
-    private static final int ARRIVAL_ISLAND_RADIUS_X = 18;
-    private static final int ARRIVAL_ISLAND_RADIUS_Z = 14;
-    private static final int ARRIVAL_LANDMARK_OFFSET = 24;
+    private static final int ARRIVAL_ISLAND_RADIUS_X = 22;
+    private static final int ARRIVAL_ISLAND_RADIUS_Z = 18;
+    private static final int ARRIVAL_LANDMARK_OFFSET_X = 64;
+    private static final int ARRIVAL_LANDMARK_OFFSET_Z = 20;
+    private static final int ARRIVAL_SHRINE_RADIUS = 6;
     private static final Map<UUID, BlockPos> OVERWORLD_RETURN_PORTALS = new ConcurrentHashMap<>();
 
     private HushPortalManager() {
@@ -162,7 +164,7 @@ public final class HushPortalManager {
 
     private static BlockPos ensureArrivalPlatform(ServerWorld world, BlockPos preferred) {
         BlockPos base = resolveArrivalBase(world, preferred);
-        buildArrivalIsland(world, base, ARRIVAL_ISLAND_RADIUS_X, ARRIVAL_ISLAND_RADIUS_Z, 5);
+        buildArrivalIsland(world, base, ARRIVAL_ISLAND_RADIUS_X, ARRIVAL_ISLAND_RADIUS_Z, 7);
 
         for (int dx = -ARRIVAL_PLATFORM_RADIUS; dx <= ARRIVAL_PLATFORM_RADIUS; dx++) {
             for (int dz = -ARRIVAL_PLATFORM_RADIUS; dz <= ARRIVAL_PLATFORM_RADIUS; dz++) {
@@ -173,8 +175,9 @@ public final class HushPortalManager {
             }
         }
 
-        buildFrame(world, base);
         ensureArrivalLandmark(world, base);
+        buildArrivalShrine(world, base);
+        buildFrame(world, base);
         return findSafeArrival(world, base.up());
     }
 
@@ -193,9 +196,53 @@ public final class HushPortalManager {
             return;
         }
 
-        BlockPos landmarkCenter = base.add(ARRIVAL_LANDMARK_OFFSET, 0, 0);
+        BlockPos landmarkCenter = base.add(ARRIVAL_LANDMARK_OFFSET_X, 0, ARRIVAL_LANDMARK_OFFSET_Z);
         buildArrivalIsland(world, landmarkCenter, ARRIVAL_ISLAND_RADIUS_X + 8, ARRIVAL_ISLAND_RADIUS_Z + 4, 7);
         ForgottenManorFeature.generateAt(world, landmarkCenter, false);
+    }
+
+    private static void buildArrivalShrine(ServerWorld world, BlockPos base) {
+        BlockState foundation = Blocks.POLISHED_DEEPSLATE.getDefaultState();
+        BlockState trim = VeilreachBlocks.POLISHED_VEILSTONE.getDefaultState();
+        BlockState inlay = Blocks.CALCITE.getDefaultState();
+        BlockState pillar = Blocks.CHISELED_DEEPSLATE.getDefaultState();
+        BlockState chain = Blocks.END_ROD.getDefaultState();
+        BlockState lantern = VeilreachBlocks.STARLANTERN.getDefaultState();
+        BlockState frame = VeilreachBlocks.MOONWOVEN_FRAME.getDefaultState();
+
+        for (int dx = -ARRIVAL_SHRINE_RADIUS; dx <= ARRIVAL_SHRINE_RADIUS; dx++) {
+            for (int dz = -ARRIVAL_SHRINE_RADIUS; dz <= ARRIVAL_SHRINE_RADIUS; dz++) {
+                int ring = Math.max(Math.abs(dx), Math.abs(dz));
+                BlockState floor = ring == ARRIVAL_SHRINE_RADIUS
+                        ? foundation
+                        : ((dx == 0 || dz == 0) ? inlay : trim);
+                world.setBlockState(base.add(dx, -1, dz), floor, Block.NOTIFY_ALL);
+
+                for (int dy = 0; dy <= ARRIVAL_CLEARANCE_HEIGHT + 3; dy++) {
+                    world.setBlockState(base.add(dx, dy, dz), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                }
+            }
+        }
+
+        for (int dx = -4; dx <= 4; dx += 8) {
+            for (int dz = -4; dz <= 4; dz += 8) {
+                BlockPos pillarBase = base.add(dx, 0, dz);
+                for (int dy = 0; dy <= 4; dy++) {
+                    world.setBlockState(pillarBase.up(dy), dy == 0 ? trim : pillar, Block.NOTIFY_ALL);
+                }
+                world.setBlockState(pillarBase.up(5), chain, Block.NOTIFY_ALL);
+                world.setBlockState(pillarBase.up(6), lantern, Block.NOTIFY_ALL);
+            }
+        }
+
+        for (int dx = -2; dx <= 2; dx++) {
+            world.setBlockState(base.add(dx, 0, -2), frame, Block.NOTIFY_ALL);
+            world.setBlockState(base.add(dx, 0, 2), frame, Block.NOTIFY_ALL);
+        }
+        for (int dz = -2; dz <= 2; dz++) {
+            world.setBlockState(base.add(-3, 0, dz), foundation, Block.NOTIFY_ALL);
+            world.setBlockState(base.add(3, 0, dz), foundation, Block.NOTIFY_ALL);
+        }
     }
 
     private static void buildArrivalIsland(ServerWorld world, BlockPos center, int radiusX, int radiusZ, int depth) {
