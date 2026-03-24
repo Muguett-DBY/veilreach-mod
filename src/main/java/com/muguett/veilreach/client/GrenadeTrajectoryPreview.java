@@ -16,6 +16,7 @@ public final class GrenadeTrajectoryPreview {
     private static final int MAX_STEPS = 34;
     private static final double STEP_DRAG = 0.98D;
     private static final double STEP_GRAVITY = 0.04D;
+    private static final int STEP_INTERVAL = 3;
 
     private GrenadeTrajectoryPreview() {
     }
@@ -34,6 +35,9 @@ public final class GrenadeTrajectoryPreview {
         if (!(stack.getItem() instanceof ThrowableGrenadeItem grenadeItem)) {
             return;
         }
+        if ((player.age & 1) != 0) {
+            return;
+        }
 
         Vec3d position = player.getEyePos().add(player.getRotationVector().multiply(0.4D));
         Vec3d velocity = player.getRotationVector().multiply(grenadeItem.getThrowSpeed()).add(player.getVelocity());
@@ -45,11 +49,11 @@ public final class GrenadeTrajectoryPreview {
                 Vec3d impact = hitResult.getPos();
                 for (int i = 0; i < 8; i++) {
                     double angle = (Math.PI * 2.0D * i) / 8.0D;
-                    double radius = 0.22D;
+                    double radius = 0.28D;
                     client.world.addParticleClient(ParticleTypes.END_ROD, impact.x + Math.cos(angle) * radius, impact.y + 0.02D, impact.z + Math.sin(angle) * radius, 0.0D, 0.0D, 0.0D);
                 }
-                for (int i = 0; i < 4; i++) {
-                    client.world.addParticleClient(ParticleTypes.GLOW, impact.x, impact.y + (i * 0.12D), impact.z, 0.0D, 0.0D, 0.0D);
+                for (int i = 0; i < 6; i++) {
+                    client.world.addParticleClient(ParticleTypes.GLOW, impact.x, impact.y + (i * 0.16D), impact.z, 0.0D, 0.0D, 0.0D);
                 }
                 client.world.addParticleClient(ParticleTypes.CRIT, impact.x, impact.y, impact.z, 0.0D, 0.0D, 0.0D);
                 if (hitResult instanceof BlockHitResult blockHitResult) {
@@ -59,22 +63,21 @@ public final class GrenadeTrajectoryPreview {
                 return;
             }
 
-            if ((step & 1) == 0) {
+            if (step % STEP_INTERVAL == 0) {
                 double drift = 0.003D * MathHelper.sin((player.age + step) * 0.3F);
-                client.world.addParticleClient(grenadeItem.showsFuseHud() ? ParticleTypes.GLOW : ParticleTypes.END_ROD, nextPosition.x, nextPosition.y, nextPosition.z, drift, 0.0D, -drift);
-                client.world.addParticleClient(ParticleTypes.CRIT, nextPosition.x, nextPosition.y, nextPosition.z, 0.0D, 0.0D, 0.0D);
-                if (step % 4 == 0) {
-                    client.world.addParticleClient(ParticleTypes.END_ROD, nextPosition.x, nextPosition.y + 0.02D, nextPosition.z, 0.0D, 0.0D, 0.0D);
-                }
+                client.world.addParticleClient(grenadeItem.showsFuseHud() ? ParticleTypes.END_ROD : ParticleTypes.GLOW, nextPosition.x, nextPosition.y, nextPosition.z, drift, 0.0D, -drift);
             }
 
             position = nextPosition;
             velocity = velocity.multiply(STEP_DRAG).add(0.0D, -STEP_GRAVITY, 0.0D);
         }
 
-        for (int i = 0; i < 3; i++) {
-            client.world.addParticleClient(ParticleTypes.GLOW, position.x, position.y + (i * 0.1D), position.z, 0.0D, 0.0D, 0.0D);
+        for (int i = 0; i < 5; i++) {
+            client.world.addParticleClient(ParticleTypes.GLOW, position.x, position.y + (i * 0.14D), position.z, 0.0D, 0.0D, 0.0D);
         }
-        client.world.addParticleClient(ParticleTypes.CRIT, position.x, position.y, position.z, 0.0D, 0.0D, 0.0D);
+        for (int i = 0; i < 4; i++) {
+            double angle = (Math.PI * 2.0D * i) / 4.0D;
+            client.world.addParticleClient(ParticleTypes.END_ROD, position.x + Math.cos(angle) * 0.18D, position.y, position.z + Math.sin(angle) * 0.18D, 0.0D, 0.0D, 0.0D);
+        }
     }
 }

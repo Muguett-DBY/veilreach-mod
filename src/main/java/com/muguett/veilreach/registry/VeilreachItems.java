@@ -2,6 +2,7 @@ package com.muguett.veilreach.registry;
 
 import com.muguett.veilreach.VeilreachMod;
 import com.muguett.veilreach.item.AstralSigilItem;
+import com.muguett.veilreach.item.ClusterGrenadeItem;
 import com.muguett.veilreach.item.GrenadeItem;
 import com.muguett.veilreach.item.HushWardCharmItem;
 import com.muguett.veilreach.item.ImpactGrenadeItem;
@@ -34,6 +35,7 @@ public final class VeilreachItems {
     public static final Item MIRROR_SHOVEL = register("mirror_shovel", settings -> new ShovelItem(VeilreachToolMaterials.MIRRORSTEEL, 1.5F, -3.0F, settings));
     public static final Item GRENADE = register("grenade", GrenadeItem::new);
     public static final Item IMPACT_GRENADE = register("impact_grenade", ImpactGrenadeItem::new);
+    public static final Item CLUSTER_GRENADE = register("cluster_grenade", ClusterGrenadeItem::new);
     public static final Item MIRROR_HELMET = register("mirror_helmet", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.HELMET).maxDamage(EquipmentType.HELMET.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
     public static final Item MIRROR_CHESTPLATE = register("mirror_chestplate", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.CHESTPLATE).maxDamage(EquipmentType.CHESTPLATE.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
     public static final Item MIRROR_LEGGINGS = register("mirror_leggings", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.LEGGINGS).maxDamage(EquipmentType.LEGGINGS.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
