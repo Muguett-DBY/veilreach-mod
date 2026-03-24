@@ -1,8 +1,10 @@
 package com.muguett.veilreach.world.dimension;
 
 import com.muguett.veilreach.registry.VeilreachBlocks;
+import com.muguett.veilreach.world.gen.feature.ForgottenManorFeature;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -12,13 +14,22 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.Heightmap;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class HushPortalManager {
     private static final int FRAME_WIDTH = 4;
     private static final int FRAME_HEIGHT = 5;
     private static final int PORTAL_SEARCH_RADIUS = 16;
     private static final int PORTAL_COOLDOWN_TICKS = 20 * 4;
+    private static final BlockPos HUSHLANDS_ENTRY_ANCHOR = new BlockPos(0, 0, 0);
+    private static final int ARRIVAL_PLATFORM_RADIUS = 3;
+    private static final int ARRIVAL_CLEARANCE_HEIGHT = 6;
+    private static final int ARRIVAL_MIN_SURFACE_Y = 72;
+    private static final int ARRIVAL_LANDMARK_OFFSET = 40;
+    private static final Map<UUID, BlockPos> OVERWORLD_RETURN_PORTALS = new ConcurrentHashMap<>();
 
     private HushPortalManager() {
     }
@@ -48,7 +59,14 @@ public final class HushPortalManager {
             return;
         }
 
-        BlockPos preferred = portalPos.withY(targetWorld.getSeaLevel());
+        boolean enteringHushlands = targetWorld.getRegistryKey() == VeilreachDimensions.HUSHLANDS_WORLD;
+        if (enteringHushlands) {
+            OVERWORLD_RETURN_PORTALS.put(player.getUuid(), portalPos.toImmutable());
+        }
+
+        BlockPos preferred = enteringHushlands
+                ? HUSHLANDS_ENTRY_ANCHOR.withY(targetWorld.getSeaLevel())
+                : OVERWORLD_RETURN_PORTALS.getOrDefault(player.getUuid(), BlockPos.ORIGIN).withY(targetWorld.getSeaLevel());
         BlockPos arrival = findExistingPortal(targetWorld, preferred);
         if (arrival == null) {
             arrival = ensureArrivalPlatform(targetWorld, preferred);
@@ -137,20 +155,39 @@ public final class HushPortalManager {
     }
 
     private static BlockPos ensureArrivalPlatform(ServerWorld world, BlockPos preferred) {
-        BlockPos center = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, preferred);
-        BlockPos base = center.up(1);
+        BlockPos base = resolveArrivalBase(world, preferred);
 
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dz = -2; dz <= 2; dz++) {
+        for (int dx = -ARRIVAL_PLATFORM_RADIUS; dx <= ARRIVAL_PLATFORM_RADIUS; dx++) {
+            for (int dz = -ARRIVAL_PLATFORM_RADIUS; dz <= ARRIVAL_PLATFORM_RADIUS; dz++) {
                 world.setBlockState(base.add(dx, -1, dz), VeilreachBlocks.VEILSTONE.getDefaultState(), Block.NOTIFY_ALL);
-                for (int dy = 0; dy <= 4; dy++) {
-                    world.setBlockState(base.add(dx, dy, dz), net.minecraft.block.Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                for (int dy = 0; dy <= ARRIVAL_CLEARANCE_HEIGHT; dy++) {
+                    world.setBlockState(base.add(dx, dy, dz), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
                 }
             }
         }
 
         buildFrame(world, base);
+        ensureArrivalLandmark(world, base);
         return findSafeArrival(world, base.up());
+    }
+
+    private static BlockPos resolveArrivalBase(ServerWorld world, BlockPos preferred) {
+        BlockPos surface = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, preferred);
+        int fallbackY = Math.max(world.getSeaLevel() + 4, ARRIVAL_MIN_SURFACE_Y);
+        int chosenY = surface.getY() < world.getSeaLevel() - 16 || surface.getY() <= world.getBottomY() + 8
+                ? fallbackY
+                : surface.getY() + 1;
+        int maxSafeY = world.getTopYInclusive() - FRAME_HEIGHT - 8;
+        return new BlockPos(preferred.getX(), Math.min(chosenY, maxSafeY), preferred.getZ());
+    }
+
+    private static void ensureArrivalLandmark(ServerWorld world, BlockPos base) {
+        if (world.getRegistryKey() != VeilreachDimensions.HUSHLANDS_WORLD) {
+            return;
+        }
+
+        BlockPos landmarkCenter = resolveArrivalBase(world, base.add(ARRIVAL_LANDMARK_OFFSET, 0, 0));
+        ForgottenManorFeature.generateAt(world, landmarkCenter, false);
     }
 
     private static void buildFrame(ServerWorld world, BlockPos base) {

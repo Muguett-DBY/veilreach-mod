@@ -23,8 +23,12 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
     @Override
     public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
         StructureWorldAccess world = context.getWorld();
-        BlockPos center = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, context.getOrigin());
-        if (!hasStableGround(world, center)) {
+        BlockPos center = HushStructureFeatureSupport.findGenerationCenter(world, context.getOrigin());
+        return generateAt(world, center, true);
+    }
+
+    public static boolean generateAt(StructureWorldAccess world, BlockPos center, boolean requireStableGround) {
+        if (requireStableGround && !hasStableGround(world, center)) {
             return false;
         }
 
@@ -238,13 +242,6 @@ public class ForgottenManorFeature extends Feature<DefaultFeatureConfig> {
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {
-        for (int dx = -8; dx <= 8; dx += 4) {
-            for (int dz = -6; dz <= 6; dz += 3) {
-                if (!HushStructureFeatureSupport.isHushGround(world, center.add(dx, -1, dz))) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return HushStructureFeatureSupport.hasStableGround(world, center, 8, 6, 4, 10, 12);
     }
 }

@@ -22,7 +22,7 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
     @Override
     public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
         StructureWorldAccess world = context.getWorld();
-        BlockPos center = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, context.getOrigin());
+        BlockPos center = HushStructureFeatureSupport.findGenerationCenter(world, context.getOrigin());
         if (!hasStableGround(world, center)) {
             return false;
         }
@@ -228,13 +228,6 @@ public class SunkenSanctumFeature extends Feature<DefaultFeatureConfig> {
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {
-        for (int dx = -6; dx <= 6; dx += 3) {
-            for (int dz = -6; dz <= 6; dz += 3) {
-                if (!HushStructureFeatureSupport.isHushGround(world, center.add(dx, -1, dz))) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return HushStructureFeatureSupport.hasStableGround(world, center, 6, 6, 3, 12, 12);
     }
 }

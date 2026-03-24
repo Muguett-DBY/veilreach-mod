@@ -17,6 +17,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
 
 final class HushStructureFeatureSupport {
@@ -33,6 +34,37 @@ final class HushStructureFeatureSupport {
                 || state.isOf(Blocks.STONE)
                 || state.isOf(Blocks.DEEPSLATE)
                 || state.isOf(Blocks.COARSE_DIRT);
+    }
+
+    static BlockPos findGenerationCenter(StructureWorldAccess world, BlockPos origin) {
+        return world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, origin);
+    }
+
+    static boolean hasStableGround(
+            StructureWorldAccess world,
+            BlockPos center,
+            int radiusX,
+            int radiusZ,
+            int step,
+            int minValidSamples,
+            int maxHeightVariance
+    ) {
+        int validSamples = 0;
+        int minY = Integer.MAX_VALUE;
+        int maxY = Integer.MIN_VALUE;
+
+        for (int dx = -radiusX; dx <= radiusX; dx += step) {
+            for (int dz = -radiusZ; dz <= radiusZ; dz += step) {
+                BlockPos surface = findGenerationCenter(world, center.add(dx, 0, dz));
+                minY = Math.min(minY, surface.getY());
+                maxY = Math.max(maxY, surface.getY());
+                if (isHushGround(world, surface.down())) {
+                    validSamples++;
+                }
+            }
+        }
+
+        return validSamples >= minValidSamples && maxY - minY <= maxHeightVariance;
     }
 
     static void clearBox(StructureWorldAccess world, BlockPos center, int radiusX, int height, int radiusZ) {

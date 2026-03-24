@@ -22,7 +22,7 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
     @Override
     public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
         StructureWorldAccess world = context.getWorld();
-        BlockPos center = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, context.getOrigin());
+        BlockPos center = HushStructureFeatureSupport.findGenerationCenter(world, context.getOrigin());
         if (!hasStableGround(world, center)) {
             return false;
         }
@@ -224,13 +224,6 @@ public class MoonfallCathedralFeature extends Feature<DefaultFeatureConfig> {
     }
 
     private static boolean hasStableGround(StructureWorldAccess world, BlockPos center) {
-        for (int dx = -9; dx <= 9; dx += 3) {
-            for (int dz = -7; dz <= 7; dz += 3) {
-                if (!HushStructureFeatureSupport.isHushGround(world, center.add(dx, -1, dz))) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return HushStructureFeatureSupport.hasStableGround(world, center, 9, 7, 3, 20, 14);
     }
 }
