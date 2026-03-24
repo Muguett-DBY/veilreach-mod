@@ -10,58 +10,49 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:ender_pearl",
-          "weight": 7,
+          "name": "minecraft:iron_ingot",
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 3.0
-              }
+                "min": 3.0,
+                "max": 8.0
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_sword",
-          "weight": 3,
+          "name": "minecraft:arrow",
+          "weight": 8,
           "functions": [
             {
-              "function": "minecraft:set_damage",
-              "add": false,
-              "damage": {
+              "function": "minecraft:set_count",
+              "count": {
                 "type": "minecraft:uniform",
-                "min": 0.1,
-                "max": 0.55
-              }
-            },
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": {
-                "type": "minecraft:uniform",
-                "min": 18.0,
-                "max": 30.0
+                "min": 8.0,
+                "max": 20.0
               },
-              "options": "#minecraft:on_random_loot"
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond",
+          "name": "minecraft:ender_pearl",
           "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1.0,
-                "max": 2.0
-              }
+                "max": 3.0
+              },
+              "add": false
             }
           ]
         },
@@ -72,35 +63,50 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
                 "min": 2.0,
                 "max": 5.0
-              }
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "veilreach:starfragment",
-          "weight": 6,
+          "weight": 5,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1.0,
-                "max": 3.0
-              }
+                "max": 2.0
+              },
+              "add": false
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
         {
           "type": "minecraft:item",
           "name": "veilreach:warden_sigil",
-          "weight": 1
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:hush_ward_charm",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_apple",
+          "weight": 2
         }
       ]
     }

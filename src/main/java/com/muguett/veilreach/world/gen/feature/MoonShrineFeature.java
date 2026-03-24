@@ -4,9 +4,9 @@ import com.mojang.serialization.Codec;
 import com.muguett.veilreach.registry.VeilreachBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
@@ -20,37 +20,63 @@ public class MoonShrineFeature extends Feature<DefaultFeatureConfig> {
     @Override
     public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
         StructureWorldAccess world = context.getWorld();
-        BlockPos center = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, context.getOrigin());
-        BlockPos floor = center.down();
-        if (!HushStructureFeatureSupport.isHushGround(world, floor)) {
+        BlockPos center = HushStructureFeatureSupport.findGenerationCenter(world, context.getOrigin());
+        if (!HushStructureFeatureSupport.hasStableGround(world, center, 6, 6, 2, 9, 8)) {
             return false;
         }
 
         BlockState veilstone = VeilreachBlocks.VEILSTONE.getDefaultState();
         BlockState polished = VeilreachBlocks.POLISHED_VEILSTONE.getDefaultState();
+        BlockState frame = VeilreachBlocks.MOONWOVEN_FRAME.getDefaultState();
         BlockState lantern = VeilreachBlocks.STARLANTERN.getDefaultState();
         BlockState altar = VeilreachBlocks.AWAKENED_ALTAR.getDefaultState();
+        BlockState glass = Blocks.IRON_BARS.getDefaultState();
 
-        HushStructureFeatureSupport.clearBox(world, center, 4, 5, 4);
+        HushStructureFeatureSupport.clearBox(world, center, 7, 9, 7);
+        HushStructureFeatureSupport.supportFootprint(world, center, -6, 6, -6, 6, 0, polished);
 
-        for (int dx = -3; dx <= 3; dx++) {
-            for (int dz = -3; dz <= 3; dz++) {
-                BlockPos pos = center.add(dx, -1, dz);
-                world.setBlockState(pos, (Math.abs(dx) == 3 || Math.abs(dz) == 3) ? polished : veilstone, HushStructureFeatureSupport.GEN_FLAGS);
+        for (int dx = -5; dx <= 5; dx++) {
+            for (int dz = -5; dz <= 5; dz++) {
+                int ring = Math.max(Math.abs(dx), Math.abs(dz));
+                BlockState floor = ring >= 4 ? polished : veilstone;
+                world.setBlockState(center.add(dx, 0, dz), floor, HushStructureFeatureSupport.GEN_FLAGS);
             }
         }
 
-        for (BlockPos pillarBase : new BlockPos[]{center.add(-3, 0, -3), center.add(3, 0, -3), center.add(-3, 0, 3), center.add(3, 0, 3)}) {
-            world.setBlockState(pillarBase, polished, HushStructureFeatureSupport.GEN_FLAGS);
-            world.setBlockState(pillarBase.up(), polished, HushStructureFeatureSupport.GEN_FLAGS);
-            world.setBlockState(pillarBase.up(2), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                world.setBlockState(center.add(dx, 1, dz), Math.abs(dx) == 3 || Math.abs(dz) == 2 ? polished : veilstone, HushStructureFeatureSupport.GEN_FLAGS);
+            }
         }
 
-        world.setBlockState(center, altar, HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(center.north(), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(center.south(), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-        HushStructureFeatureSupport.placeLootChest(world, center.east(2), Direction.WEST, "chests/moon_shrine");
-        HushStructureFeatureSupport.placeLootChest(world, center.west(2), Direction.EAST, "chests/moon_shrine");
+        for (int step = 0; step <= 2; step++) {
+            for (int dx = -2; dx <= 2; dx++) {
+                world.setBlockState(center.add(dx, step, 3 + step), polished, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+
+        for (BlockPos pillarBase : new BlockPos[]{center.add(-3, 2, -2), center.add(3, 2, -2), center.add(-3, 2, 2), center.add(3, 2, 2)}) {
+            for (int dy = 0; dy <= 3; dy++) {
+                world.setBlockState(pillarBase.up(dy), dy >= 2 ? frame : polished, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+            world.setBlockState(pillarBase.up(4), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        }
+
+        for (int dx = -4; dx <= 4; dx++) {
+            for (int dy = 2; dy <= 5; dy++) {
+                if (Math.abs(dx) == 4 || dy == 5) {
+                    world.setBlockState(center.add(dx, dy, -4), polished, HushStructureFeatureSupport.GEN_FLAGS);
+                }
+            }
+        }
+
+        world.setBlockState(center.add(-2, 3, -4), glass, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.add(2, 3, -4), glass, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.up(2), altar, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.up(2).north(), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.up(2).south(), VeilreachBlocks.FOGBOUND_BARRIER.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        HushStructureFeatureSupport.placeLootChest(world, center.east(4).up(1), Direction.WEST, "chests/moon_shrine");
+        HushStructureFeatureSupport.placeLootChest(world, center.west(4).up(1), Direction.EAST, "chests/moon_shrine");
         return true;
     }
 }

@@ -4,9 +4,9 @@ import com.mojang.serialization.Codec;
 import com.muguett.veilreach.registry.VeilreachBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
@@ -20,21 +20,48 @@ public class ShimmerleafGroveFeature extends Feature<DefaultFeatureConfig> {
     @Override
     public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
         StructureWorldAccess world = context.getWorld();
-        BlockPos center = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, context.getOrigin());
-        BlockPos floor = center.down();
-        if (!HushStructureFeatureSupport.isHushGround(world, floor)) {
+        BlockPos center = HushStructureFeatureSupport.findGenerationCenter(world, context.getOrigin());
+        if (!HushStructureFeatureSupport.hasStableGround(world, center, 7, 7, 2, 9, 8)) {
             return false;
         }
 
-        HushStructureFeatureSupport.clearBox(world, center, 5, 8, 5);
+        BlockState polished = VeilreachBlocks.POLISHED_VEILSTONE.getDefaultState();
+        BlockState veilstone = VeilreachBlocks.VEILSTONE.getDefaultState();
+        BlockState moss = VeilreachBlocks.MOONMOSS.getDefaultState();
+        BlockState blossom = VeilreachBlocks.MOONBLOSSOM.getDefaultState();
+        BlockState lantern = VeilreachBlocks.STARLANTERN.getDefaultState();
+        BlockState bars = Blocks.IRON_BARS.getDefaultState();
 
-        for (BlockPos treeCenter : new BlockPos[]{center, center.add(3, 0, 1), center.add(-2, 0, -2)}) {
+        HushStructureFeatureSupport.clearBox(world, center, 7, 9, 7);
+        HushStructureFeatureSupport.supportFootprint(world, center, -6, 6, -6, 6, 0, polished);
+
+        for (int dx = -4; dx <= 4; dx++) {
+            for (int dz = -4; dz <= 4; dz++) {
+                BlockState floor = Math.abs(dx) == 4 || Math.abs(dz) == 4 ? polished : (Math.abs(dx) <= 1 && Math.abs(dz) <= 1 ? moss : veilstone);
+                world.setBlockState(center.add(dx, 0, dz), floor, HushStructureFeatureSupport.GEN_FLAGS);
+            }
+        }
+
+        for (BlockPos treeCenter : new BlockPos[]{
+                center.add(0, 0, -5),
+                center.add(4, 0, -2),
+                center.add(-4, 0, 2),
+                center.add(1, 0, 5)
+        }) {
             growTree(world, treeCenter);
         }
 
-        world.setBlockState(center.add(1, -1, -3), VeilreachBlocks.MOONMOSS.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(center.add(-1, -1, 3), VeilreachBlocks.MIRROR_GRASS.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-        HushStructureFeatureSupport.placeLootChest(world, center.add(0, 0, 4), Direction.NORTH, "chests/shimmerleaf_grove");
+        for (Direction direction : Direction.Type.HORIZONTAL) {
+            BlockPos arbor = center.offset(direction, 3).up(1);
+            world.setBlockState(arbor, bars, HushStructureFeatureSupport.GEN_FLAGS);
+            world.setBlockState(arbor.up(), lantern, HushStructureFeatureSupport.GEN_FLAGS);
+        }
+
+        world.setBlockState(center.up(1), blossom, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.north().up(1), blossom, HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.south().up(1), blossom, HushStructureFeatureSupport.GEN_FLAGS);
+        HushStructureFeatureSupport.placeLootChest(world, center.add(0, 1, 4), Direction.NORTH, "chests/shimmerleaf_grove");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(-4, 1, 2), Direction.EAST, "chests/shimmerleaf_grove");
         return true;
     }
 

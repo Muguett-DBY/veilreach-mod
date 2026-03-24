@@ -15,104 +15,131 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
                 "min": 3.0,
-                "max": 7.0
-              }
+                "max": 8.0
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bread",
-          "weight": 9,
+          "name": "minecraft:arrow",
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
-                "min": 2.0,
-                "max": 6.0
-              }
+                "min": 8.0,
+                "max": 18.0
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:iron_ingot",
-          "weight": 6,
+          "weight": 7,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
                 "min": 2.0,
-                "max": 5.0
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "veilreach:hushberry",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 2.0,
-                "max": 5.0
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "veilreach:moonbroth_tart",
-          "weight": 5,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1.0,
-                "max": 2.0
-              }
+                "max": 6.0
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "veilreach:gloamwood_sap",
-          "weight": 6,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1.0,
-                "max": 3.0
-              }
+                "max": 4.0
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:mirror_blade",
-          "weight": 1
+          "name": "veilreach:hushberry",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2.0,
+                "max": 6.0
+              },
+              "add": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:crossbow",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.15,
+                "max": 0.45
+              },
+              "add": false
+            }
+          ]
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:hush_ward_charm",
-          "weight": 1
+          "name": "veilreach:moonbroth_tart",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1.0,
+                "max": 3.0
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:mirror_ingot",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1.0,
+                "max": 3.0
+              },
+              "add": false
+            }
+          ]
         }
       ]
     }

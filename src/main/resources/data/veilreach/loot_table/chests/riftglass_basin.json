@@ -10,58 +10,33 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:redstone",
-          "weight": 9,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 4.0,
-                "max": 10.0
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:amethyst_shard",
           "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
                 "min": 4.0,
                 "max": 12.0
-              }
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_pickaxe",
-          "weight": 3,
+          "name": "minecraft:ender_pearl",
+          "weight": 5,
           "functions": [
             {
-              "function": "minecraft:set_damage",
-              "add": false,
-              "damage": {
+              "function": "minecraft:set_count",
+              "count": {
                 "type": "minecraft:uniform",
-                "min": 0.2,
-                "max": 0.65
-              }
-            },
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": {
-                "type": "minecraft:uniform",
-                "min": 16.0,
-                "max": 28.0
+                "min": 1.0,
+                "max": 3.0
               },
-              "options": "#minecraft:on_random_loot"
+              "add": false
             }
           ]
         },
@@ -72,12 +47,12 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
                 "min": 3.0,
-                "max": 7.0
-              }
+                "max": 8.0
+              },
+              "add": false
             }
           ]
         },
@@ -88,19 +63,45 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1.0,
                 "max": 4.0
-              }
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
+          "name": "veilreach:starfragment",
+          "weight": 6,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1.0,
+                "max": 3.0
+              },
+              "add": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "name": "veilreach:hush_ward_charm",
-          "weight": 1
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_apple",
+          "weight": 2
         }
       ]
     }

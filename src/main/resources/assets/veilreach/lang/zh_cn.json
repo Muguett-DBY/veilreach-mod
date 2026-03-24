@@ -55,6 +55,12 @@
   "entity.veilreach.hush_sovereign": "寂主",
   "entity.veilreach.veilbound_watcher": "帷缚监视者",
   "entity.veilreach.warden_of_silence": "沉寂守望者",
+  "biome.veilreach.hush_grove": "寂辉幽林",
+  "biome.veilreach.gloam_forest": "幽暮密林",
+  "biome.veilreach.moonlit_thicket": "月映灌丛",
+  "biome.veilreach.rift_meadows": "裂辉草甸",
+  "biome.veilreach.silent_badlands": "沉寂荒塬",
+  "dimension.veilreach.hushlands": "寂辉荒境",
   "itemGroup.veilreach.main": "帷境远界",
   "itemGroup.veilreach.materials": "帷境远界：材料",
   "itemGroup.veilreach.creatures": "帷境远界：生物"

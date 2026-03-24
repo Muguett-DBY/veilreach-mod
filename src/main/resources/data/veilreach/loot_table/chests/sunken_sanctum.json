@@ -10,56 +10,33 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:enchanted_golden_apple",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:diamond_axe",
-          "weight": 3,
+          "name": "minecraft:ender_pearl",
+          "weight": 6,
           "functions": [
             {
-              "function": "minecraft:set_damage",
-              "add": false,
-              "damage": {
+              "function": "minecraft:set_count",
+              "count": {
                 "type": "minecraft:uniform",
-                "min": 0.2,
-                "max": 0.55
-              }
-            },
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": {
-                "type": "minecraft:uniform",
-                "min": 26.0,
-                "max": 44.0
+                "min": 1.0,
+                "max": 4.0
               },
-              "options": "#minecraft:on_random_loot"
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond_leggings",
-          "weight": 2,
+          "name": "minecraft:obsidian",
+          "weight": 7,
           "functions": [
             {
-              "function": "minecraft:set_damage",
-              "add": false,
-              "damage": {
+              "function": "minecraft:set_count",
+              "count": {
                 "type": "minecraft:uniform",
-                "min": 0.15,
-                "max": 0.45
-              }
-            },
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": {
-                "type": "minecraft:uniform",
-                "min": 24.0,
-                "max": 42.0
+                "min": 3.0,
+                "max": 7.0
               },
-              "options": "#minecraft:on_random_loot"
+              "add": false
             }
           ]
         },
@@ -70,113 +47,131 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
-                "min": 3.0,
-                "max": 9.0
-              }
+                "min": 4.0,
+                "max": 10.0
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:diamond",
-          "weight": 7,
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
                 "min": 2.0,
                 "max": 5.0
-              }
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:hush_ward_charm",
-          "weight": 4
-        },
-        {
-          "type": "minecraft:item",
-          "name": "veilreach:astral_sigil",
-          "weight": 2
-        }
-      ]
-    },
-    {
-      "rolls": {
-        "type": "minecraft:uniform",
-        "min": 2.0,
-        "max": 4.0
-      },
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:iron_ingot",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 4.0,
-                "max": 12.0
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:gold_ingot",
+          "name": "veilreach:mirror_ingot",
           "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
-                "min": 3.0,
-                "max": 10.0
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:cooked_beef",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 3.0,
-                "max": 8.0
-              }
+                "min": 2.0,
+                "max": 6.0
+              },
+              "add": false
             }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "veilreach:starfragment",
-          "weight": 8,
+          "weight": 7,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "add": false,
               "count": {
                 "type": "minecraft:uniform",
-                "min": 2.0,
-                "max": 5.0
-              }
+                "min": 1.0,
+                "max": 4.0
+              },
+              "add": false
             }
           ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1.0,
+        "max": 2.0
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_pickaxe",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.25,
+                "max": 0.65
+              },
+              "add": false
+            },
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "min": 22.0,
+                "max": 38.0
+              },
+              "options": "#minecraft:on_random_loot"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_sword",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.2,
+                "max": 0.6
+              },
+              "add": false
+            },
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "min": 22.0,
+                "max": 38.0
+              },
+              "options": "#minecraft:on_random_loot"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:sanctum_key",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:hush_ward_charm",
+          "weight": 2
         }
       ]
     }

@@ -55,6 +55,12 @@
   "entity.veilreach.hush_sovereign": "Hush Sovereign",
   "entity.veilreach.veilbound_watcher": "Veilbound Watcher",
   "entity.veilreach.warden_of_silence": "Warden of Silence",
+  "biome.veilreach.hush_grove": "Hush Grove",
+  "biome.veilreach.gloam_forest": "Gloam Forest",
+  "biome.veilreach.moonlit_thicket": "Moonlit Thicket",
+  "biome.veilreach.rift_meadows": "Rift Meadows",
+  "biome.veilreach.silent_badlands": "Silent Badlands",
+  "dimension.veilreach.hushlands": "Hushlands",
   "itemGroup.veilreach.main": "Veilreach",
   "itemGroup.veilreach.materials": "Veilreach Materials",
   "itemGroup.veilreach.creatures": "Veilreach Creatures"
