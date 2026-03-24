@@ -26,6 +26,22 @@
         },
         {
           "type": "minecraft:item",
+          "name": "minecraft:golden_apple",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1.0,
+                "max": 3.0
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "minecraft:emerald",
           "weight": 7,
           "functions": [
@@ -91,10 +107,19 @@
       ]
     },
     {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:cathedral_seal"
+        }
+      ]
+    },
+    {
       "rolls": {
         "type": "minecraft:uniform",
         "min": 1.0,
-        "max": 2.0
+        "max": 1.0
       },
       "entries": [
         {
@@ -149,18 +174,29 @@
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:cathedral_seal",
-          "weight": 5
-        },
-        {
-          "type": "minecraft:item",
           "name": "veilreach:hush_ward_charm",
           "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "veilreach:mirror_chestplate",
-          "weight": 2
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_book",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "min": 28.0,
+                "max": 42.0
+              },
+              "options": "#minecraft:on_random_loot"
+            }
+          ]
         }
       ]
     }

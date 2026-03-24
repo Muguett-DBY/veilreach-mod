@@ -58,6 +58,22 @@
         },
         {
           "type": "minecraft:item",
+          "name": "minecraft:golden_apple",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2.0,
+                "max": 4.0
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "veilreach:mirror_ingot",
           "weight": 8,
           "functions": [
@@ -172,6 +188,27 @@
           "type": "minecraft:item",
           "name": "veilreach:mirror_chestplate",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "veilreach:sovereign_ward",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_book",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "min": 34.0,
+                "max": 48.0
+              },
+              "options": "#minecraft:on_random_loot"
+            }
+          ]
         }
       ]
     }

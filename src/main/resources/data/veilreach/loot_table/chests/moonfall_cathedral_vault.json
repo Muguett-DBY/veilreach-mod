@@ -15,6 +15,11 @@
         },
         {
           "type": "minecraft:item",
+          "name": "minecraft:netherite_upgrade_smithing_template",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
           "name": "minecraft:diamond",
           "weight": 8,
           "functions": [
@@ -73,6 +78,22 @@
                 "max": 6.0
               },
               "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_book",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "min": 34.0,
+                "max": 46.0
+              },
+              "options": "#minecraft:on_random_loot"
             }
           ]
         }

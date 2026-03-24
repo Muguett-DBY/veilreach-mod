@@ -763,6 +763,65 @@ function Create-KeyItem([string]$path, [string]$metal, [string]$gem) {
     Save-Png $bmp $path
 }
 
+function Create-SanctumKeyItem([string]$path) {
+    $bmp = Create-ItemCanvas
+    Draw-RingGrid $bmp 4.8 10.3 2.5 (Color-Hex "#9fc6d8") 0.55
+    Draw-LineGrid $bmp 4.8 2.3 4.8 11.2 (Color-Hex "#dcebf1") 0.55
+    Draw-LineGrid $bmp 4.8 5.2 10.8 5.2 (Color-Hex "#7fdfff") 0.45
+    Draw-LineGrid $bmp 9.0 5.2 9.0 7.8 (Color-Hex "#6aa8c4") 0.35
+    Draw-LineGrid $bmp 7.0 5.2 7.0 8.8 (Color-Hex "#dcebf1") 0.3
+    Draw-DiamondGrid $bmp 4.8 1.8 1.4 (Color-Hex "#9ef4ff") (Color-Hex "#f4ffff")
+    Draw-RingGrid $bmp 4.8 10.3 1.1 (Color-Hex "#e8ffff") 0.2
+    Save-Png $bmp $path
+}
+
+function Create-CathedralSealItem([string]$path) {
+    $bmp = Create-ItemCanvas
+    Draw-RingGrid $bmp 8 8 5.3 (Color-Hex "#e6d3a1") 0.75
+    Draw-RingGrid $bmp 8 8 3.7 (Color-Hex "#fff3c6") 0.3
+    Draw-StarGrid $bmp 8 8 (Color-Hex "#fff4c4") (Color-Hex "#b1d9ff") 1.1
+    Draw-LineGrid $bmp 8 1.4 8 4.1 (Color-Hex "#fff0b4") 0.3
+    Draw-LineGrid $bmp 8 11.7 8 14.5 (Color-Hex "#fff0b4") 0.3
+    Draw-LineGrid $bmp 1.8 8 4.4 8 (Color-Hex "#d8c494") 0.3
+    Draw-LineGrid $bmp 11.6 8 14.2 8 (Color-Hex "#d8c494") 0.3
+    Save-Png $bmp $path
+}
+
+function Create-WardenSigilItem([string]$path) {
+    $bmp = Create-ItemCanvas
+    Draw-RingGrid $bmp 8 8 5.6 (Color-Hex "#84bdd7") 0.8
+    Draw-RingGrid $bmp 8 8 4.2 (Color-Hex "#dff7ff") 0.25
+    Draw-StarGrid $bmp 8 8 (Color-Hex "#fff4c6") (Color-Hex "#8edbff") 1.2
+    Draw-LineGrid $bmp 4.0 4.0 12.0 12.0 (Color-Hex "#8edbff") 0.25
+    Draw-LineGrid $bmp 12.0 4.0 4.0 12.0 (Color-Hex "#8edbff") 0.25
+    Draw-RingGrid $bmp 8 8 2.0 (Color-Hex "#ffffff") 0.18
+    Save-Png $bmp $path
+}
+
+function Create-AstralSigilItem([string]$path) {
+    $bmp = Create-ItemCanvas
+    Draw-RingGrid $bmp 8 8 5.3 (Color-Hex "#9bdcf7") 0.75
+    Draw-StarGrid $bmp 8 8 (Color-Hex "#fff0a8") (Color-Hex "#dff9ff") 1.25
+    Draw-LineGrid $bmp 8 1.2 8 4.4 (Color-Hex "#fff7d0") 0.3
+    Draw-LineGrid $bmp 8 11.6 8 14.8 (Color-Hex "#fff7d0") 0.3
+    Draw-LineGrid $bmp 1.2 8 4.4 8 (Color-Hex "#c7eeff") 0.3
+    Draw-LineGrid $bmp 11.6 8 14.8 8 (Color-Hex "#c7eeff") 0.3
+    Draw-RingGrid $bmp 8 8 2.5 (Color-Hex "#ffffff") 0.18
+    Save-Png $bmp $path
+}
+
+function Create-SovereignCoreItem([string]$path) {
+    $bmp = Create-ItemCanvas
+    Draw-DiamondGrid $bmp 8 8 4.0 (Color-Hex "#9de6ff") (Color-Hex "#f4ffff")
+    Draw-DiamondGrid $bmp 8 8 2.4 (Color-Hex "#fff3b4") (Color-Hex "#d8f6ff")
+    Draw-StarGrid $bmp 8 8 (Color-Hex "#fff7d2") (Color-Hex "#8fd8ff") 1.0
+    Draw-LineGrid $bmp 8 1.5 8 4.0 (Color-Hex "#8fd8ff") 0.28
+    Draw-LineGrid $bmp 8 12.0 8 14.5 (Color-Hex "#8fd8ff") 0.28
+    Draw-LineGrid $bmp 1.5 8 4.0 8 (Color-Hex "#8fd8ff") 0.28
+    Draw-LineGrid $bmp 12.0 8 14.5 8 (Color-Hex "#8fd8ff") 0.28
+    Save-Png $bmp $path
+}
+
 function Create-ToolItem([string]$path, [string]$type) {
     $bmp = Create-ItemCanvas
     switch ($type) {
@@ -1127,14 +1186,14 @@ Create-SovereignArmorItem (Join-Path $itemDir "sovereign_leggings.png") "legging
 Create-SovereignArmorItem (Join-Path $itemDir "sovereign_boots.png") "boots"
 Create-ToolItem (Join-Path $itemDir "sovereign_glaive.png") "glaive"
 Create-CrystalItem (Join-Path $itemDir "starfragment.png") "#f2d56e" "#fff9d3"
-Create-KeyItem (Join-Path $itemDir "sanctum_key.png") "#a8c8dd" "#8fe8ff"
-Create-KeyItem (Join-Path $itemDir "cathedral_seal.png") "#e4d49a" "#fff2b3"
-Create-SigilItem (Join-Path $itemDir "warden_sigil.png") "#97b8cb" "#fff4c3"
+Create-SanctumKeyItem (Join-Path $itemDir "sanctum_key.png")
+Create-CathedralSealItem (Join-Path $itemDir "cathedral_seal.png")
+Create-WardenSigilItem (Join-Path $itemDir "warden_sigil.png")
 Create-CharmItem (Join-Path $itemDir "hush_ward_charm.png")
 Create-SovereignWardItem (Join-Path $itemDir "sovereign_ward.png")
-Create-SigilItem (Join-Path $itemDir "astral_sigil.png") "#9bdcf7" "#fff0a8"
+Create-AstralSigilItem (Join-Path $itemDir "astral_sigil.png")
 Create-CrystalItem (Join-Path $itemDir "gloamwood_sap.png") "#5ba8bb" "#e1fcff"
-Create-CrystalItem (Join-Path $itemDir "sovereign_core.png") "#89dbff" "#fff7c9"
+Create-SovereignCoreItem (Join-Path $itemDir "sovereign_core.png")
 Create-SpawnEggItem (Join-Path $itemDir "mirror_stag_spawn_egg.png") "#d3ece6" "#6ca4aa"
 Create-SpawnEggItem (Join-Path $itemDir "hushling_spawn_egg.png") "#2d444a" "#a9efe4"
 Create-SpawnEggItem (Join-Path $itemDir "hush_sovereign_spawn_egg.png") "#0c1119" "#9ad9ff"
