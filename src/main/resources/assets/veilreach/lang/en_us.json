@@ -81,6 +81,9 @@
   "biome.veilreach.rift_meadows": "Rift Meadows",
   "biome.veilreach.silent_badlands": "Silent Badlands",
   "dimension.veilreach.hushlands": "Hushlands",
+  "message.veilreach.hushlands.hazard": "The silver fog presses in. A Hush Ward Charm would steady your breath.",
+  "message.veilreach.fogbound_barrier.locked": "A heavy veil seals the way. A Hush Ward Charm should steady it.",
+  "message.veilreach.fogbound_barrier.opened": "The fogbound seal loosens and the passage opens.",
   "itemGroup.veilreach.main": "Veilreach",
   "itemGroup.veilreach.materials": "Veilreach Materials",
   "itemGroup.veilreach.creatures": "Veilreach Creatures"

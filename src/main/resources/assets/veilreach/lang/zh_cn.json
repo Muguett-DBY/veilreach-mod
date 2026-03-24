@@ -81,6 +81,9 @@
   "biome.veilreach.rift_meadows": "裂辉草甸",
   "biome.veilreach.silent_badlands": "沉寂荒塬",
   "dimension.veilreach.hushlands": "寂辉荒境",
+  "message.veilreach.hushlands.hazard": "银色雾潮正在逼近。寂辉护符会让你的呼吸重新平稳。",
+  "message.veilreach.fogbound_barrier.locked": "沉重的雾幕封住了前路。你需要寂辉护符来稳定它。",
+  "message.veilreach.fogbound_barrier.opened": "雾缚封印松动了，前路也随之敞开。",
   "itemGroup.veilreach.main": "帷境远界",
   "itemGroup.veilreach.materials": "帷境远界：材料",
   "itemGroup.veilreach.creatures": "帷境远界：生物"

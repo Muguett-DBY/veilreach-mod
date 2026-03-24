@@ -7,13 +7,19 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 public final class HushlandsClientEffects {
+    private static RegistryKey<World> lastWorldKey;
+    private static int arrivalBurstTicks;
+    private static int ambientPulseTicks;
+
     private HushlandsClientEffects() {
     }
 
@@ -23,21 +29,52 @@ public final class HushlandsClientEffects {
 
     private static void spawnAmbientParticles(MinecraftClient client) {
         ClientWorld world = client.world;
-        if (world == null || client.player == null || !world.getRegistryKey().equals(VeilreachDimensions.HUSHLANDS_WORLD)) {
+        if (world == null || client.player == null) {
+            lastWorldKey = null;
+            arrivalBurstTicks = 0;
+            ambientPulseTicks = 0;
+            return;
+        }
+
+        RegistryKey<World> currentWorldKey = world.getRegistryKey();
+        if (!currentWorldKey.equals(lastWorldKey)) {
+            if (currentWorldKey.equals(VeilreachDimensions.HUSHLANDS_WORLD)) {
+                arrivalBurstTicks = 40;
+                ambientPulseTicks = 140;
+                playArrivalChime(world, client);
+            }
+            lastWorldKey = currentWorldKey;
+        }
+
+        if (!currentWorldKey.equals(VeilreachDimensions.HUSHLANDS_WORLD)) {
             return;
         }
 
         Random random = world.random;
-        if (random.nextInt(3) != 0) {
-            return;
-        }
-
         BlockPos origin = client.player.getBlockPos();
         RegistryEntry<Biome> biome = world.getBiome(origin);
         String biomeId = biome.getKey().map(key -> key.getValue().toString()).orElse("");
         boolean moonlit = biomeId.contains("moonlit_thicket");
         boolean rift = biomeId.contains("rift_meadows");
         boolean badlands = biomeId.contains("silent_badlands");
+        boolean forest = biomeId.contains("gloam_forest");
+
+        if (arrivalBurstTicks > 0) {
+            spawnArrivalBurst(world, client, origin, random, moonlit || rift);
+            arrivalBurstTicks--;
+        }
+
+        if (ambientPulseTicks > 0) {
+            ambientPulseTicks--;
+        } else if (random.nextInt(180) == 0) {
+            ambientPulseTicks = 100 + random.nextInt(120);
+            spawnSkyPulse(world, client, random, badlands || rift);
+        }
+
+        if (random.nextInt(3) != 0) {
+            return;
+        }
+
         for (int i = 0; i < 5; i++) {
             double x = origin.getX() + 0.5D + random.nextDouble() * 22.0D - 11.0D;
             double y = origin.getY() + 0.6D + random.nextDouble() * 5.5D;
@@ -58,11 +95,17 @@ public final class HushlandsClientEffects {
             if (rift && random.nextInt(6) == 0) {
                 world.addParticleClient(ParticleTypes.REVERSE_PORTAL, x, y, z, 0.0D, 0.01D, 0.0D);
             }
+            if (forest && random.nextInt(5) == 0) {
+                world.addParticleClient(ParticleTypes.SPORE_BLOSSOM_AIR, x, y, z, 0.0D, 0.006D, 0.0D);
+            }
             if (badlands && random.nextInt(5) == 0) {
                 world.addParticleClient(ParticleTypes.SMOKE, x, y - 0.3D, z, 0.0D, 0.01D, 0.0D);
             }
             if (world.getFluidState(samplePos.down()).isIn(FluidTags.WATER) && random.nextInt(5) == 0) {
                 world.addParticleClient(ParticleTypes.GLOW_SQUID_INK, x, y - 0.3D, z, 0.0D, 0.02D, 0.0D);
+            }
+            if (random.nextInt(5) == 0) {
+                world.addParticleClient(ParticleTypes.MYCELIUM, x, origin.getY() + 0.1D + random.nextDouble() * 0.7D, z, 0.0D, 0.004D, 0.0D);
             }
         }
 
@@ -75,7 +118,11 @@ public final class HushlandsClientEffects {
         }
 
         if (random.nextInt(320) == 0) {
-            net.minecraft.sound.SoundEvent sound = badlands ? SoundEvents.AMBIENT_BASALT_DELTAS_MOOD.value() : (moonlit ? SoundEvents.AMBIENT_WARPED_FOREST_MOOD.value() : SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE);
+            net.minecraft.sound.SoundEvent sound = badlands
+                    ? SoundEvents.AMBIENT_BASALT_DELTAS_MOOD.value()
+                    : (moonlit
+                    ? SoundEvents.AMBIENT_WARPED_FOREST_MOOD.value()
+                    : (rift ? SoundEvents.BLOCK_RESPAWN_ANCHOR_AMBIENT : SoundEvents.BLOCK_AMETHYST_CLUSTER_HIT));
             world.playSoundClient(
                     client.player.getX(),
                     client.player.getY(),
@@ -86,6 +133,42 @@ public final class HushlandsClientEffects {
                     0.7F + random.nextFloat() * 0.3F,
                     false
             );
+        }
+    }
+
+    private static void playArrivalChime(ClientWorld world, MinecraftClient client) {
+        world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.AMBIENT, 0.55F, 0.7F, false);
+        world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.AMBIENT, 0.45F, 0.55F, false);
+        world.playSoundClient(client.player.getX(), client.player.getY(), client.player.getZ(), SoundEvents.ENTITY_ENDERMAN_STARE, SoundCategory.AMBIENT, 0.18F, 0.45F, false);
+    }
+
+    private static void spawnArrivalBurst(ClientWorld world, MinecraftClient client, BlockPos origin, Random random, boolean bright) {
+        for (int i = 0; i < 16; i++) {
+            double angle = (Math.PI * 2.0D * i) / 16.0D;
+            double radius = 1.6D + random.nextDouble() * 1.8D;
+            double x = client.player.getX() + Math.cos(angle) * radius;
+            double z = client.player.getZ() + Math.sin(angle) * radius;
+            double y = origin.getY() + 0.15D + random.nextDouble() * 2.2D;
+            world.addParticleClient(ParticleTypes.REVERSE_PORTAL, x, y, z, 0.0D, 0.035D, 0.0D);
+            world.addParticleClient(bright ? ParticleTypes.END_ROD : ParticleTypes.WHITE_ASH, x, y, z, 0.0D, 0.02D, 0.0D);
+            if (random.nextBoolean()) {
+                world.addParticleClient(ParticleTypes.GLOW, x, y, z, 0.0D, 0.01D, 0.0D);
+            }
+        }
+    }
+
+    private static void spawnSkyPulse(ClientWorld world, MinecraftClient client, Random random, boolean intense) {
+        double baseX = client.player.getX() + (random.nextDouble() * 28.0D - 14.0D);
+        double baseY = client.player.getY() + 8.0D + random.nextDouble() * 7.0D;
+        double baseZ = client.player.getZ() + (random.nextDouble() * 28.0D - 14.0D);
+        for (int i = 0; i < (intense ? 10 : 6); i++) {
+            double x = baseX + random.nextDouble() * 4.0D - 2.0D;
+            double y = baseY + random.nextDouble() * 3.5D;
+            double z = baseZ + random.nextDouble() * 4.0D - 2.0D;
+            world.addParticleClient(intense ? ParticleTypes.REVERSE_PORTAL : ParticleTypes.END_ROD, x, y, z, 0.0D, -0.03D, 0.0D);
+            if (random.nextBoolean()) {
+                world.addParticleClient(ParticleTypes.GLOW, x, y, z, 0.0D, -0.01D, 0.0D);
+            }
         }
     }
 }

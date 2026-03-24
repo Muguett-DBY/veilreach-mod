@@ -7,6 +7,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 
 public final class HushlandsHazardManager {
     private HushlandsHazardManager() {
@@ -37,7 +38,7 @@ public final class HushlandsHazardManager {
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 80, 0, false, true));
 
             if (player.age % 200 == 0) {
-                player.sendMessage(net.minecraft.text.Text.literal("The silver fog presses in. A Hush Ward Charm would steady your breath."), true);
+                player.sendMessage(Text.translatable("message.veilreach.hushlands.hazard"), true);
             }
         }
     }

@@ -26,7 +26,7 @@ public class FogboundBarrierBlock extends Block {
         ItemStack held = player.getStackInHand(Hand.MAIN_HAND);
         if (!held.isOf(VeilreachItems.HUSH_WARD_CHARM)) {
             if (!world.isClient()) {
-                player.sendMessage(Text.literal("A heavy veil seals the way. A Hush Ward Charm should steady it."), true);
+                player.sendMessage(Text.translatable("message.veilreach.fogbound_barrier.locked"), true);
             }
             return ActionResult.SUCCESS;
         }
@@ -38,7 +38,7 @@ public class FogboundBarrierBlock extends Block {
         serverWorld.setBlockState(pos, VeilreachBlocks.RIFTGLASS.getDefaultState(), Block.NOTIFY_ALL);
         serverWorld.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 0.7F, 0.7F);
         serverWorld.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 0.9F, 1.2F);
-        player.sendMessage(Text.literal("The fogbound seal loosens and the passage opens."), true);
+        player.sendMessage(Text.translatable("message.veilreach.fogbound_barrier.opened"), true);
         return ActionResult.SUCCESS;
     }
 }
