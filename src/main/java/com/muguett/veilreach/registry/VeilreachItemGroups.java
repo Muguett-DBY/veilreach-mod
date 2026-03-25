@@ -38,6 +38,13 @@ public final class VeilreachItemGroups {
                     entries.add(VeilreachItems.IMPACT_GRENADE);
                     entries.add(VeilreachItems.CLUSTER_GRENADE);
                     entries.add(VeilreachItems.MOLOTOV);
+                    entries.add(VeilreachItems.LIGHT_ENERGY_CELL);
+                    entries.add(VeilreachItems.ENERGY_CELL);
+                    entries.add(VeilreachItems.HEAVY_CHARGE);
+                    entries.add(VeilreachItems.PULSE_PISTOL);
+                    entries.add(VeilreachItems.RIFT_RIFLE);
+                    entries.add(VeilreachItems.SILVER_SCATTER_CANNON);
+                    entries.add(VeilreachItems.WATCHER_GRENADE_LAUNCHER);
                     entries.add(VeilreachItems.LITTLE_BIRD);
                     entries.add(VeilreachItems.RIFT_SKIMMER);
                     entries.add(VeilreachItems.RIFT_GUNSHIP);
