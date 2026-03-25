@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public final class RiftGunshipRocketEntity extends ThrownItemEntity {
     private static final float EXPLOSION_POWER = 4.9F;
-    private static final int MAX_LIFETIME = 84;
+    private static final int MAX_LIFETIME = 140;
     private static final int SAFETY_TICKS = 5;
 
     private int safetyTicks = SAFETY_TICKS;

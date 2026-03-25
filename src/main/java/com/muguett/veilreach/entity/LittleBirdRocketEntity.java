@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public final class LittleBirdRocketEntity extends ThrownItemEntity {
     private static final float EXPLOSION_POWER = 4.6F;
-    private static final int MAX_LIFETIME = 96;
+    private static final int MAX_LIFETIME = 140;
     private static final int SAFETY_TICKS = 5;
 
     private int safetyTicks = SAFETY_TICKS;

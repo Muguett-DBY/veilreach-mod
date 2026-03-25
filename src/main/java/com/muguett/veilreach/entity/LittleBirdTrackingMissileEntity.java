@@ -22,7 +22,7 @@ import net.minecraft.util.math.Vec3d;
 
 public final class LittleBirdTrackingMissileEntity extends ThrownItemEntity {
     private static final float EXPLOSION_POWER = 6.4F;
-    private static final int MAX_LIFETIME = 150;
+    private static final int MAX_LIFETIME = 220;
     private static final int SAFETY_TICKS = 7;
     private static final double CRUISE_SPEED = 2.15D;
     private static final double TURN_BLEND = 0.2D;

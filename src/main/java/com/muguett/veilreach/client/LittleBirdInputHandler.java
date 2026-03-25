@@ -124,8 +124,9 @@ public final class LittleBirdInputHandler {
             ClientPlayNetworking.send(LittleBirdActionPayload.clearTrackingLocks());
         }
 
-        while (SWITCH_SEAT.wasPressed()) {
+        if (SWITCH_SEAT.wasPressed()) {
             ClientPlayNetworking.send(LittleBirdActionPayload.switchSeat());
+            return;
         }
     }
 

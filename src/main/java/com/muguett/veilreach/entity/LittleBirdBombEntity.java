@@ -50,7 +50,7 @@ public final class LittleBirdBombEntity extends ThrownItemEntity {
             return;
         }
 
-        if (age > 120 && getEntityWorld() instanceof ServerWorld serverWorld) {
+        if (age > 180 && getEntityWorld() instanceof ServerWorld serverWorld) {
             burst(serverWorld);
         }
 
