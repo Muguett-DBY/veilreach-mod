@@ -25,6 +25,13 @@ public final class VeilreachSoundEvents {
     public static final SoundEvent LITTLE_BIRD_BOMB_IMPACT = register("vehicle.little_bird_bomb_impact");
     public static final SoundEvent LITTLE_BIRD_HIT = register("vehicle.little_bird_hit");
     public static final SoundEvent LITTLE_BIRD_EXPLOSION = register("vehicle.little_bird_explosion");
+    public static final SoundEvent RIFT_SKIMMER_LOOP = register("vehicle.rift_skimmer_loop");
+    public static final SoundEvent RIFT_SKIMMER_PULSE = register("vehicle.rift_skimmer_pulse");
+    public static final SoundEvent RIFT_SKIMMER_EXPLOSION = register("vehicle.rift_skimmer_explosion");
+    public static final SoundEvent RIFT_SIEGE_HUM = register("vehicle.rift_siege_hum");
+    public static final SoundEvent RIFT_SIEGE_CANNON = register("vehicle.rift_siege_cannon");
+    public static final SoundEvent RIFT_SIEGE_SUPPRESS = register("vehicle.rift_siege_suppress");
+    public static final SoundEvent RIFT_SIEGE_EXPLOSION = register("vehicle.rift_siege_explosion");
     public static final SoundEvent HUSHLANDS_DREAM = register("music.hushlands_dream");
     public static final SoundEvent HUSHLANDS_DEPTHS = register("music.hushlands_depths");
     public static final SoundEvent HUSHLANDS_HUSH_GROVE = register("music.hushlands.hush_grove");

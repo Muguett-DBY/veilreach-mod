@@ -1,6 +1,7 @@
 package com.muguett.veilreach.client;
 
-import com.muguett.veilreach.entity.LittleBirdEntity;
+import com.muguett.veilreach.entity.vehicle.AbstractArmedVehicleEntity;
+import com.muguett.veilreach.entity.vehicle.AbstractVehicleEntity;
 import com.muguett.veilreach.network.LittleBirdActionPayload;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -10,6 +11,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
@@ -54,7 +56,8 @@ public final class LittleBirdInputHandler {
             VEHICLE_CATEGORY
     ));
 
-    private static LittleBirdRotorSoundInstance rotorSound;
+    private static VehicleLoopSoundInstance vehicleLoopSound;
+    private static int soundingVehicleId = -1;
 
     private LittleBirdInputHandler() {
     }
@@ -65,23 +68,23 @@ public final class LittleBirdInputHandler {
 
     private static void tick(MinecraftClient client) {
         if (client.player == null || client.world == null) {
-            stopRotorSound(client);
+            stopLoopSound(client);
             return;
         }
 
-        if (!(client.player.getVehicle() instanceof LittleBirdEntity helicopter) || helicopter.getControllingPassenger() != client.player) {
-            stopRotorSound(client);
+        if (!(client.player.getVehicle() instanceof AbstractArmedVehicleEntity vehicle) || vehicle.getControllingPassenger() != client.player) {
+            stopLoopSound(client);
             return;
         }
 
-        ensureRotorSound(client, helicopter);
-        spawnLockIndicators(client, helicopter);
+        ensureLoopSound(client, vehicle);
+        spawnLockIndicators(client, vehicle);
 
         float forward = (client.options.forwardKey.isPressed() ? 1.0F : 0.0F) - (client.options.backKey.isPressed() ? 0.65F : 0.0F);
         float turn = (client.options.rightKey.isPressed() ? 1.0F : 0.0F) - (client.options.leftKey.isPressed() ? 1.0F : 0.0F);
         boolean ascend = client.options.jumpKey.isPressed();
         boolean descend = DESCEND.isPressed();
-        helicopter.applyPilotInputs(forward, turn, ascend, descend, client.player.getYaw(), client.player.getPitch());
+        vehicle.applyPilotInputs(forward, turn, ascend, descend, client.player.getYaw(), client.player.getPitch());
         ClientPlayNetworking.send(LittleBirdActionPayload.controls(forward, turn, ascend, descend, client.player.getYaw(), client.player.getPitch()));
 
         while (FIRE_ROCKET.wasPressed()) {
@@ -105,9 +108,9 @@ public final class LittleBirdInputHandler {
         }
     }
 
-    private static void spawnLockIndicators(MinecraftClient client, LittleBirdEntity helicopter) {
+    private static void spawnLockIndicators(MinecraftClient client, AbstractArmedVehicleEntity vehicle) {
         long time = client.world.getTime();
-        for (Entity target : helicopter.getLockedTargets()) {
+        for (Entity target : vehicle.getHighlightedTargets()) {
             double radius = Math.max(0.55D, target.getWidth() * 0.8D);
             double baseY = target.getY() + (target.getHeight() * 0.62D);
             double phase = (time * 0.18D) + (target.getId() * 0.35D);
@@ -121,20 +124,29 @@ public final class LittleBirdInputHandler {
         }
     }
 
-    private static void ensureRotorSound(MinecraftClient client, LittleBirdEntity helicopter) {
-        if (rotorSound != null && rotorSound.isDone()) {
-            rotorSound = null;
+    private static void ensureLoopSound(MinecraftClient client, AbstractVehicleEntity vehicle) {
+        SoundEvent loopSound = vehicle.getLoopingSound();
+        if (loopSound == null) {
+            stopLoopSound(client);
+            return;
         }
-        if (rotorSound == null) {
-            rotorSound = new LittleBirdRotorSoundInstance(helicopter);
-            client.getSoundManager().play(rotorSound);
+        if (vehicleLoopSound != null && vehicleLoopSound.isDone()) {
+            vehicleLoopSound = null;
+            soundingVehicleId = -1;
+        }
+        if (vehicleLoopSound == null || soundingVehicleId != vehicle.getId()) {
+            stopLoopSound(client);
+            vehicleLoopSound = new VehicleLoopSoundInstance(vehicle, loopSound);
+            soundingVehicleId = vehicle.getId();
+            client.getSoundManager().play(vehicleLoopSound);
         }
     }
 
-    private static void stopRotorSound(MinecraftClient client) {
-        if (rotorSound != null) {
-            client.getSoundManager().stop(rotorSound);
-            rotorSound = null;
+    private static void stopLoopSound(MinecraftClient client) {
+        if (vehicleLoopSound != null) {
+            client.getSoundManager().stop(vehicleLoopSound);
+            vehicleLoopSound = null;
+            soundingVehicleId = -1;
         }
     }
 }

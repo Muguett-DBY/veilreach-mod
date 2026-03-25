@@ -1,13 +1,12 @@
 package com.muguett.veilreach.client;
 
-import com.muguett.veilreach.entity.LittleBirdEntity;
+import com.muguett.veilreach.entity.vehicle.AbstractArmedVehicleEntity;
+import com.muguett.veilreach.entity.vehicle.VehicleHudState;
+import com.muguett.veilreach.entity.vehicle.VehicleWeaponMount;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 public final class LittleBirdHudOverlay {
     private LittleBirdHudOverlay() {
@@ -19,35 +18,34 @@ public final class LittleBirdHudOverlay {
 
     private static void render(DrawContext drawContext) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null || !(client.player.getVehicle() instanceof LittleBirdEntity helicopter) || helicopter.getControllingPassenger() != client.player) {
+        if (client.player == null || !(client.player.getVehicle() instanceof AbstractArmedVehicleEntity vehicle) || vehicle.getControllingPassenger() != client.player) {
             return;
         }
 
+        VehicleHudState hudState = vehicle.createHudState(client.player);
         int width = drawContext.getScaledWindowWidth();
         int height = drawContext.getScaledWindowHeight();
         int cx = width / 2;
         int cy = height / 2;
         boolean firstPerson = client.options.getPerspective().isFirstPerson();
-        Entity lockedTarget = helicopter.getLockedTarget();
-        int lockCount = helicopter.getLockedTargetCount();
 
         if (firstPerson) {
-            drawCockpitFrame(drawContext, width, height, helicopter);
-            drawFlightSymbology(drawContext, cx, cy, helicopter);
+            drawCockpitFrame(drawContext, width, height, hudState);
+            drawFlightSymbology(drawContext, cx, cy, vehicle, hudState);
         }
-        drawReticle(drawContext, cx, cy, lockCount > 0);
-        drawHealth(drawContext, client, helicopter, width, height);
-        drawSystems(drawContext, client, helicopter, width, height, lockedTarget, lockCount);
+        drawReticle(drawContext, cx, cy, hudState.lockActive(), hudState.accentColor(), hudState.warningColor());
+        drawHealth(drawContext, client, hudState, width, height);
+        drawSystems(drawContext, client, hudState, width, height);
     }
 
-    private static void drawCockpitFrame(DrawContext drawContext, int width, int height, LittleBirdEntity helicopter) {
+    private static void drawCockpitFrame(DrawContext drawContext, int width, int height, VehicleHudState state) {
         int cx = width / 2;
         int cy = height / 2;
         int frame = 0x7C14202A;
-        int glass = 0x180C1822;
-        int accent = helicopter.isDamaged() ? 0xA8FF8A74 : 0xA0D8F1FF;
+        int glass = 0x160C1822;
+        int accent = state.critical() ? state.warningColor() : state.accentColor();
         int console = 0xB0101A24;
-        int glow = 0x6CE5F5FF;
+        int glow = (state.accentColor() & 0x00FFFFFF) | 0x66000000;
 
         drawContext.fill(0, 0, width, 18, glass);
         drawContext.fill(0, height - 84, width, height, 0x2A08121A);
@@ -56,7 +54,6 @@ public final class LittleBirdHudOverlay {
 
         drawContext.fill(cx - 82, 0, cx + 82, 12, frame);
         drawContext.fill(cx - 6, 0, cx + 6, cy - 46, frame);
-
         drawContext.fill(cx - 182, 0, cx - 168, height, frame);
         drawContext.fill(cx + 168, 0, cx + 182, height, frame);
 
@@ -74,12 +71,13 @@ public final class LittleBirdHudOverlay {
         drawContext.fill(cx - 74, consoleTop + 21, cx + 74, consoleTop + 24, accent);
         drawContext.fill(cx - 136, consoleTop + 34, cx - 62, consoleTop + 36, glow);
         drawContext.fill(cx + 62, consoleTop + 34, cx + 136, consoleTop + 36, glow);
+        drawContext.drawCenteredTextWithShadow(MinecraftClient.getInstance().textRenderer, state.callsign(), cx, consoleTop + 45, 0xE7F6FF);
     }
 
-    private static void drawFlightSymbology(DrawContext drawContext, int cx, int cy, LittleBirdEntity helicopter) {
-        int ladderColor = helicopter.isDamaged() ? 0xC8FF9B7A : 0xC8D8F4FF;
-        int pitchOffset = Math.round(helicopter.getVisualPitch() * 1.75F);
-        int rollOffset = Math.round(helicopter.getVisualRoll() * 0.65F);
+    private static void drawFlightSymbology(DrawContext drawContext, int cx, int cy, AbstractArmedVehicleEntity vehicle, VehicleHudState state) {
+        int ladderColor = state.critical() ? state.warningColor() : state.accentColor();
+        int pitchOffset = Math.round(vehicle.getVisualPitch() * 1.75F);
+        int rollOffset = Math.round(vehicle.getVisualRoll() * 0.65F);
         int horizonY = cy - pitchOffset;
 
         drawContext.fill(cx - 78 + rollOffset, horizonY - 1, cx - 26 + rollOffset, horizonY + 1, ladderColor);
@@ -95,23 +93,19 @@ public final class LittleBirdHudOverlay {
             drawContext.fill(cx + inset + rollOffset, yBelow - 1, cx + 62 + rollOffset, yBelow + 1, ladderColor);
         }
 
-        drawContext.fill(cx - 2, cy + 20, cx + 2, cy + 46, 0x88D8F4FF);
-        drawContext.fill(cx - 10, cy + 28, cx - 2, cy + 30, 0x88D8F4FF);
-        drawContext.fill(cx + 2, cy + 28, cx + 10, cy + 30, 0x88D8F4FF);
+        drawContext.fill(cx - 2, cy + 20, cx + 2, cy + 46, ladderColor);
+        drawContext.fill(cx - 10, cy + 28, cx - 2, cy + 30, ladderColor);
+        drawContext.fill(cx + 2, cy + 28, cx + 10, cy + 30, ladderColor);
     }
 
-    private static void drawReticle(DrawContext drawContext, int cx, int cy, boolean hasLock) {
-        int color = hasLock ? 0xD8FFD4A2 : 0xC8D7F3FF;
-        int accent = hasLock ? 0xF0FF8A6E : 0xE8FFF4C4;
+    private static void drawReticle(DrawContext drawContext, int cx, int cy, boolean hasLock, int accentColor, int warningColor) {
+        int color = hasLock ? warningColor : accentColor;
+        int accent = hasLock ? 0xFFF2C59F : 0xFFEFF9FF;
         drawContext.fill(cx - 1, cy - 14, cx + 1, cy - 4, color);
         drawContext.fill(cx - 1, cy + 4, cx + 1, cy + 14, color);
         drawContext.fill(cx - 14, cy - 1, cx - 4, cy + 1, color);
         drawContext.fill(cx + 4, cy - 1, cx + 14, cy + 1, color);
         drawContext.fill(cx - 1, cy - 1, cx + 1, cy + 1, accent);
-        drawContext.fill(cx - 24, cy - 10, cx - 18, cy - 8, color);
-        drawContext.fill(cx + 18, cy - 10, cx + 24, cy - 8, color);
-        drawContext.fill(cx - 24, cy + 8, cx - 18, cy + 10, color);
-        drawContext.fill(cx + 18, cy + 8, cx + 24, cy + 10, color);
         if (hasLock) {
             drawContext.fill(cx - 34, cy - 18, cx - 30, cy - 2, accent);
             drawContext.fill(cx - 34, cy - 18, cx - 18, cy - 14, accent);
@@ -124,61 +118,47 @@ public final class LittleBirdHudOverlay {
         }
     }
 
-    private static void drawHealth(DrawContext drawContext, MinecraftClient client, LittleBirdEntity helicopter, int width, int height) {
+    private static void drawHealth(DrawContext drawContext, MinecraftClient client, VehicleHudState state, int width, int height) {
         int x = 16;
         int y = height - 52;
-        int barWidth = 128;
-        float ratio = Math.max(0.0F, Math.min(1.0F, helicopter.getHealthAmount() / LittleBirdEntity.MAX_HEALTH));
+        int barWidth = 138;
+        float ratio = Math.max(0.0F, Math.min(1.0F, state.health() / state.maxHealth()));
         int fill = Math.round(barWidth * ratio);
-        int fillColor = ratio <= 0.25F ? 0xFFE05D51 : 0xFF9AE3B8;
+        int fillColor = state.critical() ? 0xFFE05D51 : state.damaged() ? 0xFFE9B36F : 0xFF9AE3B8;
         drawContext.fill(x - 2, y - 14, x + barWidth + 2, y + 12, 0x7A08111B);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.health").formatted(Formatting.AQUA), x, y - 12, 0xE7F6FF);
+        drawContext.drawTextWithShadow(client.textRenderer, state.callsign(), x, y - 12, 0xE7F6FF);
         drawContext.fill(x, y, x + barWidth, y + 8, 0xFF203846);
         drawContext.fill(x, y, x + fill, y + 8, fillColor);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.literal(Math.round(helicopter.getHealthAmount()) + " / " + Math.round(LittleBirdEntity.MAX_HEALTH)), x + 2, y + 10, 0xE7F6FF);
+        drawContext.drawTextWithShadow(client.textRenderer, Text.literal(Math.round(state.health()) + " / " + Math.round(state.maxHealth())), x + 2, y + 10, 0xE7F6FF);
     }
 
-    private static void drawSystems(DrawContext drawContext, MinecraftClient client, LittleBirdEntity helicopter, int width, int height, Entity lockedTarget, int lockCount) {
-        int panelWidth = 150;
+    private static void drawSystems(DrawContext drawContext, MinecraftClient client, VehicleHudState state, int width, int height) {
+        int panelWidth = 178;
         int x = width - panelWidth - 16;
-        int y = height - 90;
-        drawContext.fill(x - 2, y - 14, x + panelWidth + 2, y + 52, 0x7A08111B);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.ordnance").formatted(Formatting.GOLD), x, y - 12, 0xFFF7E4B1);
+        int y = height - 108;
+        drawContext.fill(x - 2, y - 14, x + panelWidth + 2, y + 70, 0x7A08111B);
+        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.vehicle.systems"), x, y - 12, 0xFFF7E4B1);
 
-        Text rocketText = helicopter.getRocketReload() > 0
-                ? Text.translatable("hud.veilreach.little_bird.rockets_reload", String.format("%.1f", helicopter.getRocketReload() / 20.0F))
-                : helicopter.getRocketCooldown() > 0
-                ? Text.translatable("hud.veilreach.little_bird.rockets_cooldown", String.format("%.1f", helicopter.getRocketCooldown() / 20.0F), helicopter.getRocketAmmo(), LittleBirdEntity.MAX_ROCKET_AMMO)
-                : Text.translatable("hud.veilreach.little_bird.rockets", helicopter.getRocketAmmo(), LittleBirdEntity.MAX_ROCKET_AMMO);
-        Text bombText = helicopter.getBombReload() > 0
-                ? Text.translatable("hud.veilreach.little_bird.bombs_reload", String.format("%.1f", helicopter.getBombReload() / 20.0F))
-                : helicopter.getBombCooldown() > 0
-                ? Text.translatable("hud.veilreach.little_bird.bombs_cooldown", String.format("%.1f", helicopter.getBombCooldown() / 20.0F), helicopter.getBombAmmo(), LittleBirdEntity.MAX_BOMB_AMMO)
-                : Text.translatable("hud.veilreach.little_bird.bombs", helicopter.getBombAmmo(), LittleBirdEntity.MAX_BOMB_AMMO);
-        Text trackingText = helicopter.getTrackingMissileReload() > 0
-                ? Text.translatable("hud.veilreach.little_bird.tracking_reload", String.format("%.1f", helicopter.getTrackingMissileReload() / 20.0F))
-                : helicopter.getTrackingMissileCooldown() > 0
-                ? Text.translatable("hud.veilreach.little_bird.tracking_cooldown", String.format("%.1f", helicopter.getTrackingMissileCooldown() / 20.0F), helicopter.getTrackingMissileAmmo(), LittleBirdEntity.MAX_TRACKING_MISSILES)
-                : Text.translatable("hud.veilreach.little_bird.tracking", helicopter.getTrackingMissileAmmo(), LittleBirdEntity.MAX_TRACKING_MISSILES);
-        Text lockText = buildLockText(helicopter, lockedTarget, lockCount);
+        int row = 0;
+        for (VehicleWeaponMount mount : state.mounts()) {
+            drawContext.drawTextWithShadow(client.textRenderer, formatMountStatus(mount), x, y + (row * 12), mount.tintColor());
+            row++;
+        }
 
-        drawContext.drawTextWithShadow(client.textRenderer, rocketText, x, y + 2, 0xE7F6FF);
-        drawContext.drawTextWithShadow(client.textRenderer, bombText, x, y + 14, 0xE7F6FF);
-        drawContext.drawTextWithShadow(client.textRenderer, trackingText, x, y + 26, 0xFFDDBD84);
-        drawContext.drawTextWithShadow(client.textRenderer, lockText, x, y + 38, lockedTarget != null ? 0xFFFFAD8C : 0xBBD8E8);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.speed", String.format("%.1f", helicopter.getVelocity().horizontalLength() * 20.0D)), x, y + 50, 0xBBD8E8);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.altitude", Math.round(helicopter.getY())), x + 74, y + 50, 0xBBD8E8);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.throttle", Math.round(helicopter.getThrottle() * 100.0F)), x + 74, y + 2, 0xBBD8E8);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.fire_hint"), x + 74, y + 14, 0xFFE0BE7A);
+        drawContext.drawTextWithShadow(client.textRenderer, state.targetText(), x, y + 40, state.lockActive() ? state.warningColor() : 0xBBD8E8);
+        drawContext.drawTextWithShadow(client.textRenderer, Text.literal(String.format("SPD %.1f", state.speed())), x, y + 52, 0xBBD8E8);
+        drawContext.drawTextWithShadow(client.textRenderer, Text.literal("ALT " + state.altitude()), x + 76, y + 52, 0xBBD8E8);
+        drawContext.drawTextWithShadow(client.textRenderer, Text.literal("THR " + Math.round(state.throttle() * 100.0F) + "%"), x + 76, y + 40, 0xBBD8E8);
+        drawContext.drawTextWithShadow(client.textRenderer, state.hintText(), x, y + 64, 0xFFE0BE7A);
     }
 
-    private static Text buildLockText(LittleBirdEntity helicopter, Entity lockedTarget, int lockCount) {
-        if (lockCount <= 0 || lockedTarget == null) {
-            return Text.translatable("hud.veilreach.little_bird.lock_none");
+    private static Text formatMountStatus(VehicleWeaponMount mount) {
+        if (mount.isReloading()) {
+            return mount.label().copy().append(Text.literal(": reloading %.1fs".formatted(mount.reloadTicks() / 20.0F)));
         }
-        MutableText base = Text.translatable("hud.veilreach.little_bird.locked_count", lockCount);
-        base.append("  ");
-        base.append(Text.translatable("hud.veilreach.little_bird.lock_primary", lockedTarget.getName(), Math.round(helicopter.distanceTo(lockedTarget))));
-        return base;
+        if (mount.isCoolingDown()) {
+            return mount.label().copy().append(Text.literal(": cooldown %.1fs (%s/%s)".formatted(mount.cooldownTicks() / 20.0F, mount.ammo(), mount.maxAmmo())));
+        }
+        return mount.label().copy().append(Text.literal(": %s / %s".formatted(mount.ammo(), mount.maxAmmo())));
     }
 }

@@ -1,5 +1,9 @@
 package com.muguett.veilreach.entity;
 
+import com.muguett.veilreach.entity.vehicle.AbstractArmedVehicleEntity;
+import com.muguett.veilreach.entity.vehicle.VehicleHudState;
+import com.muguett.veilreach.entity.vehicle.VehicleWeaponMount;
+import com.muguett.veilreach.network.LittleBirdActionPayload;
 import com.muguett.veilreach.registry.VeilreachItems;
 import com.muguett.veilreach.registry.VeilreachSoundEvents;
 import net.minecraft.entity.Entity;
@@ -17,9 +21,11 @@ import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -30,8 +36,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.RaycastContext;
 
-public final class LittleBirdEntity extends Entity {
-    private static final TrackedData<Float> HEALTH = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
+import java.util.List;
+
+public final class LittleBirdEntity extends AbstractArmedVehicleEntity {
     private static final TrackedData<Integer> ROCKET_AMMO = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> ROCKET_COOLDOWN = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> ROCKET_RELOAD = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -52,10 +59,6 @@ public final class LittleBirdEntity extends Entity {
             DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER),
             DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER)
     };
-    private static final TrackedData<Float> THROTTLE = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Float> VISUAL_PITCH = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Float> VISUAL_ROLL = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
-
     public static final float MAX_HEALTH = 320.0F;
     public static final int MAX_ROCKET_AMMO = 12;
     public static final int MAX_BOMB_AMMO = 3;
@@ -92,14 +95,6 @@ public final class LittleBirdEntity extends Entity {
     private float lastTailRotorAngle;
     private float tailRotorAngle;
     private int launchSide;
-    private int damageFlashTicks;
-    private float pilotForwardInput;
-    private float pilotTurnInput;
-    private boolean pilotAscendInput;
-    private boolean pilotDescendInput;
-    private float pilotAimYaw;
-    private float pilotAimPitch;
-    private int pilotControlTicks;
     private int pendingRocketSalvo;
     private float rocketSalvoYaw;
     private float rocketSalvoPitch;
@@ -114,7 +109,7 @@ public final class LittleBirdEntity extends Entity {
 
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
-        builder.add(HEALTH, MAX_HEALTH);
+        initVehicleTrackerBase(builder);
         builder.add(ROCKET_AMMO, MAX_ROCKET_AMMO);
         builder.add(ROCKET_COOLDOWN, 0);
         builder.add(ROCKET_RELOAD, 0);
@@ -127,9 +122,6 @@ public final class LittleBirdEntity extends Entity {
         for (TrackedData<Integer> trackedData : LOCKED_TARGET_IDS) {
             builder.add(trackedData, -1);
         }
-        builder.add(THROTTLE, 0.0F);
-        builder.add(VISUAL_PITCH, 0.0F);
-        builder.add(VISUAL_ROLL, 0.0F);
     }
 
     @Override
@@ -141,14 +133,7 @@ public final class LittleBirdEntity extends Entity {
         lastTailRotorAngle = tailRotorAngle;
         tickRotorAngles();
 
-        if (pilotControlTicks > 0) {
-            pilotControlTicks--;
-        } else {
-            pilotForwardInput = 0.0F;
-            pilotTurnInput = 0.0F;
-            pilotAscendInput = false;
-            pilotDescendInput = false;
-        }
+        tickPilotInputWindow();
 
         if (!getEntityWorld().isClient()) {
             tickWeaponState();
@@ -173,14 +158,11 @@ public final class LittleBirdEntity extends Entity {
             }
         }
 
-        if (damageFlashTicks > 0) {
-            damageFlashTicks--;
-        }
-
         if (getEntityWorld().isClient()) {
             tickRotorWashClient();
         }
 
+        tickDamageFlash();
         for (Entity passenger : getPassengerList()) {
             updatePassengerPosition(passenger);
         }
@@ -353,9 +335,12 @@ public final class LittleBirdEntity extends Entity {
         if (!(getEntityWorld() instanceof ServerWorld serverWorld)) {
             return;
         }
-        if (getHealthAmount() <= (MAX_HEALTH * 0.4F) && age % 3 == 0) {
-            Vec3d smokeOrigin = new Vec3d(getX(), getY(), getZ()).add(Vec3d.fromPolar(0.0F, getYaw()).multiply(-1.4D)).add(0.0D, 1.2D, 0.0D);
-            serverWorld.spawnParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, smokeOrigin.x, smokeOrigin.y, smokeOrigin.z, 2, 0.12D, 0.08D, 0.12D, 0.01D);
+        Vec3d smokeOrigin = new Vec3d(getX(), getY(), getZ()).add(Vec3d.fromPolar(0.0F, getYaw()).multiply(-1.35D)).add(0.0D, 1.12D, 0.0D);
+        if (isCriticalDamage() && age % 5 == 0) {
+            serverWorld.spawnParticles(ParticleTypes.SMOKE, smokeOrigin.x, smokeOrigin.y, smokeOrigin.z, 4, 0.16D, 0.1D, 0.16D, 0.01D);
+            serverWorld.spawnParticles(ParticleTypes.SMALL_FLAME, smokeOrigin.x, smokeOrigin.y, smokeOrigin.z, 2, 0.04D, 0.03D, 0.04D, 0.003D);
+        } else if (isDamaged() && age % 6 == 0) {
+            serverWorld.spawnParticles(ParticleTypes.ELECTRIC_SPARK, smokeOrigin.x, smokeOrigin.y, smokeOrigin.z, 3, 0.14D, 0.08D, 0.14D, 0.01D);
         }
     }
 
@@ -697,44 +682,7 @@ public final class LittleBirdEntity extends Entity {
     }
 
     @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
-        if (player.shouldCancelInteraction()) {
-            return ActionResult.PASS;
-        }
-        if (hasPassenger(player)) {
-            return ActionResult.CONSUME;
-        }
-        if (hasPassengers()) {
-            return ActionResult.PASS;
-        }
-        if (!getEntityWorld().isClient()) {
-            player.startRiding(this, true, true);
-            getEntityWorld().playSound(null, getX(), getY(), getZ(), VeilreachSoundEvents.LITTLE_BIRD_STARTUP, SoundCategory.NEUTRAL, 0.85F, 1.0F);
-        }
-        return getEntityWorld().isClient() ? ActionResult.SUCCESS : ActionResult.CONSUME;
-    }
-
-    @Override
-    public boolean damage(ServerWorld world, DamageSource source, float amount) {
-        if (isRemoved()) {
-            return false;
-        }
-
-        float scaledDamage = scaleIncomingDamage(source, amount);
-        if (scaledDamage <= 0.0F) {
-            return false;
-        }
-
-        setHealthAmount(Math.max(0.0F, getHealthAmount() - scaledDamage));
-        damageFlashTicks = 8;
-        world.playSound(null, getX(), getY(), getZ(), VeilreachSoundEvents.LITTLE_BIRD_HIT, SoundCategory.HOSTILE, 0.75F, 0.9F + (world.random.nextFloat() * 0.1F));
-        if (getHealthAmount() <= 0.0F) {
-            destroy(world);
-        }
-        return true;
-    }
-
-    private float scaleIncomingDamage(DamageSource source, float amount) {
+    protected float scaleIncomingDamage(DamageSource source, float amount) {
         if (source.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             return amount;
         }
@@ -750,7 +698,13 @@ public final class LittleBirdEntity extends Entity {
         return Math.max(MIN_HEAVY_DAMAGE, amount * AMBIENT_DAMAGE_MULTIPLIER);
     }
 
-    private void destroy(ServerWorld world) {
+    @Override
+    protected void onVehicleDamaged(ServerWorld world, DamageSource source, float scaledDamage) {
+        world.playSound(null, getX(), getY(), getZ(), VeilreachSoundEvents.LITTLE_BIRD_HIT, SoundCategory.HOSTILE, 0.75F, 0.9F + (world.random.nextFloat() * 0.1F));
+    }
+
+    @Override
+    protected void destroyVehicle(ServerWorld world) {
         if (isRemoved()) {
             return;
         }
@@ -758,61 +712,113 @@ public final class LittleBirdEntity extends Entity {
         removeAllPassengers();
         world.playSound(null, getX(), getY(), getZ(), VeilreachSoundEvents.LITTLE_BIRD_EXPLOSION, SoundCategory.HOSTILE, 1.0F, 0.92F);
         world.spawnParticles(ParticleTypes.EXPLOSION_EMITTER, getX(), getY() + 0.4D, getZ(), 3, 0.15D, 0.15D, 0.15D, 0.0D);
-        world.spawnParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, getX(), getY() + 0.4D, getZ(), 24, 0.45D, 0.24D, 0.45D, 0.03D);
+        world.spawnParticles(ParticleTypes.SMOKE, getX(), getY() + 0.4D, getZ(), 24, 0.45D, 0.24D, 0.45D, 0.03D);
         world.spawnParticles(ParticleTypes.POOF, getX(), getY() + 0.4D, getZ(), 22, 0.55D, 0.25D, 0.55D, 0.02D);
         world.createExplosion(this, getX(), getY() + 0.3D, getZ(), 4.2F, World.ExplosionSourceType.TNT);
         discard();
     }
 
     @Override
-    protected boolean canAddPassenger(Entity passenger) {
-        return getPassengerList().isEmpty() && passenger instanceof LivingEntity;
+    protected SoundEvent getBoardingSound() {
+        return VeilreachSoundEvents.LITTLE_BIRD_STARTUP;
     }
 
     @Override
-    public LivingEntity getControllingPassenger() {
-        return getFirstPassenger() instanceof LivingEntity living ? living : null;
+    public SoundEvent getLoopingSound() {
+        return VeilreachSoundEvents.LITTLE_BIRD_ROTOR_LOOP;
     }
 
     @Override
-    protected void updatePassengerPosition(Entity passenger, PositionUpdater positionUpdater) {
-        if (!hasPassenger(passenger)) {
-            return;
+    public float getLoopSoundVolume() {
+        return MathHelper.clamp(0.2F + (getThrottle() * 0.65F), 0.0F, 1.0F);
+    }
+
+    @Override
+    public float getLoopSoundPitch() {
+        float pitch = 0.78F + (getThrottle() * 0.4F);
+        if (isCriticalDamage()) {
+            pitch *= 0.9F;
         }
-
-        Vec3d seatOffset = new Vec3d(0.0D, 0.94D + (passenger.getHeight() * 0.02D), -1.18D).rotateY(-(getYaw() * 0.017453292F));
-        positionUpdater.accept(passenger, getX() + seatOffset.x, getY() + seatOffset.y, getZ() + seatOffset.z);
+        return pitch;
     }
 
     @Override
-    public boolean isPushable() {
-        return false;
+    public Vec3d getPassengerAnchorOffset(Entity passenger) {
+        return new Vec3d(0.0D, 0.94D + (passenger.getHeight() * 0.02D), -1.18D);
     }
 
     @Override
-    public boolean canHit() {
-        return true;
-    }
-
-    @Override
-    public boolean isInteractable() {
-        return true;
-    }
-
-
-    @Override
-    public boolean shouldAlwaysSyncAbsolute() {
-        return false;
-    }
-
-    @Override
-    public boolean isFlyingVehicle() {
-        return true;
+    public float getMaxHealthAmount() {
+        return MAX_HEALTH;
     }
 
     @Override
     public ItemStack getPickBlockStack() {
         return new ItemStack(VeilreachItems.LITTLE_BIRD);
+    }
+
+    @Override
+    public VehicleHudState createHudState(PlayerEntity viewer) {
+        Entity lockedTarget = getLockedTarget();
+        int lockCount = getLockedTargetCount();
+        Text targetText = lockCount <= 0 || lockedTarget == null
+                ? Text.translatable("hud.veilreach.little_bird.lock_none")
+                : Text.translatable("hud.veilreach.little_bird.lock_primary", lockedTarget.getName(), Math.round(distanceTo(lockedTarget)))
+                .copy().append("  ").append(Text.translatable("hud.veilreach.little_bird.locked_count", lockCount));
+
+        return new VehicleHudState(
+                Text.translatable("entity.veilreach.little_bird"),
+                getHealthAmount(),
+                MAX_HEALTH,
+                getVelocity().horizontalLength() * 20.0D,
+                (int) Math.round(getY()),
+                getThrottle(),
+                List.of(
+                        new VehicleWeaponMount(Text.translatable("hud.veilreach.little_bird.rockets"), getRocketAmmo(), MAX_ROCKET_AMMO, getRocketCooldown(), getRocketReload(), 0xFFE7F6FF),
+                        new VehicleWeaponMount(Text.translatable("hud.veilreach.little_bird.bombs"), getBombAmmo(), MAX_BOMB_AMMO, getBombCooldown(), getBombReload(), 0xFFFFD7A6),
+                        new VehicleWeaponMount(Text.translatable("hud.veilreach.little_bird.tracking"), getTrackingMissileAmmo(), MAX_TRACKING_MISSILES, getTrackingMissileCooldown(), getTrackingMissileReload(), 0xFFFFB88F)
+                ),
+                targetText,
+                Text.translatable("hud.veilreach.little_bird.fire_hint"),
+                0xFFD8F1FF,
+                0xFFFF8C72,
+                lockCount > 0,
+                isDamaged(),
+                isCriticalDamage()
+        );
+    }
+
+    @Override
+    public void handleVehicleAction(ServerPlayerEntity pilot, LittleBirdActionPayload payload) {
+        switch (payload.action()) {
+            case LittleBirdActionPayload.FIRE_ROCKET -> tryFireRocket(pilot, payload.yaw(), payload.pitch());
+            case LittleBirdActionPayload.DROP_BOMB -> tryDropBomb(pilot);
+            case LittleBirdActionPayload.LOCK_TRACKING -> tryToggleTrackingLock(pilot, payload.yaw(), payload.pitch());
+            case LittleBirdActionPayload.FIRE_TRACKING -> tryFireTrackingVolley(pilot);
+            case LittleBirdActionPayload.CLEAR_TRACKING_LOCKS -> clearTrackingLocks(pilot);
+            case LittleBirdActionPayload.UPDATE_CONTROLS ->
+                    applyPilotInputs(payload.forward(), payload.turn(), payload.ascend(), payload.descend(), payload.yaw(), payload.pitch());
+            default -> {
+            }
+        }
+    }
+
+    @Override
+    public void rearmVehicle() {
+        setRocketAmmo(MAX_ROCKET_AMMO);
+        setRocketCooldown(0);
+        setRocketReload(0);
+        setBombAmmo(MAX_BOMB_AMMO);
+        setBombCooldown(0);
+        setBombReload(0);
+        setTrackingMissileAmmo(MAX_TRACKING_MISSILES);
+        setTrackingMissileCooldown(0);
+        setTrackingMissileReload(0);
+    }
+
+    @Override
+    public List<Entity> getHighlightedTargets() {
+        return getLockedTargets();
     }
 
     @Override
@@ -855,14 +861,6 @@ public final class LittleBirdEntity extends Entity {
         setVisualPitch(readView.getFloat("visual_pitch", 0.0F));
         setVisualRoll(readView.getFloat("visual_roll", 0.0F));
         launchSide = readView.getInt("launch_side", 0);
-    }
-
-    public float getHealthAmount() {
-        return getDataTracker().get(HEALTH);
-    }
-
-    private void setHealthAmount(float value) {
-        getDataTracker().set(HEALTH, value);
     }
 
     public int getRocketAmmo() {
@@ -945,53 +943,11 @@ public final class LittleBirdEntity extends Entity {
         getDataTracker().set(LOCKED_TARGET_IDS[slot], value);
     }
 
-    public float getThrottle() {
-        return getDataTracker().get(THROTTLE);
-    }
-
-    private void setThrottle(float value) {
-        getDataTracker().set(THROTTLE, value);
-    }
-
-    public float getVisualPitch() {
-        return getDataTracker().get(VISUAL_PITCH);
-    }
-
-    private void setVisualPitch(float value) {
-        getDataTracker().set(VISUAL_PITCH, value);
-    }
-
-    public float getVisualRoll() {
-        return getDataTracker().get(VISUAL_ROLL);
-    }
-
-    private void setVisualRoll(float value) {
-        getDataTracker().set(VISUAL_ROLL, value);
-    }
-
     public float getRotorAngle(float tickDelta) {
         return MathHelper.lerp(tickDelta, lastRotorAngle, rotorAngle);
     }
 
     public float getTailRotorAngle(float tickDelta) {
         return MathHelper.lerp(tickDelta, lastTailRotorAngle, tailRotorAngle);
-    }
-
-    public boolean isDamaged() {
-        return getHealthAmount() <= (MAX_HEALTH * 0.4F);
-    }
-
-    public float getDamageFlash(float tickDelta) {
-        return damageFlashTicks > 0 ? 1.0F : 0.0F;
-    }
-
-    public void applyPilotInputs(float forward, float turn, boolean ascend, boolean descend, float yaw, float pitch) {
-        this.pilotForwardInput = MathHelper.clamp(forward, -1.0F, 1.0F);
-        this.pilotTurnInput = MathHelper.clamp(turn, -1.0F, 1.0F);
-        this.pilotAscendInput = ascend;
-        this.pilotDescendInput = descend;
-        this.pilotAimYaw = yaw;
-        this.pilotAimPitch = pitch;
-        this.pilotControlTicks = CONTROL_TIMEOUT_TICKS;
     }
 }

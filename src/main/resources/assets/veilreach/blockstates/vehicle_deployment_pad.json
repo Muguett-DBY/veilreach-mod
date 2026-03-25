@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "veilreach:block/vehicle_deployment_pad" }
+  }
+}

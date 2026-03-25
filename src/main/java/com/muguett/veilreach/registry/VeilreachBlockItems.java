@@ -32,6 +32,10 @@ public final class VeilreachBlockItems {
         register("awakened_altar", VeilreachBlocks.AWAKENED_ALTAR);
         register("fogbound_barrier", VeilreachBlocks.FOGBOUND_BARRIER);
         register("starlight_cache", VeilreachBlocks.STARLIGHT_CACHE);
+        register("vehicle_repair_pad", VeilreachBlocks.VEHICLE_REPAIR_PAD);
+        register("vehicle_rearm_node", VeilreachBlocks.VEHICLE_REARM_NODE);
+        register("vehicle_recall_beacon", VeilreachBlocks.VEHICLE_RECALL_BEACON);
+        register("vehicle_deployment_pad", VeilreachBlocks.VEHICLE_DEPLOYMENT_PAD);
     }
 
     private static void register(String path, net.minecraft.block.Block block) {

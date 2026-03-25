@@ -7,6 +7,10 @@ import com.muguett.veilreach.block.HushPortalBlock;
 import com.muguett.veilreach.block.MoonwovenFrameBlock;
 import com.muguett.veilreach.block.SealedAltarBlock;
 import com.muguett.veilreach.block.StarlightCacheBlock;
+import com.muguett.veilreach.block.VehicleDeploymentPadBlock;
+import com.muguett.veilreach.block.VehicleRecallBeaconBlock;
+import com.muguett.veilreach.block.VehicleRearmNodeBlock;
+import com.muguett.veilreach.block.VehicleRepairPadBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -41,6 +45,10 @@ public final class VeilreachBlocks {
     public static final Block AWAKENED_ALTAR = register("awakened_altar", settings -> new Block(settings.mapColor(MapColor.OFF_WHITE).strength(4.2F, 12.0F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().luminance(state -> 12)));
     public static final Block FOGBOUND_BARRIER = register("fogbound_barrier", settings -> new FogboundBarrierBlock(settings.mapColor(MapColor.GRAY).strength(5.0F, 18.0F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().luminance(state -> 5)));
     public static final Block STARLIGHT_CACHE = register("starlight_cache", settings -> new StarlightCacheBlock(settings.mapColor(MapColor.OFF_WHITE).strength(3.8F, 10.0F).sounds(BlockSoundGroup.AMETHYST_CLUSTER).requiresTool().luminance(state -> 10)));
+    public static final Block VEHICLE_REPAIR_PAD = register("vehicle_repair_pad", settings -> new VehicleRepairPadBlock(settings.mapColor(MapColor.CYAN).strength(3.2F, 9.0F).sounds(BlockSoundGroup.COPPER).requiresTool().luminance(state -> 8)));
+    public static final Block VEHICLE_REARM_NODE = register("vehicle_rearm_node", settings -> new VehicleRearmNodeBlock(settings.mapColor(MapColor.PALE_PURPLE).strength(3.6F, 10.0F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().luminance(state -> 10)));
+    public static final Block VEHICLE_RECALL_BEACON = register("vehicle_recall_beacon", settings -> new VehicleRecallBeaconBlock(settings.mapColor(MapColor.LIGHT_BLUE).strength(3.4F, 10.0F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().luminance(state -> 11)));
+    public static final Block VEHICLE_DEPLOYMENT_PAD = register("vehicle_deployment_pad", settings -> new VehicleDeploymentPadBlock(settings.mapColor(MapColor.DARK_AQUA).strength(3.4F, 10.0F).sounds(BlockSoundGroup.COPPER).requiresTool().luminance(state -> 7)));
 
     private VeilreachBlocks() {
     }

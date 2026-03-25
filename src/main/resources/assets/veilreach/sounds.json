@@ -147,6 +147,64 @@
       }
     ]
   },
+  "vehicle.rift_skimmer_loop": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_skimmer_loop",
+        "stream": true,
+        "volume": 0.72
+      }
+    ]
+  },
+  "vehicle.rift_skimmer_pulse": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_skimmer_pulse",
+        "volume": 0.88
+      }
+    ]
+  },
+  "vehicle.rift_skimmer_explosion": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_skimmer_explosion",
+        "volume": 0.96
+      }
+    ]
+  },
+  "vehicle.rift_siege_hum": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_siege_hum",
+        "stream": true,
+        "volume": 0.74
+      }
+    ]
+  },
+  "vehicle.rift_siege_cannon": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_siege_cannon",
+        "volume": 0.98
+      }
+    ]
+  },
+  "vehicle.rift_siege_suppress": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_siege_suppress",
+        "volume": 0.9
+      }
+    ]
+  },
+  "vehicle.rift_siege_explosion": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_siege_explosion",
+        "volume": 1.0
+      }
+    ]
+  },
   "music.hushlands_dream": {
     "sounds": [
       {

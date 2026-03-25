@@ -296,6 +296,78 @@ def make_little_bird_explosion() -> np.ndarray:
     return pan_stereo(signal, 0.0)
 
 
+def make_rift_skimmer_loop() -> np.ndarray:
+    duration = 4.2
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    hum = sine(168.0, duration) * 0.18
+    shimmer = sine(522.0, duration) * (0.06 + 0.02 * np.sin(2 * math.pi * 0.9 * t))
+    air = noise(duration, 141, "pink") * 0.03
+    pulse = np.sin(2 * math.pi * 9.5 * t) * 0.05
+    signal = apply_reverb(hum + shimmer + air + pulse, 0.06, 0.3, 3)
+    return pan_stereo(signal * envelope(signal.size, 0.02, 0.04), 0.12)
+
+
+def make_rift_skimmer_pulse() -> np.ndarray:
+    duration = 0.45
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    snap = noise(duration, 142, "white") * np.linspace(0.3, 0.02, t.size, dtype=np.float32)
+    beam = sine(760.0, duration) * envelope(t.size, 0.01, 0.74) * 0.24
+    low = sine(112.0, duration) * np.linspace(0.14, 0.0, t.size, dtype=np.float32)
+    signal = apply_reverb(snap + beam + low, 0.025, 0.22, 2)
+    return pan_stereo(signal, 0.16)
+
+
+def make_rift_skimmer_explosion() -> np.ndarray:
+    duration = 1.3
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    boom = noise(duration, 143, "brown") * np.linspace(0.5, 0.0, t.size, dtype=np.float32)
+    glass = layered_chime([392.0, 587.33], duration, 144) * 0.12
+    sub = sine(42.0, duration) * np.linspace(0.32, 0.02, t.size, dtype=np.float32)
+    signal = apply_reverb(boom + glass + sub, 0.08, 0.46, 4)
+    return pan_stereo(signal, 0.02)
+
+
+def make_rift_siege_hum() -> np.ndarray:
+    duration = 4.8
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    bass = sine(72.0, duration) * 0.26
+    body = sine(144.0, duration, phase=0.3) * 0.12
+    air = noise(duration, 145, "pink") * 0.022
+    pulse = np.sin(2 * math.pi * 6.2 * t) * 0.03
+    signal = apply_reverb(bass + body + air + pulse, 0.08, 0.34, 3)
+    return pan_stereo(signal * envelope(signal.size, 0.02, 0.04), -0.05)
+
+
+def make_rift_siege_cannon() -> np.ndarray:
+    duration = 1.0
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    crack = noise(duration, 146, "white") * np.linspace(0.45, 0.0, t.size, dtype=np.float32)
+    boom = sine(58.0, duration) * np.linspace(0.34, 0.0, t.size, dtype=np.float32)
+    metal = sine(240.0, duration) * envelope(t.size, 0.01, 0.72) * 0.08
+    signal = apply_reverb(crack + boom + metal, 0.05, 0.42, 3)
+    return pan_stereo(signal, -0.02)
+
+
+def make_rift_siege_suppress() -> np.ndarray:
+    duration = 0.72
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    pop = noise(duration, 147, "white") * np.linspace(0.3, 0.0, t.size, dtype=np.float32)
+    warp = sine(312.0, duration) * (0.1 + 0.08 * np.sin(2 * math.pi * 12.0 * t))
+    low = sine(86.0, duration) * np.linspace(0.18, 0.03, t.size, dtype=np.float32)
+    signal = apply_reverb(pop + warp + low, 0.03, 0.28, 3)
+    return pan_stereo(signal, 0.06)
+
+
+def make_rift_siege_explosion() -> np.ndarray:
+    duration = 1.9
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    boom = noise(duration, 148, "brown") * np.linspace(0.72, 0.0, t.size, dtype=np.float32)
+    debris = noise(duration, 149, "white") * envelope(t.size, 0.01, 0.8) * 0.18
+    sub = sine(36.0, duration) * np.linspace(0.48, 0.02, t.size, dtype=np.float32)
+    signal = apply_reverb(boom + debris + sub, 0.1, 0.58, 5)
+    return pan_stereo(signal, 0.0)
+
+
 def make_music(seed: int, roots: list[float], duration: float, pan: float) -> np.ndarray:
     t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
     signal = np.zeros_like(t)
@@ -329,6 +401,13 @@ def main() -> None:
     write_ogg("vehicle/little_bird_bomb_impact.ogg", make_little_bird_bomb_impact())
     write_ogg("vehicle/little_bird_hit.ogg", make_little_bird_hit())
     write_ogg("vehicle/little_bird_explosion.ogg", make_little_bird_explosion())
+    write_ogg("vehicle/rift_skimmer_loop.ogg", make_rift_skimmer_loop())
+    write_ogg("vehicle/rift_skimmer_pulse.ogg", make_rift_skimmer_pulse())
+    write_ogg("vehicle/rift_skimmer_explosion.ogg", make_rift_skimmer_explosion())
+    write_ogg("vehicle/rift_siege_hum.ogg", make_rift_siege_hum())
+    write_ogg("vehicle/rift_siege_cannon.ogg", make_rift_siege_cannon())
+    write_ogg("vehicle/rift_siege_suppress.ogg", make_rift_siege_suppress())
+    write_ogg("vehicle/rift_siege_explosion.ogg", make_rift_siege_explosion())
     write_ogg("block/hush_portal_loop.ogg", make_portal_hum())
     write_ogg("ambient/hushlands_whispers.ogg", make_whisper_ambient())
     write_ogg("ambient/rift_meadows_resonance.ogg", make_rift_ambient())

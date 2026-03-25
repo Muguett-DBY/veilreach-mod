@@ -10,6 +10,7 @@ import com.muguett.veilreach.item.LittleBirdItem;
 import com.muguett.veilreach.item.LoreHintItem;
 import com.muguett.veilreach.item.MolotovItem;
 import com.muguett.veilreach.item.SovereignWardItem;
+import com.muguett.veilreach.item.VehicleDeployItem;
 import com.muguett.veilreach.item.VeilreachSpawnEggItem;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.item.equipment.EquipmentType;
@@ -40,9 +41,18 @@ public final class VeilreachItems {
     public static final Item CLUSTER_GRENADE = register("cluster_grenade", ClusterGrenadeItem::new);
     public static final Item MOLOTOV = register("molotov", MolotovItem::new);
     public static final Item LITTLE_BIRD = register("little_bird", settings -> new LittleBirdItem(settings.maxCount(1).rarity(Rarity.RARE)));
+    public static final Item RIFT_SKIMMER = register("rift_skimmer", settings -> new VehicleDeployItem(settings.maxCount(1).rarity(Rarity.UNCOMMON), world -> new com.muguett.veilreach.entity.RiftSkimmerEntity(VeilreachEntities.RIFT_SKIMMER, world), 1.0D,
+            "item.veilreach.rift_skimmer.tooltip",
+            "item.veilreach.rift_skimmer.tooltip2"));
+    public static final Item RIFT_SIEGE_PLATFORM = register("rift_siege_platform", settings -> new VehicleDeployItem(settings.maxCount(1).rarity(Rarity.RARE), world -> new com.muguett.veilreach.entity.RiftSiegePlatformEntity(VeilreachEntities.RIFT_SIEGE_PLATFORM, world), 1.15D,
+            "item.veilreach.rift_siege_platform.tooltip",
+            "item.veilreach.rift_siege_platform.tooltip2"));
     public static final Item LITTLE_BIRD_ROCKET_ITEM = register("little_bird_rocket", Item::new);
     public static final Item LITTLE_BIRD_BOMB_ITEM = register("little_bird_bomb", Item::new);
     public static final Item LITTLE_BIRD_BOMBLET_ITEM = register("little_bird_bomblet", Item::new);
+    public static final Item RIFT_PULSE_BOLT_ITEM = register("rift_pulse_bolt", Item::new);
+    public static final Item RIFT_SIEGE_SHELL_ITEM = register("rift_siege_shell", Item::new);
+    public static final Item RIFT_SUPPRESSOR_CHARGE_ITEM = register("rift_suppressor_charge", Item::new);
     public static final Item MIRROR_HELMET = register("mirror_helmet", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.HELMET).maxDamage(EquipmentType.HELMET.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
     public static final Item MIRROR_CHESTPLATE = register("mirror_chestplate", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.CHESTPLATE).maxDamage(EquipmentType.CHESTPLATE.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
     public static final Item MIRROR_LEGGINGS = register("mirror_leggings", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.LEGGINGS).maxDamage(EquipmentType.LEGGINGS.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));

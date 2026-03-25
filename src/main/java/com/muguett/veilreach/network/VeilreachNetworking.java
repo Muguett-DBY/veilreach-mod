@@ -1,6 +1,6 @@
 package com.muguett.veilreach.network;
 
-import com.muguett.veilreach.entity.LittleBirdEntity;
+import com.muguett.veilreach.entity.vehicle.AbstractArmedVehicleEntity;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
@@ -15,21 +15,10 @@ public final class VeilreachNetworking {
         ServerPlayNetworking.registerGlobalReceiver(LittleBirdActionPayload.ID, (payload, context) -> {
             context.server().execute(() -> {
                 Entity vehicle = context.player().getVehicle();
-                if (!(vehicle instanceof LittleBirdEntity helicopter) || helicopter.getControllingPassenger() != context.player()) {
+                if (!(vehicle instanceof AbstractArmedVehicleEntity armedVehicle) || armedVehicle.getControllingPassenger() != context.player()) {
                     return;
                 }
-
-                switch (payload.action()) {
-                    case LittleBirdActionPayload.FIRE_ROCKET -> helicopter.tryFireRocket(context.player(), payload.yaw(), payload.pitch());
-                    case LittleBirdActionPayload.DROP_BOMB -> helicopter.tryDropBomb(context.player());
-                    case LittleBirdActionPayload.LOCK_TRACKING -> helicopter.tryToggleTrackingLock(context.player(), payload.yaw(), payload.pitch());
-                    case LittleBirdActionPayload.FIRE_TRACKING -> helicopter.tryFireTrackingVolley(context.player());
-                    case LittleBirdActionPayload.CLEAR_TRACKING_LOCKS -> helicopter.clearTrackingLocks(context.player());
-                    case LittleBirdActionPayload.UPDATE_CONTROLS ->
-                            helicopter.applyPilotInputs(payload.forward(), payload.turn(), payload.ascend(), payload.descend(), payload.yaw(), payload.pitch());
-                    default -> {
-                    }
-                }
+                armedVehicle.handleVehicleAction(context.player(), payload);
             });
         });
     }

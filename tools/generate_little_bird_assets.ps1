@@ -6,8 +6,9 @@ $root = Split-Path -Parent $PSScriptRoot
 $assetsRoot = Join-Path $root "src\main\resources\assets\veilreach"
 $itemDir = Join-Path $assetsRoot "textures\item"
 $entityDir = Join-Path $assetsRoot "textures\entity"
+$blockDir = Join-Path $assetsRoot "textures\block"
 
-foreach ($dir in @($itemDir, $entityDir)) {
+foreach ($dir in @($itemDir, $entityDir, $blockDir)) {
     if (-not (Test-Path $dir)) {
         New-Item -ItemType Directory -Path $dir -Force | Out-Null
     }
@@ -223,9 +224,116 @@ function Create-LittleBirdEntityTexture([string]$path) {
     Save-Png $bmp $path
 }
 
+function Create-RiftSkimmerItem([string]$path) {
+    $bmp = New-Bitmap 32 32
+    $body = Color-Hex "#2d4458"
+    $glow = Color-Hex "#96efff"
+    $fin = Color-Hex "#8c70ff"
+    Fill-Rect $bmp 7 13 18 5 $body
+    Fill-Rect $bmp 11 10 10 3 $glow
+    Fill-Rect $bmp 6 14 3 4 $fin
+    Fill-Rect $bmp 23 14 3 4 $fin
+    Draw-Line $bmp 16 6 4 10 $glow
+    Draw-Line $bmp 16 6 28 10 $glow
+    Draw-Line $bmp 16 18 22 25 $fin
+    Save-Png $bmp $path
+}
+
+function Create-RiftSiegeItem([string]$path) {
+    $bmp = New-Bitmap 32 32
+    $body = Color-Hex "#4e515f"
+    $plate = Color-Hex "#d3b58b"
+    $core = Color-Hex "#b488ff"
+    Fill-Rect $bmp 6 13 20 7 $body
+    Fill-Rect $bmp 11 9 10 4 $plate
+    Fill-Rect $bmp 14 6 4 7 $core
+    Fill-Rect $bmp 4 15 3 5 $body
+    Fill-Rect $bmp 25 15 3 5 $body
+    Draw-Line $bmp 16 9 16 3 $plate
+    Save-Png $bmp $path
+}
+
+function Create-PulseBoltItem([string]$path) {
+    $bmp = New-Bitmap 32 32
+    $glow = Color-Hex "#9af4ff"
+    $core = Color-Hex "#4a72b7"
+    Draw-Circle $bmp 16 16 6 $glow
+    Fill-Rect $bmp 14 8 4 16 $core
+    Fill-Rect $bmp 8 14 16 4 $core
+    Save-Png $bmp $path
+}
+
+function Create-ShellItem([string]$path, [System.Drawing.Color]$body, [System.Drawing.Color]$accent) {
+    $bmp = New-Bitmap 32 32
+    Fill-Rect $bmp 13 5 6 16 $body
+    Fill-Rect $bmp 12 3 8 3 $accent
+    Fill-Rect $bmp 11 19 10 5 $body
+    Draw-Line $bmp 11 21 8 26 $accent
+    Draw-Line $bmp 21 21 24 26 $accent
+    Save-Png $bmp $path
+}
+
+function Create-RiftSkimmerEntityTexture([string]$path) {
+    $bmp = New-Bitmap 64 32
+    $body = Color-Hex "#2d4355"
+    $panel = Color-Hex "#4f6375"
+    $glow = Color-Hex "#9cecff"
+    $fin = Color-Hex "#8f72ff"
+    Fill-Rect $bmp 0 0 24 12 $body
+    Fill-Rect $bmp 24 0 20 12 $panel
+    Fill-Rect $bmp 44 0 20 12 $glow
+    Fill-Rect $bmp 0 14 20 10 $body
+    Fill-Rect $bmp 20 14 20 10 $glow
+    Fill-Rect $bmp 40 14 24 10 $fin
+    Draw-Line $bmp 4 6 20 6 $glow
+    Draw-Line $bmp 22 6 38 6 $fin
+    Draw-Line $bmp 4 20 56 20 $glow
+    Save-Png $bmp $path
+}
+
+function Create-RiftSiegeEntityTexture([string]$path) {
+    $bmp = New-Bitmap 80 48
+    $body = Color-Hex "#494c5a"
+    $plate = Color-Hex "#d2b288"
+    $core = Color-Hex "#b487ff"
+    $shadow = Color-Hex "#272b36"
+    Fill-Rect $bmp 0 0 32 16 $body
+    Fill-Rect $bmp 32 0 24 16 $plate
+    Fill-Rect $bmp 56 0 24 16 $shadow
+    Fill-Rect $bmp 0 18 28 12 $body
+    Fill-Rect $bmp 28 18 24 12 $core
+    Fill-Rect $bmp 52 18 28 12 $plate
+    Fill-Rect $bmp 0 34 80 8 $shadow
+    Draw-Line $bmp 6 8 26 8 $plate
+    Draw-Line $bmp 34 8 48 8 $core
+    Draw-Line $bmp 8 24 72 24 $plate
+    Save-Png $bmp $path
+}
+
+function Create-ServiceBlock([string]$path, [System.Drawing.Color]$base, [System.Drawing.Color]$accent, [System.Drawing.Color]$trim) {
+    $bmp = New-Bitmap 16 16
+    Fill-Rect $bmp 0 0 16 16 $base
+    Fill-Rect $bmp 2 2 12 12 $trim
+    Fill-Rect $bmp 4 4 8 8 $accent
+    Draw-Line $bmp 0 8 15 8 $accent
+    Draw-Line $bmp 8 0 8 15 $accent
+    Save-Png $bmp $path
+}
+
 Create-LittleBirdItem (Join-Path $itemDir "little_bird.png")
 Create-RocketItem (Join-Path $itemDir "little_bird_rocket.png")
 Create-BombItem (Join-Path $itemDir "little_bird_bomb.png") $false
 Create-BombItem (Join-Path $itemDir "little_bird_bomblet.png") $true
 Create-LittleBirdEntityTexture (Join-Path $entityDir "little_bird.png")
 Create-RocketEntityTexture (Join-Path $entityDir "little_bird_rocket.png")
+Create-RiftSkimmerItem (Join-Path $itemDir "rift_skimmer.png")
+Create-RiftSiegeItem (Join-Path $itemDir "rift_siege_platform.png")
+Create-PulseBoltItem (Join-Path $itemDir "rift_pulse_bolt.png")
+Create-ShellItem (Join-Path $itemDir "rift_siege_shell.png") (Color-Hex "#5a6070") (Color-Hex "#d8c39f")
+Create-ShellItem (Join-Path $itemDir "rift_suppressor_charge.png") (Color-Hex "#6f4db3") (Color-Hex "#c8a1ff")
+Create-RiftSkimmerEntityTexture (Join-Path $entityDir "rift_skimmer.png")
+Create-RiftSiegeEntityTexture (Join-Path $entityDir "rift_siege_platform.png")
+Create-ServiceBlock (Join-Path $blockDir "vehicle_repair_pad.png") (Color-Hex "#1c3842") (Color-Hex "#82f0bc") (Color-Hex "#2b5f66")
+Create-ServiceBlock (Join-Path $blockDir "vehicle_rearm_node.png") (Color-Hex "#2b2348") (Color-Hex "#c59aff") (Color-Hex "#4b3f77")
+Create-ServiceBlock (Join-Path $blockDir "vehicle_recall_beacon.png") (Color-Hex "#233042") (Color-Hex "#8fdcff") (Color-Hex "#3e5872")
+Create-ServiceBlock (Join-Path $blockDir "vehicle_deployment_pad.png") (Color-Hex "#20333a") (Color-Hex "#e5d596") (Color-Hex "#48626a")

@@ -39,6 +39,8 @@ public final class VeilreachItemGroups {
                     entries.add(VeilreachItems.CLUSTER_GRENADE);
                     entries.add(VeilreachItems.MOLOTOV);
                     entries.add(VeilreachItems.LITTLE_BIRD);
+                    entries.add(VeilreachItems.RIFT_SKIMMER);
+                    entries.add(VeilreachItems.RIFT_SIEGE_PLATFORM);
                     entries.add(VeilreachItems.MIRROR_HELMET);
                     entries.add(VeilreachItems.MIRROR_CHESTPLATE);
                     entries.add(VeilreachItems.MIRROR_LEGGINGS);
@@ -73,6 +75,10 @@ public final class VeilreachItemGroups {
                     entries.add(VeilreachBlocks.AWAKENED_ALTAR);
                     entries.add(VeilreachBlocks.FOGBOUND_BARRIER);
                     entries.add(VeilreachBlocks.STARLIGHT_CACHE);
+                    entries.add(VeilreachBlocks.VEHICLE_REPAIR_PAD);
+                    entries.add(VeilreachBlocks.VEHICLE_REARM_NODE);
+                    entries.add(VeilreachBlocks.VEHICLE_RECALL_BEACON);
+                    entries.add(VeilreachBlocks.VEHICLE_DEPLOYMENT_PAD);
 
                     entries.add(VeilreachItems.MIRROR_STAG_SPAWN_EGG);
                     entries.add(VeilreachItems.HUSHLING_SPAWN_EGG);
