@@ -12,13 +12,16 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public final class ClusterGrenadeEntity extends AbstractGrenadeEntity {
-    public static final float PRIMARY_BLAST_POWER = 3.8F;
-    public static final float SECONDARY_BLAST_POWER = 2.6F;
-    public static final float FINAL_BLAST_POWER = 1.9F;
+    public static final float PRIMARY_BLAST_POWER = 4.6F;
+    public static final float SECONDARY_BLAST_POWER = 3.2F;
+    public static final float TERTIARY_BLAST_POWER = 2.2F;
+    public static final float FINAL_BLAST_POWER = 1.35F;
     private static final int PRIMARY_CHILDREN = 5;
     private static final int SECONDARY_CHILDREN = 3;
-    private static final int SECONDARY_FUSE_TICKS = 14;
-    private static final int FINAL_FUSE_TICKS = 16;
+    private static final int TERTIARY_CHILDREN = 2;
+    private static final int SECONDARY_FUSE_TICKS = 12;
+    private static final int TERTIARY_FUSE_TICKS = 16;
+    private static final int FINAL_FUSE_TICKS = 20;
 
     private int stage;
     private int fuseTicks;
@@ -56,13 +59,21 @@ public final class ClusterGrenadeEntity extends AbstractGrenadeEntity {
             return;
         }
 
-        float blastPower = stage == 0 ? PRIMARY_BLAST_POWER : stage == 1 ? SECONDARY_BLAST_POWER : FINAL_BLAST_POWER;
+        float blastPower = switch (stage) {
+            case 0 -> PRIMARY_BLAST_POWER;
+            case 1 -> SECONDARY_BLAST_POWER;
+            case 2 -> TERTIARY_BLAST_POWER;
+            default -> FINAL_BLAST_POWER;
+        };
         world.createExplosion(this, getX(), getY(), getZ(), blastPower, World.ExplosionSourceType.TNT);
+        world.spawnParticles(stage >= 2 ? ParticleTypes.FLAME : ParticleTypes.SMOKE, getX(), getY() + 0.12D, getZ(), 8, 0.12D, 0.08D, 0.12D, 0.01D);
 
         if (stage == 0) {
-            spawnChildren(world, PRIMARY_CHILDREN, 1, SECONDARY_FUSE_TICKS, 0.34D);
+            spawnChildren(world, PRIMARY_CHILDREN, 1, SECONDARY_FUSE_TICKS, 0.38D);
         } else if (stage == 1) {
-            spawnChildren(world, SECONDARY_CHILDREN, 2, FINAL_FUSE_TICKS, 0.28D);
+            spawnChildren(world, SECONDARY_CHILDREN, 2, TERTIARY_FUSE_TICKS, 0.32D);
+        } else if (stage == 2) {
+            spawnChildren(world, TERTIARY_CHILDREN, 3, FINAL_FUSE_TICKS, 0.26D);
         }
 
         discard();

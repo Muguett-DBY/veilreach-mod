@@ -15,7 +15,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HeldItemRenderer.class)
 public abstract class HeldItemRendererMixin {
-    @Inject(method = "renderFirstPersonItem", at = @At("HEAD"))
+    @Inject(
+            method = "renderFirstPersonItem",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemDisplayContext;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;I)V",
+                    shift = At.Shift.BEFORE
+            )
+    )
     private void veilreach$tiltGrenadesWhileUsing(AbstractClientPlayerEntity player, float tickProgress, float pitch, Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices, OrderedRenderCommandQueue renderQueue, int light, CallbackInfo ci) {
         if (!(item.getItem() instanceof ThrowableGrenadeItem) || !player.isUsingItem() || player.getActiveHand() != hand) {
             return;
@@ -26,9 +33,9 @@ public abstract class HeldItemRendererMixin {
         float eased = Math.min(1.0F, charge * 10.0F);
         float handSign = rightHand ? 1.0F : -1.0F;
 
-        matrices.translate(handSign * -0.08F * eased, -0.10F * eased, -0.16F * eased);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-18.0F * eased));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(handSign * 12.0F * eased));
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(handSign * -8.0F * eased));
+        matrices.translate(handSign * -0.16F * eased, -0.18F * eased, -0.24F * eased);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-28.0F * eased));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(handSign * 18.0F * eased));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(handSign * -14.0F * eased));
     }
 }
