@@ -262,6 +262,38 @@
       }
     ]
   },
+  "weapon.rift_pulse_bolt_fire": {
+    "sounds": [
+      {
+        "name": "veilreach:weapon/rift_pulse_bolt_fire",
+        "volume": 0.82
+      }
+    ]
+  },
+  "weapon.rift_rifle_fire": {
+    "sounds": [
+      {
+        "name": "veilreach:weapon/rift_rifle_fire",
+        "volume": 0.88
+      }
+    ]
+  },
+  "weapon.silver_scatter_fire": {
+    "sounds": [
+      {
+        "name": "veilreach:weapon/silver_scatter_fire",
+        "volume": 0.9
+      }
+    ]
+  },
+  "weapon.watcher_launch": {
+    "sounds": [
+      {
+        "name": "veilreach:weapon/watcher_launch",
+        "volume": 0.95
+      }
+    ]
+  },
   "music.hushlands_dream": {
     "sounds": [
       {

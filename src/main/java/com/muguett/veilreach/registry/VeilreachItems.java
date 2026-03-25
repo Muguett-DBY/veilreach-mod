@@ -2,6 +2,7 @@ package com.muguett.veilreach.registry;
 
 import com.muguett.veilreach.VeilreachMod;
 import com.muguett.veilreach.item.AstralSigilItem;
+import com.muguett.veilreach.item.AmmoItem;
 import com.muguett.veilreach.item.ClusterGrenadeItem;
 import com.muguett.veilreach.item.GrenadeItem;
 import com.muguett.veilreach.item.HushWardCharmItem;
@@ -9,6 +10,10 @@ import com.muguett.veilreach.item.ImpactGrenadeItem;
 import com.muguett.veilreach.item.LittleBirdItem;
 import com.muguett.veilreach.item.LoreHintItem;
 import com.muguett.veilreach.item.MolotovItem;
+import com.muguett.veilreach.item.PulsePistolItem;
+import com.muguett.veilreach.item.RiftRifleItem;
+import com.muguett.veilreach.item.SilverScatterCannonItem;
+import com.muguett.veilreach.item.WatcherGrenadeLauncherItem;
 import com.muguett.veilreach.item.SovereignWardItem;
 import com.muguett.veilreach.item.VehicleDeployItem;
 import com.muguett.veilreach.item.VeilreachSpawnEggItem;
@@ -40,6 +45,13 @@ public final class VeilreachItems {
     public static final Item IMPACT_GRENADE = register("impact_grenade", ImpactGrenadeItem::new);
     public static final Item CLUSTER_GRENADE = register("cluster_grenade", ClusterGrenadeItem::new);
     public static final Item MOLOTOV = register("molotov", MolotovItem::new);
+    public static final Item LIGHT_ENERGY_CELL = register("light_energy_cell", settings -> new AmmoItem(settings.maxCount(64).rarity(Rarity.COMMON)));
+    public static final Item ENERGY_CELL = register("energy_cell", settings -> new AmmoItem(settings.maxCount(64).rarity(Rarity.UNCOMMON)));
+    public static final Item HEAVY_CHARGE = register("heavy_charge", settings -> new AmmoItem(settings.maxCount(32).rarity(Rarity.RARE)));
+    public static final Item PULSE_PISTOL = register("pulse_pistol", settings -> new PulsePistolItem(settings.rarity(Rarity.COMMON)));
+    public static final Item RIFT_RIFLE = register("rift_rifle", settings -> new RiftRifleItem(settings.rarity(Rarity.UNCOMMON)));
+    public static final Item SILVER_SCATTER_CANNON = register("silver_scatter_cannon", settings -> new SilverScatterCannonItem(settings.rarity(Rarity.RARE)));
+    public static final Item WATCHER_GRENADE_LAUNCHER = register("watcher_grenade_launcher", settings -> new WatcherGrenadeLauncherItem(settings.rarity(Rarity.EPIC)));
     public static final Item LITTLE_BIRD = register("little_bird", settings -> new LittleBirdItem(settings.maxCount(1).rarity(Rarity.RARE)));
     public static final Item RIFT_SKIMMER = register("rift_skimmer", settings -> new VehicleDeployItem(settings.maxCount(1).rarity(Rarity.UNCOMMON), world -> new com.muguett.veilreach.entity.RiftSkimmerEntity(VeilreachEntities.RIFT_SKIMMER, world), 1.0D,
             "item.veilreach.rift_skimmer.tooltip",
@@ -55,6 +67,9 @@ public final class VeilreachItems {
     public static final Item LITTLE_BIRD_BOMB_ITEM = register("little_bird_bomb", Item::new);
     public static final Item LITTLE_BIRD_BOMBLET_ITEM = register("little_bird_bomblet", Item::new);
     public static final Item RIFT_PULSE_BOLT_ITEM = register("rift_pulse_bolt", Item::new);
+    public static final Item RIFT_RIFLE_ROUND_ITEM = register("rift_rifle_round", Item::new);
+    public static final Item SCATTER_SHARD_ITEM = register("scatter_shard", Item::new);
+    public static final Item WATCHER_SHELL_ITEM = register("watcher_shell", Item::new);
     public static final Item RIFT_GUNSHIP_ROCKET_ITEM = register("rift_gunship_rocket", Item::new);
     public static final Item RIFT_GUNSHIP_ROUND_ITEM = register("rift_gunship_round", Item::new);
     public static final Item RIFT_SIEGE_SHELL_ITEM = register("rift_siege_shell", Item::new);

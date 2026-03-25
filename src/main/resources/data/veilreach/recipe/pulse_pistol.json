@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " M ",
+    "VM ",
+    " C "
+  ],
+  "key": {
+    "M": "veilreach:mirror_ingot",
+    "V": "veilreach:veil_shard",
+    "C": "veilreach:light_energy_cell"
+  },
+  "result": {
+    "id": "veilreach:pulse_pistol",
+    "count": 1
+  }
+}

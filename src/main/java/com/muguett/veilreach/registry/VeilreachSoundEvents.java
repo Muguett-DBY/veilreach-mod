@@ -39,6 +39,10 @@ public final class VeilreachSoundEvents {
     public static final SoundEvent RIFT_SIEGE_CANNON = register("vehicle.rift_siege_cannon");
     public static final SoundEvent RIFT_SIEGE_SUPPRESS = register("vehicle.rift_siege_suppress");
     public static final SoundEvent RIFT_SIEGE_EXPLOSION = register("vehicle.rift_siege_explosion");
+    public static final SoundEvent RIFT_PULSE_BOLT_FIRE = register("weapon.rift_pulse_bolt_fire");
+    public static final SoundEvent RIFT_RIFLE_FIRE = register("weapon.rift_rifle_fire");
+    public static final SoundEvent SILVER_SCATTER_FIRE = register("weapon.silver_scatter_fire");
+    public static final SoundEvent WATCHER_LAUNCH = register("weapon.watcher_launch");
     public static final SoundEvent HUSHLANDS_DREAM = register("music.hushlands_dream");
     public static final SoundEvent HUSHLANDS_DEPTHS = register("music.hushlands_depths");
     public static final SoundEvent HUSHLANDS_HUSH_GROVE = register("music.hushlands.hush_grove");

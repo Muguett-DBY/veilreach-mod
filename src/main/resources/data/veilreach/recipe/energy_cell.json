@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " V ",
+    "VMV",
+    " V "
+  ],
+  "key": {
+    "V": "veilreach:veil_shard",
+    "M": "veilreach:mirror_ingot"
+  },
+  "result": {
+    "id": "veilreach:energy_cell",
+    "count": 4
+  }
+}

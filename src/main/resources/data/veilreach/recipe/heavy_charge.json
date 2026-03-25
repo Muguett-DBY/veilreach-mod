@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " V ",
+    "VSV",
+    " V "
+  ],
+  "key": {
+    "V": "veilreach:starfragment",
+    "S": "minecraft:gunpowder"
+  },
+  "result": {
+    "id": "veilreach:heavy_charge",
+    "count": 2
+  }
+}

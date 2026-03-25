@@ -22,6 +22,7 @@ import com.muguett.veilreach.entity.RiftSiegePlatformEntity;
 import com.muguett.veilreach.entity.RiftSiegeShellEntity;
 import com.muguett.veilreach.entity.RiftSkimmerEntity;
 import com.muguett.veilreach.entity.RiftSuppressorChargeEntity;
+import com.muguett.veilreach.entity.RiftWeaponProjectileEntity;
 import com.muguett.veilreach.entity.VeilboundWatcherEntity;
 import com.muguett.veilreach.entity.WardenOfSilenceEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -74,6 +75,8 @@ public final class VeilreachEntities {
             EntityType.Builder.<RiftSiegeShellEntity>create(RiftSiegeShellEntity::new, SpawnGroup.MISC).dimensions(0.3F, 0.3F).maxTrackingRange(10).trackingTickInterval(1));
     public static final EntityType<RiftSuppressorChargeEntity> RIFT_SUPPRESSOR_CHARGE = register("rift_suppressor_charge",
             EntityType.Builder.<RiftSuppressorChargeEntity>create(RiftSuppressorChargeEntity::new, SpawnGroup.MISC).dimensions(0.28F, 0.28F).maxTrackingRange(10).trackingTickInterval(1));
+    public static final EntityType<RiftWeaponProjectileEntity> RIFT_WEAPON_PROJECTILE = register("rift_weapon_projectile",
+            EntityType.Builder.<RiftWeaponProjectileEntity>create(RiftWeaponProjectileEntity::new, SpawnGroup.MISC).dimensions(0.18F, 0.18F).maxTrackingRange(12).trackingTickInterval(1));
 
     public static final EntityType<HushlingEntity> HUSHLING = register("hushling",
             EntityType.Builder.create(HushlingEntity::new, SpawnGroup.MONSTER).dimensions(0.6F, 1.95F));

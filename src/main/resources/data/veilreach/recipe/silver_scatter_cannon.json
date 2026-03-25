@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "VMV",
+    " C "
+  ],
+  "key": {
+    "S": "veilreach:starfragment",
+    "M": "veilreach:mirror_ingot",
+    "V": "veilreach:veil_shard",
+    "C": "veilreach:energy_cell"
+  },
+  "result": {
+    "id": "veilreach:silver_scatter_cannon",
+    "count": 1
+  }
+}

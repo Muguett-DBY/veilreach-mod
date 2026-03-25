@@ -4,77 +4,13 @@
     {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 3.0,
-        "max": 5.0
+        "min": 2.0,
+        "max": 4.0
       },
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 4.0,
-                "max": 9.0
-              },
-              "add": false
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:emerald",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 6.0,
-                "max": 14.0
-              },
-              "add": false
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:experience_bottle",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 6.0,
-                "max": 14.0
-              },
-              "add": false
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:golden_apple",
-          "weight": 5,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 2.0,
-                "max": 4.0
-              },
-              "add": false
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "veilreach:mirror_ingot",
+          "name": "veilreach:light_energy_cell",
           "weight": 8,
           "functions": [
             {
@@ -90,15 +26,15 @@
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:starfragment",
+          "name": "veilreach:energy_cell",
           "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 2.0,
-                "max": 5.0
+                "min": 3.0,
+                "max": 6.0
               },
               "add": false
             }
@@ -106,8 +42,8 @@
         },
         {
           "type": "minecraft:item",
-          "name": "veilreach:moonbroth_tart",
-          "weight": 5,
+          "name": "veilreach:heavy_charge",
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -119,101 +55,11 @@
               "add": false
             }
           ]
-        }
-      ]
-    },
-    {
-      "rolls": {
-        "type": "minecraft:uniform",
-        "min": 1.0,
-        "max": 2.0
-      },
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:diamond_sword",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.1,
-                "max": 0.45
-              },
-              "add": false
-            },
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": {
-                "type": "minecraft:uniform",
-                "min": 28.0,
-                "max": 44.0
-              },
-              "options": "#minecraft:on_random_loot"
-            }
-          ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond_helmet",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.1,
-                "max": 0.4
-              },
-              "add": false
-            },
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": {
-                "type": "minecraft:uniform",
-                "min": 28.0,
-                "max": 44.0
-              },
-              "options": "#minecraft:on_random_loot"
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "veilreach:mirror_helmet",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "veilreach:mirror_chestplate",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "veilreach:sovereign_ward",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:totem_of_undying",
+          "name": "veilreach:watcher_grenade_launcher",
           "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:enchanted_book",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": {
-                "type": "minecraft:uniform",
-                "min": 34.0,
-                "max": 48.0
-              },
-              "options": "#minecraft:on_random_loot"
-            }
-          ]
         }
       ]
     }

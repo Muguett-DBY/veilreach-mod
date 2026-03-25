@@ -1198,6 +1198,31 @@ function Paint-WardenDetails([System.Drawing.Bitmap]$bmp) {
     Draw-WideLine $bmp 10 55 20 61 $horn 1
 }
 
+function Create-WeaponIcon([string]$path, [string]$accent, [string]$glow, [string]$body, [string]$pattern) {
+    $bmp = Create-ItemCanvas
+    $accentColor = Color-Hex $accent
+    $glowColor = Color-Hex $glow
+    $bodyColor = Color-Hex $body
+    $patternColor = Color-Hex $pattern
+    Fill-RectGrid $bmp 4 6 8 4 $bodyColor
+    Fill-RectGrid $bmp 5 5 6 6 $patternColor
+    Draw-LineGrid $bmp 3 8 13 8 $accentColor 0.5
+    Draw-LineGrid $bmp 6 4 10 12 $glowColor 0.45
+    Draw-StarGrid $bmp 12.3 4.6 $accentColor $glowColor 0.45
+    Save-Png $bmp $path
+}
+
+function Create-AmmoIcon([string]$path, [string]$primary, [string]$secondary, [string]$accent) {
+    $bmp = Create-ItemCanvas
+    $primaryColor = Color-Hex $primary
+    $secondaryColor = Color-Hex $secondary
+    $accentColor = Color-Hex $accent
+    Draw-DiamondGrid $bmp 8 8 4.4 $primaryColor $secondaryColor
+    Draw-StarGrid $bmp 8 8 $accentColor $secondaryColor 0.55
+    Draw-RingGrid $bmp 8 8 2.4 $accentColor 0.18
+    Save-Png $bmp $path
+}
+
 Create-StoneBlock (Join-Path $blockDir "veilstone.png") "#20262f" "#495a66" "#7cc8d4"
 Create-StoneBlock (Join-Path $blockDir "polished_veilstone.png") "#2a323c" "#718291" "#cfe8ef"
 Create-StoneBlock (Join-Path $blockDir "mirror_grass.png") "#183034" "#4b7775" "#b1f1d3"
@@ -1248,6 +1273,17 @@ Create-SovereignWardItem (Join-Path $itemDir "sovereign_ward.png")
 Create-AstralSigilItem (Join-Path $itemDir "astral_sigil.png")
 Create-CrystalItem (Join-Path $itemDir "gloamwood_sap.png") "#5ba8bb" "#e1fcff"
 Create-SovereignCoreItem (Join-Path $itemDir "sovereign_core.png")
+Create-AmmoIcon (Join-Path $itemDir "light_energy_cell.png") "#cfefff" "#7ec9db" "#ffffff"
+Create-AmmoIcon (Join-Path $itemDir "energy_cell.png") "#bfe6ff" "#5f8fa6" "#f5fbff"
+Create-AmmoIcon (Join-Path $itemDir "heavy_charge.png") "#9db3cf" "#4f657c" "#fff0b6"
+Create-WeaponIcon (Join-Path $itemDir "pulse_pistol.png") "#9fe9ff" "#e7fbff" "#455a72" "#b8f1ff"
+Create-WeaponIcon (Join-Path $itemDir "rift_rifle.png") "#8cc9ff" "#f5ffff" "#3d4f63" "#a4d8ff"
+Create-WeaponIcon (Join-Path $itemDir "silver_scatter_cannon.png") "#dfebff" "#9fd8f0" "#4b5e77" "#eff7ff"
+Create-WeaponIcon (Join-Path $itemDir "watcher_grenade_launcher.png") "#d8f2ff" "#b8d3ff" "#34455d" "#fff0b6"
+Create-AmmoIcon (Join-Path $itemDir "rift_pulse_bolt.png") "#c4f7ff" "#7ec9db" "#ffffff"
+Create-AmmoIcon (Join-Path $itemDir "rift_rifle_round.png") "#b8e1ff" "#5b83a8" "#f9fcff"
+Create-AmmoIcon (Join-Path $itemDir "scatter_shard.png") "#eff7ff" "#a9c8d8" "#ffffff"
+Create-AmmoIcon (Join-Path $itemDir "watcher_shell.png") "#e8f1ff" "#7590a7" "#fff1b6"
 Create-SpawnEggItem (Join-Path $itemDir "mirror_stag_spawn_egg.png") "#d3ece6" "#6ca4aa"
 Create-SpawnEggItem (Join-Path $itemDir "hushling_spawn_egg.png") "#2d444a" "#a9efe4"
 Create-SpawnEggItem (Join-Path $itemDir "hush_sovereign_spawn_egg.png") "#0c1119" "#9ad9ff"

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " W ",
+    "VMV",
+    " H "
+  ],
+  "key": {
+    "W": "veilreach:warden_sigil",
+    "M": "veilreach:mirror_ingot",
+    "V": "veilreach:veil_shard",
+    "H": "veilreach:heavy_charge"
+  },
+  "result": {
+    "id": "veilreach:watcher_grenade_launcher",
+    "count": 1
+  }
+}

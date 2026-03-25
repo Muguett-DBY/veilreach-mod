@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " MV",
+    " LM",
+    " C "
+  ],
+  "key": {
+    "M": "veilreach:mirror_ingot",
+    "L": "veilreach:lunar_fiber",
+    "V": "veilreach:veil_shard",
+    "C": "veilreach:energy_cell"
+  },
+  "result": {
+    "id": "veilreach:rift_rifle",
+    "count": 1
+  }
+}

@@ -440,6 +440,46 @@ def make_rift_siege_explosion() -> np.ndarray:
     return pan_stereo(signal, 0.0)
 
 
+def make_rift_pulse_bolt_fire() -> np.ndarray:
+    duration = 0.34
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    snap = noise(duration, 161, "white") * np.linspace(0.28, 0.02, t.size, dtype=np.float32)
+    ping = sine(1220.0, duration) * envelope(t.size, 0.01, 0.7) * 0.15
+    shimmer = sine(3200.0, duration) * np.linspace(0.03, 0.0, t.size, dtype=np.float32)
+    signal = apply_reverb(snap + ping + shimmer, 0.02, 0.22, 2)
+    return pan_stereo(signal, 0.04)
+
+
+def make_rift_rifle_fire() -> np.ndarray:
+    duration = 0.42
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    crack = noise(duration, 162, "white") * np.linspace(0.35, 0.02, t.size, dtype=np.float32)
+    tone = sine(840.0, duration) * envelope(t.size, 0.01, 0.82) * 0.18
+    bass = sine(112.0, duration) * np.linspace(0.12, 0.0, t.size, dtype=np.float32)
+    signal = apply_reverb(crack + tone + bass, 0.03, 0.24, 2)
+    return pan_stereo(signal, -0.02)
+
+
+def make_silver_scatter_fire() -> np.ndarray:
+    duration = 0.5
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    burst = noise(duration, 163, "white") * np.linspace(0.45, 0.03, t.size, dtype=np.float32)
+    burst += noise(duration, 164, "pink") * np.linspace(0.16, 0.02, t.size, dtype=np.float32)
+    crackle = sine(580.0, duration) * envelope(t.size, 0.01, 0.72) * 0.12
+    signal = apply_reverb(burst + crackle, 0.028, 0.28, 3)
+    return pan_stereo(signal, 0.08)
+
+
+def make_watcher_launch() -> np.ndarray:
+    duration = 0.62
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    thump = sine(72.0, duration) * np.linspace(0.3, 0.04, t.size, dtype=np.float32)
+    hiss = noise(duration, 165, "pink") * np.linspace(0.2, 0.03, t.size, dtype=np.float32)
+    clatter = noise(duration, 166, "white") * np.linspace(0.12, 0.01, t.size, dtype=np.float32)
+    signal = apply_reverb(thump + hiss + clatter, 0.04, 0.3, 3)
+    return pan_stereo(signal, -0.05)
+
+
 def make_music(seed: int, roots: list[float], duration: float, pan: float) -> np.ndarray:
     t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
     signal = np.zeros_like(t)
@@ -487,6 +527,10 @@ def main() -> None:
     write_ogg("vehicle/rift_siege_cannon.ogg", make_rift_siege_cannon())
     write_ogg("vehicle/rift_siege_suppress.ogg", make_rift_siege_suppress())
     write_ogg("vehicle/rift_siege_explosion.ogg", make_rift_siege_explosion())
+    write_ogg("weapon/rift_pulse_bolt_fire.ogg", make_rift_pulse_bolt_fire())
+    write_ogg("weapon/rift_rifle_fire.ogg", make_rift_rifle_fire())
+    write_ogg("weapon/silver_scatter_fire.ogg", make_silver_scatter_fire())
+    write_ogg("weapon/watcher_launch.ogg", make_watcher_launch())
     write_ogg("block/hush_portal_loop.ogg", make_portal_hum())
     write_ogg("ambient/hushlands_whispers.ogg", make_whisper_ambient())
     write_ogg("ambient/rift_meadows_resonance.ogg", make_rift_ambient())

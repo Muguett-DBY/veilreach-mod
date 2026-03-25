@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " V ",
+    "VGV",
+    " V "
+  ],
+  "key": {
+    "V": "veilreach:veil_shard",
+    "G": "minecraft:glass"
+  },
+  "result": {
+    "id": "veilreach:light_energy_cell",
+    "count": 8
+  }
+}
