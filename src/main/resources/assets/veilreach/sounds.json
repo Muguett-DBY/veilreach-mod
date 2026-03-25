@@ -82,6 +82,71 @@
       }
     ]
   },
+  "vehicle.little_bird_startup": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/little_bird_startup",
+        "volume": 0.92
+      }
+    ]
+  },
+  "vehicle.little_bird_rotor_loop": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/little_bird_rotor_loop",
+        "stream": true,
+        "volume": 0.76
+      }
+    ]
+  },
+  "vehicle.little_bird_rocket_launch": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/little_bird_rocket_launch",
+        "volume": 0.9
+      }
+    ]
+  },
+  "vehicle.little_bird_rocket_impact": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/little_bird_rocket_impact",
+        "volume": 0.95
+      }
+    ]
+  },
+  "vehicle.little_bird_bomb_drop": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/little_bird_bomb_drop",
+        "volume": 0.82
+      }
+    ]
+  },
+  "vehicle.little_bird_bomb_impact": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/little_bird_bomb_impact",
+        "volume": 1.0
+      }
+    ]
+  },
+  "vehicle.little_bird_hit": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/little_bird_hit",
+        "volume": 0.84
+      }
+    ]
+  },
+  "vehicle.little_bird_explosion": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/little_bird_explosion",
+        "volume": 1.0
+      }
+    ]
+  },
   "music.hushlands_dream": {
     "sounds": [
       {

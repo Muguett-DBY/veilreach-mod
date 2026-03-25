@@ -8,6 +8,8 @@ public final class VeilreachEntityModelLayers {
     public static final EntityModelLayer MIRROR_STAG = create("mirror_stag");
     public static final EntityModelLayer HUSHLING = create("hushling");
     public static final EntityModelLayer LANTERNKEEPER = create("lanternkeeper");
+    public static final EntityModelLayer LITTLE_BIRD = create("little_bird");
+    public static final EntityModelLayer LITTLE_BIRD_ROCKET = create("little_bird_rocket");
     public static final EntityModelLayer MOONFALLEN_KNIGHT = create("moonfallen_knight");
     public static final EntityModelLayer HUSH_SOVEREIGN = create("hush_sovereign");
     public static final EntityModelLayer VEILBOUND_WATCHER = create("veilbound_watcher");

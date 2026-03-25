@@ -1,5 +1,6 @@
 package com.muguett.veilreach;
 
+import com.muguett.veilreach.network.VeilreachNetworking;
 import com.muguett.veilreach.registry.VeilreachBlockItems;
 import com.muguett.veilreach.registry.VeilreachBlocks;
 import com.muguett.veilreach.registry.VeilreachEntities;
@@ -27,6 +28,7 @@ public final class VeilreachMod implements ModInitializer {
         VeilreachItems.initialize();
         VeilreachBlockItems.initialize();
         VeilreachItemGroups.initialize();
+        VeilreachNetworking.initialize();
         HushlandsBiomes.initialize();
         HushlandsWorldgen.initialize();
         HushlandsHazardManager.initialize();

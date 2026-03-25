@@ -17,6 +17,14 @@ public final class VeilreachSoundEvents {
     public static final SoundEvent ASTRAL_SIGIL_USE = register("ui.astral_sigil");
     public static final SoundEvent SEALED_ALTAR_UNLOCK = register("ui.sealed_altar_unlock");
     public static final SoundEvent HUSHLANDS_ARRIVAL_INTRO = register("ui.hushlands_arrival_intro");
+    public static final SoundEvent LITTLE_BIRD_STARTUP = register("vehicle.little_bird_startup");
+    public static final SoundEvent LITTLE_BIRD_ROTOR_LOOP = register("vehicle.little_bird_rotor_loop");
+    public static final SoundEvent LITTLE_BIRD_ROCKET_LAUNCH = register("vehicle.little_bird_rocket_launch");
+    public static final SoundEvent LITTLE_BIRD_ROCKET_IMPACT = register("vehicle.little_bird_rocket_impact");
+    public static final SoundEvent LITTLE_BIRD_BOMB_DROP = register("vehicle.little_bird_bomb_drop");
+    public static final SoundEvent LITTLE_BIRD_BOMB_IMPACT = register("vehicle.little_bird_bomb_impact");
+    public static final SoundEvent LITTLE_BIRD_HIT = register("vehicle.little_bird_hit");
+    public static final SoundEvent LITTLE_BIRD_EXPLOSION = register("vehicle.little_bird_explosion");
     public static final SoundEvent HUSHLANDS_DREAM = register("music.hushlands_dream");
     public static final SoundEvent HUSHLANDS_DEPTHS = register("music.hushlands_depths");
     public static final SoundEvent HUSHLANDS_HUSH_GROVE = register("music.hushlands.hush_grove");

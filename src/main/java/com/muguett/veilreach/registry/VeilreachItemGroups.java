@@ -38,6 +38,7 @@ public final class VeilreachItemGroups {
                     entries.add(VeilreachItems.IMPACT_GRENADE);
                     entries.add(VeilreachItems.CLUSTER_GRENADE);
                     entries.add(VeilreachItems.MOLOTOV);
+                    entries.add(VeilreachItems.LITTLE_BIRD);
                     entries.add(VeilreachItems.MIRROR_HELMET);
                     entries.add(VeilreachItems.MIRROR_CHESTPLATE);
                     entries.add(VeilreachItems.MIRROR_LEGGINGS);

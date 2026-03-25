@@ -7,6 +7,9 @@ import com.muguett.veilreach.entity.ClusterGrenadeEntity;
 import com.muguett.veilreach.entity.GrenadeEntity;
 import com.muguett.veilreach.entity.ImpactGrenadeEntity;
 import com.muguett.veilreach.entity.LanternkeeperEntity;
+import com.muguett.veilreach.entity.LittleBirdBombEntity;
+import com.muguett.veilreach.entity.LittleBirdEntity;
+import com.muguett.veilreach.entity.LittleBirdRocketEntity;
 import com.muguett.veilreach.entity.MolotovEntity;
 import com.muguett.veilreach.entity.MoonfallenKnightEntity;
 import com.muguett.veilreach.entity.MirrorStagEntity;
@@ -38,6 +41,12 @@ public final class VeilreachEntities {
             EntityType.Builder.<ClusterGrenadeEntity>create(ClusterGrenadeEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(8).trackingTickInterval(1));
     public static final EntityType<MolotovEntity> MOLOTOV = register("molotov",
             EntityType.Builder.<MolotovEntity>create(MolotovEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(6).trackingTickInterval(1));
+    public static final EntityType<LittleBirdEntity> LITTLE_BIRD = register("little_bird",
+            EntityType.Builder.<LittleBirdEntity>create(LittleBirdEntity::new, SpawnGroup.MISC).dimensions(2.4F, 1.35F).maxTrackingRange(16).trackingTickInterval(1));
+    public static final EntityType<LittleBirdRocketEntity> LITTLE_BIRD_ROCKET = register("little_bird_rocket",
+            EntityType.Builder.<LittleBirdRocketEntity>create(LittleBirdRocketEntity::new, SpawnGroup.MISC).dimensions(0.28F, 0.28F).maxTrackingRange(10).trackingTickInterval(1));
+    public static final EntityType<LittleBirdBombEntity> LITTLE_BIRD_BOMB = register("little_bird_bomb",
+            EntityType.Builder.<LittleBirdBombEntity>create(LittleBirdBombEntity::new, SpawnGroup.MISC).dimensions(0.34F, 0.34F).maxTrackingRange(10).trackingTickInterval(1));
 
     public static final EntityType<HushlingEntity> HUSHLING = register("hushling",
             EntityType.Builder.create(HushlingEntity::new, SpawnGroup.MONSTER).dimensions(0.6F, 1.95F));

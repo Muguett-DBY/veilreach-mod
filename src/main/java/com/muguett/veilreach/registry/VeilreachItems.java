@@ -6,6 +6,7 @@ import com.muguett.veilreach.item.ClusterGrenadeItem;
 import com.muguett.veilreach.item.GrenadeItem;
 import com.muguett.veilreach.item.HushWardCharmItem;
 import com.muguett.veilreach.item.ImpactGrenadeItem;
+import com.muguett.veilreach.item.LittleBirdItem;
 import com.muguett.veilreach.item.LoreHintItem;
 import com.muguett.veilreach.item.MolotovItem;
 import com.muguett.veilreach.item.SovereignWardItem;
@@ -38,6 +39,10 @@ public final class VeilreachItems {
     public static final Item IMPACT_GRENADE = register("impact_grenade", ImpactGrenadeItem::new);
     public static final Item CLUSTER_GRENADE = register("cluster_grenade", ClusterGrenadeItem::new);
     public static final Item MOLOTOV = register("molotov", MolotovItem::new);
+    public static final Item LITTLE_BIRD = register("little_bird", settings -> new LittleBirdItem(settings.maxCount(1).rarity(Rarity.RARE)));
+    public static final Item LITTLE_BIRD_ROCKET_ITEM = register("little_bird_rocket", Item::new);
+    public static final Item LITTLE_BIRD_BOMB_ITEM = register("little_bird_bomb", Item::new);
+    public static final Item LITTLE_BIRD_BOMBLET_ITEM = register("little_bird_bomblet", Item::new);
     public static final Item MIRROR_HELMET = register("mirror_helmet", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.HELMET).maxDamage(EquipmentType.HELMET.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
     public static final Item MIRROR_CHESTPLATE = register("mirror_chestplate", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.CHESTPLATE).maxDamage(EquipmentType.CHESTPLATE.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
     public static final Item MIRROR_LEGGINGS = register("mirror_leggings", settings -> new Item(settings.armor(VeilreachArmorMaterials.MIRRORSTEEL, EquipmentType.LEGGINGS).maxDamage(EquipmentType.LEGGINGS.getMaxDamage(VeilreachArmorMaterials.MIRRORSTEEL.durability()))));
