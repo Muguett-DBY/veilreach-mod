@@ -30,7 +30,7 @@ public class RiftSpireFeature extends Feature<DefaultFeatureConfig> {
         BlockState frame = VeilreachBlocks.MOONWOVEN_FRAME.getDefaultState();
         BlockState lantern = VeilreachBlocks.STARLANTERN.getDefaultState();
 
-        HushStructureFeatureSupport.clearBox(world, center, 8, 30, 8);
+        HushStructureFeatureSupport.clearBox(world, center, 7, 30, 7);
         HushStructureFeatureSupport.supportFootprint(world, center, -6, 6, -6, 6, -1, base);
 
         for (int dx = -4; dx <= 4; dx++) {

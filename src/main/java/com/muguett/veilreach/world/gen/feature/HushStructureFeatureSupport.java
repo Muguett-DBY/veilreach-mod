@@ -16,6 +16,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
@@ -40,7 +41,9 @@ final class HushStructureFeatureSupport {
     }
 
     static BlockPos findGenerationCenter(StructureWorldAccess world, BlockPos origin) {
-        return world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, origin);
+        ChunkPos chunkPos = new ChunkPos(origin);
+        BlockPos chunkCenter = new BlockPos(chunkPos.getStartX() + 8, origin.getY(), chunkPos.getStartZ() + 8);
+        return world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, chunkCenter);
     }
 
     static boolean hasStableGround(

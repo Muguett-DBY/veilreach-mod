@@ -20,7 +20,7 @@ public class ShatteredCausewayFeature extends Feature<DefaultFeatureConfig> {
     public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
         StructureWorldAccess world = context.getWorld();
         BlockPos center = HushStructureFeatureSupport.findGenerationCenter(world, context.getOrigin());
-        if (!HushStructureFeatureSupport.hasStableGround(world, center, 20, 14, 4, 18, 14)) {
+        if (!HushStructureFeatureSupport.hasStableGround(world, center, 8, 8, 2, 16, 10)) {
             return false;
         }
 
@@ -30,37 +30,39 @@ public class ShatteredCausewayFeature extends Feature<DefaultFeatureConfig> {
         BlockState frame = VeilreachBlocks.MOONWOVEN_FRAME.getDefaultState();
         BlockState lantern = VeilreachBlocks.STARLANTERN.getDefaultState();
 
-        HushStructureFeatureSupport.clearBox(world, center, 24, 20, 10);
+        HushStructureFeatureSupport.clearBox(world, center, 7, 14, 7);
+        HushStructureFeatureSupport.supportFootprint(world, center, -7, 7, -4, 4, -1, base);
 
-        for (int span = -18; span <= 18; span++) {
-            if (span >= -2 && span <= 2) {
+        for (int span = -7; span <= 7; span++) {
+            if (span == 0) {
                 continue;
             }
-            int deckY = Math.abs(span) > 12 ? 1 : 0;
-            for (int width = -2; width <= 2; width++) {
+            int deckY = Math.abs(span) >= 5 ? 1 : 0;
+            int widthLimit = Math.abs(span) >= 6 ? 1 : 2;
+            for (int width = -widthLimit; width <= widthLimit; width++) {
                 BlockPos deck = center.add(span, deckY, width);
                 world.setBlockState(deck.down(), base, HushStructureFeatureSupport.GEN_FLAGS);
-                world.setBlockState(deck, Math.abs(width) == 2 ? trim : base, HushStructureFeatureSupport.GEN_FLAGS);
+                world.setBlockState(deck, Math.abs(width) == widthLimit ? trim : base, HushStructureFeatureSupport.GEN_FLAGS);
                 HushStructureFeatureSupport.fillDown(world, deck.down(), wall);
             }
-            if (Math.abs(span) % 6 == 0) {
+            if (Math.abs(span) == 4 || Math.abs(span) == 7) {
                 buildPylon(world, center.add(span, deckY, 0), wall, frame, lantern);
             }
         }
 
         for (int side = -1; side <= 1; side += 2) {
-            for (int segment = 0; segment <= 3; segment++) {
-                BlockPos shard = center.add(side * (4 + segment * 3), 2 + segment, side * (1 + segment));
-                for (int y = 0; y <= 5 + segment; y++) {
-                    world.setBlockState(shard.up(y), y >= 4 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
+            for (int segment = 0; segment <= 1; segment++) {
+                BlockPos shard = center.add(side * (4 + segment * 2), 2 + segment, side * (1 + segment));
+                for (int y = 0; y <= 4 + segment; y++) {
+                    world.setBlockState(shard.up(y), y >= 3 ? frame : wall, HushStructureFeatureSupport.GEN_FLAGS);
                 }
             }
         }
 
-        HushStructureFeatureSupport.placeLootChest(world, center.add(-15, 1, 0), Direction.EAST, "chests/echo_monolith");
-        HushStructureFeatureSupport.placeLootChest(world, center.add(15, 2, 0), Direction.WEST, "chests/echo_monolith");
-        world.setBlockState(center.add(-7, 1, 0), VeilreachBlocks.STARLIGHT_CACHE.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
-        world.setBlockState(center.add(7, 1, 0), VeilreachBlocks.STARLIGHT_CACHE.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        HushStructureFeatureSupport.placeLootChest(world, center.add(-6, 1, 0), Direction.EAST, "chests/echo_monolith");
+        HushStructureFeatureSupport.placeLootChest(world, center.add(6, 1, 0), Direction.WEST, "chests/echo_monolith");
+        world.setBlockState(center.add(-3, 1, 0), VeilreachBlocks.STARLIGHT_CACHE.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
+        world.setBlockState(center.add(3, 1, 0), VeilreachBlocks.STARLIGHT_CACHE.getDefaultState(), HushStructureFeatureSupport.GEN_FLAGS);
         return true;
     }
 
