@@ -25,6 +25,7 @@ public abstract class AbstractHoverVehicleEntity extends AbstractArmedVehicleEnt
         tickPilotInputWindow();
 
         if (!getEntityWorld().isClient()) {
+            syncSeatAssignmentsServer();
             tickVehicleSystemsServer();
         }
 

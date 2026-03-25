@@ -172,6 +172,63 @@
       }
     ]
   },
+  "vehicle.rift_gunship_startup": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_gunship_startup",
+        "volume": 0.92
+      }
+    ]
+  },
+  "vehicle.rift_gunship_loop": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_gunship_loop",
+        "stream": true,
+        "volume": 0.74
+      }
+    ]
+  },
+  "vehicle.rift_gunship_rocket": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_gunship_rocket",
+        "volume": 0.92
+      }
+    ]
+  },
+  "vehicle.rift_gunship_cannon": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_gunship_cannon",
+        "volume": 0.84
+      }
+    ]
+  },
+  "vehicle.rift_gunship_countermeasure": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_gunship_countermeasure",
+        "volume": 0.88
+      }
+    ]
+  },
+  "vehicle.rift_gunship_hit": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_gunship_hit",
+        "volume": 0.82
+      }
+    ]
+  },
+  "vehicle.rift_gunship_explosion": {
+    "sounds": [
+      {
+        "name": "veilreach:vehicle/rift_gunship_explosion",
+        "volume": 1.0
+      }
+    ]
+  },
   "vehicle.rift_siege_hum": {
     "sounds": [
       {

@@ -15,7 +15,7 @@ public final class VeilreachNetworking {
         ServerPlayNetworking.registerGlobalReceiver(LittleBirdActionPayload.ID, (payload, context) -> {
             context.server().execute(() -> {
                 Entity vehicle = context.player().getVehicle();
-                if (!(vehicle instanceof AbstractArmedVehicleEntity armedVehicle) || armedVehicle.getControllingPassenger() != context.player()) {
+                if (!(vehicle instanceof AbstractArmedVehicleEntity armedVehicle) || !armedVehicle.hasPassenger(context.player())) {
                     return;
                 }
                 armedVehicle.handleVehicleAction(context.player(), payload);

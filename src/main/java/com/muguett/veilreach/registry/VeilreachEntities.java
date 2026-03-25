@@ -15,6 +15,9 @@ import com.muguett.veilreach.entity.MolotovEntity;
 import com.muguett.veilreach.entity.MoonfallenKnightEntity;
 import com.muguett.veilreach.entity.MirrorStagEntity;
 import com.muguett.veilreach.entity.RiftPulseBoltEntity;
+import com.muguett.veilreach.entity.RiftGunshipEntity;
+import com.muguett.veilreach.entity.RiftGunshipRocketEntity;
+import com.muguett.veilreach.entity.RiftGunshipRoundEntity;
 import com.muguett.veilreach.entity.RiftSiegePlatformEntity;
 import com.muguett.veilreach.entity.RiftSiegeShellEntity;
 import com.muguett.veilreach.entity.RiftSkimmerEntity;
@@ -57,10 +60,16 @@ public final class VeilreachEntities {
             EntityType.Builder.<LittleBirdBombEntity>create(LittleBirdBombEntity::new, SpawnGroup.MISC).dimensions(0.34F, 0.34F).maxTrackingRange(10).trackingTickInterval(1));
     public static final EntityType<RiftSkimmerEntity> RIFT_SKIMMER = register("rift_skimmer",
             EntityType.Builder.<RiftSkimmerEntity>create(RiftSkimmerEntity::new, SpawnGroup.MISC).dimensions(1.8F, 0.95F).maxTrackingRange(16).trackingTickInterval(1));
+    public static final EntityType<RiftGunshipEntity> RIFT_GUNSHIP = register("rift_gunship",
+            EntityType.Builder.<RiftGunshipEntity>create(RiftGunshipEntity::new, SpawnGroup.MISC).dimensions(2.8F, 1.55F).maxTrackingRange(16).trackingTickInterval(1));
     public static final EntityType<RiftSiegePlatformEntity> RIFT_SIEGE_PLATFORM = register("rift_siege_platform",
             EntityType.Builder.<RiftSiegePlatformEntity>create(RiftSiegePlatformEntity::new, SpawnGroup.MISC).dimensions(2.45F, 1.45F).maxTrackingRange(16).trackingTickInterval(1));
     public static final EntityType<RiftPulseBoltEntity> RIFT_PULSE_BOLT = register("rift_pulse_bolt",
             EntityType.Builder.<RiftPulseBoltEntity>create(RiftPulseBoltEntity::new, SpawnGroup.MISC).dimensions(0.2F, 0.2F).maxTrackingRange(10).trackingTickInterval(1));
+    public static final EntityType<RiftGunshipRocketEntity> RIFT_GUNSHIP_ROCKET = register("rift_gunship_rocket",
+            EntityType.Builder.<RiftGunshipRocketEntity>create(RiftGunshipRocketEntity::new, SpawnGroup.MISC).dimensions(0.28F, 0.28F).maxTrackingRange(10).trackingTickInterval(1));
+    public static final EntityType<RiftGunshipRoundEntity> RIFT_GUNSHIP_ROUND = register("rift_gunship_round",
+            EntityType.Builder.<RiftGunshipRoundEntity>create(RiftGunshipRoundEntity::new, SpawnGroup.MISC).dimensions(0.2F, 0.2F).maxTrackingRange(10).trackingTickInterval(1));
     public static final EntityType<RiftSiegeShellEntity> RIFT_SIEGE_SHELL = register("rift_siege_shell",
             EntityType.Builder.<RiftSiegeShellEntity>create(RiftSiegeShellEntity::new, SpawnGroup.MISC).dimensions(0.3F, 0.3F).maxTrackingRange(10).trackingTickInterval(1));
     public static final EntityType<RiftSuppressorChargeEntity> RIFT_SUPPRESSOR_CHARGE = register("rift_suppressor_charge",

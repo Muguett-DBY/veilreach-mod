@@ -40,6 +40,7 @@ public final class VeilreachItemGroups {
                     entries.add(VeilreachItems.MOLOTOV);
                     entries.add(VeilreachItems.LITTLE_BIRD);
                     entries.add(VeilreachItems.RIFT_SKIMMER);
+                    entries.add(VeilreachItems.RIFT_GUNSHIP);
                     entries.add(VeilreachItems.RIFT_SIEGE_PLATFORM);
                     entries.add(VeilreachItems.MIRROR_HELMET);
                     entries.add(VeilreachItems.MIRROR_CHESTPLATE);

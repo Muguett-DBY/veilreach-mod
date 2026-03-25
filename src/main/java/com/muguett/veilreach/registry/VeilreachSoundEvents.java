@@ -28,6 +28,13 @@ public final class VeilreachSoundEvents {
     public static final SoundEvent RIFT_SKIMMER_LOOP = register("vehicle.rift_skimmer_loop");
     public static final SoundEvent RIFT_SKIMMER_PULSE = register("vehicle.rift_skimmer_pulse");
     public static final SoundEvent RIFT_SKIMMER_EXPLOSION = register("vehicle.rift_skimmer_explosion");
+    public static final SoundEvent RIFT_GUNSHIP_STARTUP = register("vehicle.rift_gunship_startup");
+    public static final SoundEvent RIFT_GUNSHIP_LOOP = register("vehicle.rift_gunship_loop");
+    public static final SoundEvent RIFT_GUNSHIP_ROCKET = register("vehicle.rift_gunship_rocket");
+    public static final SoundEvent RIFT_GUNSHIP_CANNON = register("vehicle.rift_gunship_cannon");
+    public static final SoundEvent RIFT_GUNSHIP_COUNTERMEASURE = register("vehicle.rift_gunship_countermeasure");
+    public static final SoundEvent RIFT_GUNSHIP_HIT = register("vehicle.rift_gunship_hit");
+    public static final SoundEvent RIFT_GUNSHIP_EXPLOSION = register("vehicle.rift_gunship_explosion");
     public static final SoundEvent RIFT_SIEGE_HUM = register("vehicle.rift_siege_hum");
     public static final SoundEvent RIFT_SIEGE_CANNON = register("vehicle.rift_siege_cannon");
     public static final SoundEvent RIFT_SIEGE_SUPPRESS = register("vehicle.rift_siege_suppress");

@@ -2,6 +2,8 @@ package com.muguett.veilreach.entity;
 
 import com.muguett.veilreach.entity.vehicle.AbstractArmedVehicleEntity;
 import com.muguett.veilreach.entity.vehicle.VehicleHudState;
+import com.muguett.veilreach.entity.vehicle.VehicleSeatDefinition;
+import com.muguett.veilreach.entity.vehicle.VehicleSeatRole;
 import com.muguett.veilreach.entity.vehicle.VehicleWeaponMount;
 import com.muguett.veilreach.network.LittleBirdActionPayload;
 import com.muguett.veilreach.registry.VeilreachItems;
@@ -89,6 +91,9 @@ public final class LittleBirdEntity extends AbstractArmedVehicleEntity {
     private static final double LOCK_RANGE = 112.0D;
     private static final double LOCK_KEEP_RANGE = 148.0D;
     private static final double LOCK_MIN_ALIGNMENT = 0.84D;
+    private static final List<VehicleSeatDefinition> SEAT_DEFINITIONS = List.of(
+            new VehicleSeatDefinition(VehicleSeatRole.PILOT, new Vec3d(0.0D, 0.98D, -1.18D), new Vec3d(1.8D, 0.0D, 0.7D), true)
+    );
 
     private float lastRotorAngle;
     private float rotorAngle;
@@ -136,6 +141,7 @@ public final class LittleBirdEntity extends AbstractArmedVehicleEntity {
         tickPilotInputWindow();
 
         if (!getEntityWorld().isClient()) {
+            syncSeatAssignmentsServer();
             tickWeaponState();
         }
 
@@ -743,11 +749,6 @@ public final class LittleBirdEntity extends AbstractArmedVehicleEntity {
     }
 
     @Override
-    public Vec3d getPassengerAnchorOffset(Entity passenger) {
-        return new Vec3d(0.0D, 0.94D + (passenger.getHeight() * 0.02D), -1.18D);
-    }
-
-    @Override
     public float getMaxHealthAmount() {
         return MAX_HEALTH;
     }
@@ -759,6 +760,7 @@ public final class LittleBirdEntity extends AbstractArmedVehicleEntity {
 
     @Override
     public VehicleHudState createHudState(PlayerEntity viewer) {
+        Text seatLabel = Text.translatable(getSeatRole(viewer).translationKey());
         Entity lockedTarget = getLockedTarget();
         int lockCount = getLockedTargetCount();
         Text targetText = lockCount <= 0 || lockedTarget == null
@@ -768,6 +770,7 @@ public final class LittleBirdEntity extends AbstractArmedVehicleEntity {
 
         return new VehicleHudState(
                 Text.translatable("entity.veilreach.little_bird"),
+                seatLabel,
                 getHealthAmount(),
                 MAX_HEALTH,
                 getVelocity().horizontalLength() * 20.0D,
@@ -784,8 +787,14 @@ public final class LittleBirdEntity extends AbstractArmedVehicleEntity {
                 0xFFFF8C72,
                 lockCount > 0,
                 isDamaged(),
-                isCriticalDamage()
+                isCriticalDamage(),
+                usesFlightHud(viewer)
         );
+    }
+
+    @Override
+    protected List<VehicleSeatDefinition> getSeatDefinitions() {
+        return SEAT_DEFINITIONS;
     }
 
     @Override

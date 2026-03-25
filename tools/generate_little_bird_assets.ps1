@@ -239,6 +239,23 @@ function Create-RiftSkimmerItem([string]$path) {
     Save-Png $bmp $path
 }
 
+function Create-RiftGunshipItem([string]$path) {
+    $bmp = New-Bitmap 32 32
+    $body = Color-Hex "#31495d"
+    $glass = Color-Hex "#9fe7f7"
+    $accent = Color-Hex "#d6be86"
+    $flare = Color-Hex "#89d6ff"
+    Fill-Rect $bmp 7 12 18 7 $body
+    Fill-Rect $bmp 10 8 12 4 $glass
+    Fill-Rect $bmp 4 13 4 5 $body
+    Fill-Rect $bmp 24 13 4 5 $body
+    Fill-Rect $bmp 11 19 10 2 $accent
+    Draw-Line $bmp 16 6 5 3 $flare
+    Draw-Line $bmp 16 6 27 3 $flare
+    Draw-Line $bmp 16 19 16 26 $accent
+    Save-Png $bmp $path
+}
+
 function Create-RiftSiegeItem([string]$path) {
     $bmp = New-Bitmap 32 32
     $body = Color-Hex "#4e515f"
@@ -291,6 +308,42 @@ function Create-RiftSkimmerEntityTexture([string]$path) {
     Save-Png $bmp $path
 }
 
+function Create-RiftGunshipEntityTexture([string]$path) {
+    $bmp = New-Bitmap 128 96
+    $body = Color-Hex "#32485a"
+    $panel = Color-Hex "#4f6678"
+    $glass = Color-Hex "#9fe5f3"
+    $accent = Color-Hex "#d6be87"
+    $glow = Color-Hex "#90d9ff"
+    $shadow = Color-Hex "#1d2831"
+
+    Fill-Rect $bmp 0 0 128 96 $shadow
+    Fill-Rect $bmp 6 8 42 18 $body
+    Fill-Rect $bmp 50 8 24 16 $glass
+    Fill-Rect $bmp 76 8 28 16 $panel
+    Fill-Rect $bmp 6 30 40 14 $panel
+    Fill-Rect $bmp 50 30 24 14 $body
+    Fill-Rect $bmp 78 30 26 14 $panel
+    Fill-Rect $bmp 8 48 32 10 $body
+    Fill-Rect $bmp 42 48 28 10 $glow
+    Fill-Rect $bmp 72 48 34 10 $panel
+    Fill-Rect $bmp 8 64 26 6 $accent
+    Fill-Rect $bmp 36 64 22 6 $body
+    Fill-Rect $bmp 60 64 24 6 $accent
+    Fill-Rect $bmp 86 64 20 6 $panel
+    Fill-Rect $bmp 90 18 28 8 $accent
+    Fill-Rect $bmp 92 32 26 8 $glow
+    Fill-Rect $bmp 92 44 20 8 $panel
+    Draw-Line $bmp 12 16 42 16 $accent
+    Draw-Line $bmp 54 16 72 16 $accent
+    Draw-Line $bmp 78 16 100 16 $accent
+    Draw-Line $bmp 10 36 44 36 $glow
+    Draw-Line $bmp 54 36 102 36 $accent
+    Draw-Line $bmp 10 54 102 54 $glow
+    Draw-Line $bmp 12 67 104 67 $accent
+    Save-Png $bmp $path
+}
+
 function Create-RiftSiegeEntityTexture([string]$path) {
     $bmp = New-Bitmap 80 48
     $body = Color-Hex "#494c5a"
@@ -327,11 +380,15 @@ Create-BombItem (Join-Path $itemDir "little_bird_bomblet.png") $true
 Create-LittleBirdEntityTexture (Join-Path $entityDir "little_bird.png")
 Create-RocketEntityTexture (Join-Path $entityDir "little_bird_rocket.png")
 Create-RiftSkimmerItem (Join-Path $itemDir "rift_skimmer.png")
+Create-RiftGunshipItem (Join-Path $itemDir "rift_gunship.png")
 Create-RiftSiegeItem (Join-Path $itemDir "rift_siege_platform.png")
 Create-PulseBoltItem (Join-Path $itemDir "rift_pulse_bolt.png")
+Create-ShellItem (Join-Path $itemDir "rift_gunship_rocket.png") (Color-Hex "#5f6f80") (Color-Hex "#d4ba83")
+Create-ShellItem (Join-Path $itemDir "rift_gunship_round.png") (Color-Hex "#7b8794") (Color-Hex "#9fe7ff")
 Create-ShellItem (Join-Path $itemDir "rift_siege_shell.png") (Color-Hex "#5a6070") (Color-Hex "#d8c39f")
 Create-ShellItem (Join-Path $itemDir "rift_suppressor_charge.png") (Color-Hex "#6f4db3") (Color-Hex "#c8a1ff")
 Create-RiftSkimmerEntityTexture (Join-Path $entityDir "rift_skimmer.png")
+Create-RiftGunshipEntityTexture (Join-Path $entityDir "rift_gunship.png")
 Create-RiftSiegeEntityTexture (Join-Path $entityDir "rift_siege_platform.png")
 Create-ServiceBlock (Join-Path $blockDir "vehicle_repair_pad.png") (Color-Hex "#1c3842") (Color-Hex "#82f0bc") (Color-Hex "#2b5f66")
 Create-ServiceBlock (Join-Path $blockDir "vehicle_rearm_node.png") (Color-Hex "#2b2348") (Color-Hex "#c59aff") (Color-Hex "#4b3f77")

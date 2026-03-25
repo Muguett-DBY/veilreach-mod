@@ -6,6 +6,7 @@ import java.util.List;
 
 public record VehicleHudState(
         Text callsign,
+        Text seatLabel,
         float health,
         float maxHealth,
         double speed,
@@ -18,6 +19,7 @@ public record VehicleHudState(
         int warningColor,
         boolean lockActive,
         boolean damaged,
-        boolean critical
+        boolean critical,
+        boolean showFlightSymbology
 ) {
 }

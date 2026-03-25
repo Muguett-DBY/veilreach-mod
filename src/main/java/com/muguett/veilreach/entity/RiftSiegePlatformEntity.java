@@ -2,6 +2,8 @@ package com.muguett.veilreach.entity;
 
 import com.muguett.veilreach.entity.vehicle.AbstractHoverVehicleEntity;
 import com.muguett.veilreach.entity.vehicle.VehicleHudState;
+import com.muguett.veilreach.entity.vehicle.VehicleSeatDefinition;
+import com.muguett.veilreach.entity.vehicle.VehicleSeatRole;
 import com.muguett.veilreach.entity.vehicle.VehicleWeaponMount;
 import com.muguett.veilreach.network.LittleBirdActionPayload;
 import com.muguett.veilreach.registry.VeilreachItems;
@@ -41,6 +43,9 @@ public final class RiftSiegePlatformEntity extends AbstractHoverVehicleEntity {
     private static final int MAIN_RELOAD_TICKS = 96;
     private static final int SUPPRESS_COOLDOWN_TICKS = 10;
     private static final int SUPPRESS_RELOAD_TICKS = 84;
+    private static final List<VehicleSeatDefinition> SEAT_DEFINITIONS = List.of(
+            new VehicleSeatDefinition(VehicleSeatRole.PILOT, new Vec3d(0.0D, 1.02D, -0.3D), new Vec3d(1.7D, 0.0D, 0.8D), true)
+    );
 
     public RiftSiegePlatformEntity(EntityType<? extends RiftSiegePlatformEntity> entityType, World world) {
         super(entityType, world);
@@ -163,6 +168,7 @@ public final class RiftSiegePlatformEntity extends AbstractHoverVehicleEntity {
     public VehicleHudState createHudState(PlayerEntity viewer) {
         return new VehicleHudState(
                 Text.translatable("entity.veilreach.rift_siege_platform"),
+                Text.translatable(getSeatRole(viewer).translationKey()),
                 getHealthAmount(),
                 MAX_HEALTH,
                 getVelocity().horizontalLength() * 20.0D,
@@ -178,7 +184,8 @@ public final class RiftSiegePlatformEntity extends AbstractHoverVehicleEntity {
                 0xFFFF8C72,
                 false,
                 isDamaged(),
-                isCriticalDamage()
+                isCriticalDamage(),
+                usesFlightHud(viewer)
         );
     }
 
@@ -195,11 +202,6 @@ public final class RiftSiegePlatformEntity extends AbstractHoverVehicleEntity {
     @Override
     public float getLoopSoundPitch() {
         return 0.78F + (getThrottle() * 0.18F);
-    }
-
-    @Override
-    public Vec3d getPassengerAnchorOffset(net.minecraft.entity.Entity passenger) {
-        return new Vec3d(0.0D, 1.0D + (passenger.getHeight() * 0.02D), -0.3D);
     }
 
     @Override
@@ -345,6 +347,11 @@ public final class RiftSiegePlatformEntity extends AbstractHoverVehicleEntity {
     @Override
     public ItemStack getPickBlockStack() {
         return new ItemStack(VeilreachItems.RIFT_SIEGE_PLATFORM);
+    }
+
+    @Override
+    protected List<VehicleSeatDefinition> getSeatDefinitions() {
+        return SEAT_DEFINITIONS;
     }
 
     @Override

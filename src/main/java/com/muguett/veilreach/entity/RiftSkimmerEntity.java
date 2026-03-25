@@ -2,6 +2,8 @@ package com.muguett.veilreach.entity;
 
 import com.muguett.veilreach.entity.vehicle.AbstractHoverVehicleEntity;
 import com.muguett.veilreach.entity.vehicle.VehicleHudState;
+import com.muguett.veilreach.entity.vehicle.VehicleSeatDefinition;
+import com.muguett.veilreach.entity.vehicle.VehicleSeatRole;
 import com.muguett.veilreach.entity.vehicle.VehicleWeaponMount;
 import com.muguett.veilreach.network.LittleBirdActionPayload;
 import com.muguett.veilreach.registry.VeilreachItems;
@@ -35,6 +37,9 @@ public final class RiftSkimmerEntity extends AbstractHoverVehicleEntity {
     public static final int MAX_PULSE_AMMO = 40;
     private static final int PRIMARY_COOLDOWN_TICKS = 3;
     private static final int PRIMARY_RELOAD_TICKS = 68;
+    private static final List<VehicleSeatDefinition> SEAT_DEFINITIONS = List.of(
+            new VehicleSeatDefinition(VehicleSeatRole.PILOT, new Vec3d(0.0D, 0.92D, -0.12D), new Vec3d(1.5D, 0.0D, 0.45D), true)
+    );
 
     public RiftSkimmerEntity(EntityType<? extends RiftSkimmerEntity> entityType, World world) {
         super(entityType, world);
@@ -118,6 +123,7 @@ public final class RiftSkimmerEntity extends AbstractHoverVehicleEntity {
     public VehicleHudState createHudState(PlayerEntity viewer) {
         return new VehicleHudState(
                 Text.translatable("entity.veilreach.rift_skimmer"),
+                Text.translatable(getSeatRole(viewer).translationKey()),
                 getHealthAmount(),
                 MAX_HEALTH,
                 getVelocity().horizontalLength() * 20.0D,
@@ -130,7 +136,8 @@ public final class RiftSkimmerEntity extends AbstractHoverVehicleEntity {
                 0xFFFFB37C,
                 false,
                 isDamaged(),
-                isCriticalDamage()
+                isCriticalDamage(),
+                usesFlightHud(viewer)
         );
     }
 
@@ -147,11 +154,6 @@ public final class RiftSkimmerEntity extends AbstractHoverVehicleEntity {
     @Override
     public float getLoopSoundPitch() {
         return 0.92F + (getThrottle() * 0.34F);
-    }
-
-    @Override
-    public Vec3d getPassengerAnchorOffset(net.minecraft.entity.Entity passenger) {
-        return new Vec3d(0.0D, 0.9D + (passenger.getHeight() * 0.02D), -0.12D);
     }
 
     @Override
@@ -287,6 +289,11 @@ public final class RiftSkimmerEntity extends AbstractHoverVehicleEntity {
     @Override
     public ItemStack getPickBlockStack() {
         return new ItemStack(VeilreachItems.RIFT_SKIMMER);
+    }
+
+    @Override
+    protected List<VehicleSeatDefinition> getSeatDefinitions() {
+        return SEAT_DEFINITIONS;
     }
 
     @Override

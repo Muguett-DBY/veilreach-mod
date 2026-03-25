@@ -11,6 +11,7 @@ public final class VeilreachEntityModelLayers {
     public static final EntityModelLayer LITTLE_BIRD = create("little_bird");
     public static final EntityModelLayer LITTLE_BIRD_ROCKET = create("little_bird_rocket");
     public static final EntityModelLayer RIFT_SKIMMER = create("rift_skimmer");
+    public static final EntityModelLayer RIFT_GUNSHIP = create("rift_gunship");
     public static final EntityModelLayer RIFT_SIEGE_PLATFORM = create("rift_siege_platform");
     public static final EntityModelLayer MOONFALLEN_KNIGHT = create("moonfallen_knight");
     public static final EntityModelLayer HUSH_SOVEREIGN = create("hush_sovereign");

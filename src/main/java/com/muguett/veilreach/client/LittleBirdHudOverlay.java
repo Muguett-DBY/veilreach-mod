@@ -5,10 +5,16 @@ import com.muguett.veilreach.entity.vehicle.VehicleHudState;
 import com.muguett.veilreach.entity.vehicle.VehicleWeaponMount;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class LittleBirdHudOverlay {
+    private static final int SAFE_MARGIN = 12;
+
     private LittleBirdHudOverlay() {
     }
 
@@ -18,7 +24,7 @@ public final class LittleBirdHudOverlay {
 
     private static void render(DrawContext drawContext) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null || !(client.player.getVehicle() instanceof AbstractArmedVehicleEntity vehicle) || vehicle.getControllingPassenger() != client.player) {
+        if (client.player == null || !(client.player.getVehicle() instanceof AbstractArmedVehicleEntity vehicle) || !vehicle.hasPassenger(client.player)) {
             return;
         }
 
@@ -31,10 +37,12 @@ public final class LittleBirdHudOverlay {
 
         if (firstPerson) {
             drawCockpitFrame(drawContext, width, height, hudState);
-            drawFlightSymbology(drawContext, cx, cy, vehicle, hudState);
+            if (hudState.showFlightSymbology()) {
+                drawFlightSymbology(drawContext, cx, cy, vehicle, hudState);
+            }
         }
-        drawReticle(drawContext, cx, cy, hudState.lockActive(), hudState.accentColor(), hudState.warningColor());
-        drawHealth(drawContext, client, hudState, width, height);
+        drawReticle(drawContext, cx, cy, hudState.lockActive(), hudState.accentColor(), hudState.warningColor(), hudState.showFlightSymbology());
+        drawHealth(drawContext, client, hudState, height);
         drawSystems(drawContext, client, hudState, width, height);
     }
 
@@ -46,6 +54,7 @@ public final class LittleBirdHudOverlay {
         int accent = state.critical() ? state.warningColor() : state.accentColor();
         int console = 0xB0101A24;
         int glow = (state.accentColor() & 0x00FFFFFF) | 0x66000000;
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
         drawContext.fill(0, 0, width, 18, glass);
         drawContext.fill(0, height - 84, width, height, 0x2A08121A);
@@ -71,7 +80,8 @@ public final class LittleBirdHudOverlay {
         drawContext.fill(cx - 74, consoleTop + 21, cx + 74, consoleTop + 24, accent);
         drawContext.fill(cx - 136, consoleTop + 34, cx - 62, consoleTop + 36, glow);
         drawContext.fill(cx + 62, consoleTop + 34, cx + 136, consoleTop + 36, glow);
-        drawContext.drawCenteredTextWithShadow(MinecraftClient.getInstance().textRenderer, state.callsign(), cx, consoleTop + 45, 0xE7F6FF);
+        drawContext.drawCenteredTextWithShadow(textRenderer, state.callsign(), cx, consoleTop + 43, 0xE7F6FF);
+        drawContext.drawCenteredTextWithShadow(textRenderer, state.seatLabel(), cx, consoleTop + 55, 0xFFF7E4B1);
     }
 
     private static void drawFlightSymbology(DrawContext drawContext, int cx, int cy, AbstractArmedVehicleEntity vehicle, VehicleHudState state) {
@@ -98,7 +108,7 @@ public final class LittleBirdHudOverlay {
         drawContext.fill(cx + 2, cy + 28, cx + 10, cy + 30, ladderColor);
     }
 
-    private static void drawReticle(DrawContext drawContext, int cx, int cy, boolean hasLock, int accentColor, int warningColor) {
+    private static void drawReticle(DrawContext drawContext, int cx, int cy, boolean hasLock, int accentColor, int warningColor, boolean flightSymbology) {
         int color = hasLock ? warningColor : accentColor;
         int accent = hasLock ? 0xFFF2C59F : 0xFFEFF9FF;
         drawContext.fill(cx - 1, cy - 14, cx + 1, cy - 4, color);
@@ -106,7 +116,13 @@ public final class LittleBirdHudOverlay {
         drawContext.fill(cx - 14, cy - 1, cx - 4, cy + 1, color);
         drawContext.fill(cx + 4, cy - 1, cx + 14, cy + 1, color);
         drawContext.fill(cx - 1, cy - 1, cx + 1, cy + 1, accent);
-        if (hasLock) {
+
+        if (!flightSymbology) {
+            drawContext.fill(cx - 20, cy - 20, cx - 18, cy + 20, accent);
+            drawContext.fill(cx + 18, cy - 20, cx + 20, cy + 20, accent);
+            drawContext.fill(cx - 20, cy - 20, cx + 20, cy - 18, accent);
+            drawContext.fill(cx - 20, cy + 18, cx + 20, cy + 20, accent);
+        } else if (hasLock) {
             drawContext.fill(cx - 34, cy - 18, cx - 30, cy - 2, accent);
             drawContext.fill(cx - 34, cy - 18, cx - 18, cy - 14, accent);
             drawContext.fill(cx + 30, cy - 18, cx + 34, cy - 2, accent);
@@ -118,38 +134,62 @@ public final class LittleBirdHudOverlay {
         }
     }
 
-    private static void drawHealth(DrawContext drawContext, MinecraftClient client, VehicleHudState state, int width, int height) {
-        int x = 16;
-        int y = height - 52;
+    private static void drawHealth(DrawContext drawContext, MinecraftClient client, VehicleHudState state, int height) {
+        int x = SAFE_MARGIN + 4;
+        int y = height - 58;
         int barWidth = 138;
         float ratio = Math.max(0.0F, Math.min(1.0F, state.health() / state.maxHealth()));
         int fill = Math.round(barWidth * ratio);
         int fillColor = state.critical() ? 0xFFE05D51 : state.damaged() ? 0xFFE9B36F : 0xFF9AE3B8;
-        drawContext.fill(x - 2, y - 14, x + barWidth + 2, y + 12, 0x7A08111B);
-        drawContext.drawTextWithShadow(client.textRenderer, state.callsign(), x, y - 12, 0xE7F6FF);
-        drawContext.fill(x, y, x + barWidth, y + 8, 0xFF203846);
-        drawContext.fill(x, y, x + fill, y + 8, fillColor);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.literal(Math.round(state.health()) + " / " + Math.round(state.maxHealth())), x + 2, y + 10, 0xE7F6FF);
+        drawContext.fill(x - 2, y - 18, x + barWidth + 2, y + 14, 0x7A08111B);
+        drawContext.drawTextWithShadow(client.textRenderer, state.callsign(), x, y - 16, 0xE7F6FF);
+        drawContext.drawTextWithShadow(client.textRenderer, state.seatLabel(), x, y - 6, 0xFFF7E4B1);
+        drawContext.fill(x, y + 6, x + barWidth, y + 14, 0xFF203846);
+        drawContext.fill(x, y + 6, x + fill, y + 14, fillColor);
+        drawContext.drawTextWithShadow(client.textRenderer, Text.literal(Math.round(state.health()) + " / " + Math.round(state.maxHealth())), x + 2, y + 16, 0xE7F6FF);
     }
 
     private static void drawSystems(DrawContext drawContext, MinecraftClient client, VehicleHudState state, int width, int height) {
-        int panelWidth = 178;
-        int x = width - panelWidth - 16;
-        int y = height - 108;
-        drawContext.fill(x - 2, y - 14, x + panelWidth + 2, y + 70, 0x7A08111B);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.vehicle.systems"), x, y - 12, 0xFFF7E4B1);
+        TextRenderer textRenderer = client.textRenderer;
+        int panelWidth = Math.max(162, Math.min(228, width / 4));
+        int textWidth = panelWidth - 12;
+        int x = width - panelWidth - SAFE_MARGIN;
 
-        int row = 0;
+        List<Text> mountLines = new ArrayList<>();
         for (VehicleWeaponMount mount : state.mounts()) {
-            drawContext.drawTextWithShadow(client.textRenderer, formatMountStatus(mount), x, y + (row * 12), mount.tintColor());
-            row++;
+            mountLines.add(fitText(textRenderer, formatMountStatus(mount), textWidth));
         }
 
-        drawContext.drawTextWithShadow(client.textRenderer, state.targetText(), x, y + 40, state.lockActive() ? state.warningColor() : 0xBBD8E8);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.literal(String.format("SPD %.1f", state.speed())), x, y + 52, 0xBBD8E8);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.literal("ALT " + state.altitude()), x + 76, y + 52, 0xBBD8E8);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.literal("THR " + Math.round(state.throttle() * 100.0F) + "%"), x + 76, y + 40, 0xBBD8E8);
-        drawContext.drawTextWithShadow(client.textRenderer, state.hintText(), x, y + 64, 0xFFE0BE7A);
+        List<Text> hintLines = wrapHintLines(textRenderer, state.hintText(), textWidth, 2);
+        Text targetLine = fitText(textRenderer, state.targetText(), textWidth);
+        Text metricsLeft = fitText(textRenderer, Text.literal(String.format("SPD %.1f  ALT %s", state.speed(), state.altitude())), textWidth);
+        Text metricsRight = fitText(textRenderer, Text.literal("THR " + Math.round(state.throttle() * 100.0F) + "%"), textWidth);
+
+        int lineHeight = 10;
+        int panelHeight = 18 + 12 + (mountLines.size() * lineHeight) + 10 + 10 + 10 + 10 + (hintLines.size() * lineHeight) + 8;
+        int y = Math.max(SAFE_MARGIN, height - panelHeight - SAFE_MARGIN);
+
+        drawContext.fill(x - 2, y - 2, x + panelWidth + 2, y + panelHeight, 0x7A08111B);
+        drawContext.drawTextWithShadow(textRenderer, Text.translatable("hud.veilreach.vehicle.systems"), x, y, 0xFFF7E4B1);
+        drawContext.drawTextWithShadow(textRenderer, state.seatLabel(), x + panelWidth - textRenderer.getWidth(state.seatLabel()), y, 0xFFE7F6FF);
+
+        int cursorY = y + 12;
+        for (int index = 0; index < mountLines.size(); index++) {
+            drawContext.drawTextWithShadow(textRenderer, mountLines.get(index), x, cursorY, state.mounts().get(index).tintColor());
+            cursorY += lineHeight;
+        }
+
+        cursorY += 2;
+        drawContext.drawTextWithShadow(textRenderer, targetLine, x, cursorY, state.lockActive() ? state.warningColor() : 0xBBD8E8);
+        cursorY += lineHeight;
+        drawContext.drawTextWithShadow(textRenderer, metricsLeft, x, cursorY, 0xBBD8E8);
+        cursorY += lineHeight;
+        drawContext.drawTextWithShadow(textRenderer, metricsRight, x, cursorY, 0xBBD8E8);
+        cursorY += lineHeight;
+        for (Text line : hintLines) {
+            drawContext.drawTextWithShadow(textRenderer, line, x, cursorY, 0xFFE0BE7A);
+            cursorY += lineHeight;
+        }
     }
 
     private static Text formatMountStatus(VehicleWeaponMount mount) {
@@ -160,5 +200,43 @@ public final class LittleBirdHudOverlay {
             return mount.label().copy().append(Text.literal(": cooldown %.1fs (%s/%s)".formatted(mount.cooldownTicks() / 20.0F, mount.ammo(), mount.maxAmmo())));
         }
         return mount.label().copy().append(Text.literal(": %s / %s".formatted(mount.ammo(), mount.maxAmmo())));
+    }
+
+    private static List<Text> wrapHintLines(TextRenderer textRenderer, Text hintText, int maxWidth, int maxLines) {
+        String[] segments = hintText.getString().split(" / ");
+        List<Text> lines = new ArrayList<>();
+        String current = "";
+        for (String segment : segments) {
+            String candidate = current.isEmpty() ? segment : current + " / " + segment;
+            if (textRenderer.getWidth(candidate) <= maxWidth) {
+                current = candidate;
+                continue;
+            }
+            if (!current.isEmpty()) {
+                lines.add(fitText(textRenderer, Text.literal(current), maxWidth));
+                if (lines.size() >= maxLines) {
+                    return lines;
+                }
+            }
+            current = segment;
+        }
+
+        if (!current.isEmpty() && lines.size() < maxLines) {
+            lines.add(fitText(textRenderer, Text.literal(current), maxWidth));
+        }
+        return lines;
+    }
+
+    private static Text fitText(TextRenderer textRenderer, Text text, int maxWidth) {
+        String raw = text.getString();
+        if (textRenderer.getWidth(raw) <= maxWidth) {
+            return Text.literal(raw);
+        }
+
+        String truncated = raw;
+        while (truncated.length() > 1 && textRenderer.getWidth(truncated + "...") > maxWidth) {
+            truncated = truncated.substring(0, truncated.length() - 1);
+        }
+        return Text.literal(truncated + "...");
     }
 }

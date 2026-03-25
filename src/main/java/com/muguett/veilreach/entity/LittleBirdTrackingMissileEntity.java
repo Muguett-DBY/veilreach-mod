@@ -3,6 +3,7 @@ package com.muguett.veilreach.entity;
 import com.muguett.veilreach.registry.VeilreachEntities;
 import com.muguett.veilreach.registry.VeilreachItems;
 import com.muguett.veilreach.registry.VeilreachSoundEvents;
+import com.muguett.veilreach.entity.vehicle.AbstractVehicleEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -49,7 +50,11 @@ public final class LittleBirdTrackingMissileEntity extends ThrownItemEntity {
 
         Entity target = getTarget();
         if (target != null && target.isAlive()) {
-            homeTowards(target);
+            if (target instanceof AbstractVehicleEntity vehicle && vehicle.hasActiveCountermeasures()) {
+                targetId = -1;
+            } else {
+                homeTowards(target);
+            }
         }
 
         if (getEntityWorld().isClient()) {

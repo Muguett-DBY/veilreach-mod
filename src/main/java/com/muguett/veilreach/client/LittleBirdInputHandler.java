@@ -2,6 +2,7 @@ package com.muguett.veilreach.client;
 
 import com.muguett.veilreach.entity.vehicle.AbstractArmedVehicleEntity;
 import com.muguett.veilreach.entity.vehicle.AbstractVehicleEntity;
+import com.muguett.veilreach.entity.vehicle.VehicleSeatRole;
 import com.muguett.veilreach.network.LittleBirdActionPayload;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -72,23 +73,33 @@ public final class LittleBirdInputHandler {
             return;
         }
 
-        if (!(client.player.getVehicle() instanceof AbstractArmedVehicleEntity vehicle) || vehicle.getControllingPassenger() != client.player) {
+        if (!(client.player.getVehicle() instanceof AbstractArmedVehicleEntity vehicle) || !vehicle.hasPassenger(client.player)) {
             stopLoopSound(client);
             return;
         }
 
+        VehicleSeatRole seatRole = vehicle.getSeatRole(client.player);
         ensureLoopSound(client, vehicle);
         spawnLockIndicators(client, vehicle);
 
-        float forward = (client.options.forwardKey.isPressed() ? 1.0F : 0.0F) - (client.options.backKey.isPressed() ? 0.65F : 0.0F);
-        float turn = (client.options.rightKey.isPressed() ? 1.0F : 0.0F) - (client.options.leftKey.isPressed() ? 1.0F : 0.0F);
-        boolean ascend = client.options.jumpKey.isPressed();
-        boolean descend = DESCEND.isPressed();
-        vehicle.applyPilotInputs(forward, turn, ascend, descend, client.player.getYaw(), client.player.getPitch());
+        boolean pilotSeat = seatRole == VehicleSeatRole.PILOT;
+        float forward = pilotSeat ? (client.options.forwardKey.isPressed() ? 1.0F : 0.0F) - (client.options.backKey.isPressed() ? 0.65F : 0.0F) : 0.0F;
+        float turn = pilotSeat ? (client.options.rightKey.isPressed() ? 1.0F : 0.0F) - (client.options.leftKey.isPressed() ? 1.0F : 0.0F) : 0.0F;
+        boolean ascend = pilotSeat && client.options.jumpKey.isPressed();
+        boolean descend = pilotSeat && DESCEND.isPressed();
+        if (pilotSeat) {
+            vehicle.applyPilotInputs(forward, turn, ascend, descend, client.player.getYaw(), client.player.getPitch());
+        }
         ClientPlayNetworking.send(LittleBirdActionPayload.controls(forward, turn, ascend, descend, client.player.getYaw(), client.player.getPitch()));
 
-        while (FIRE_ROCKET.wasPressed()) {
-            ClientPlayNetworking.send(LittleBirdActionPayload.fireRocket(client.player.getYaw(), client.player.getPitch()));
+        if (seatRole == VehicleSeatRole.GUNNER) {
+            if (FIRE_ROCKET.isPressed()) {
+                ClientPlayNetworking.send(LittleBirdActionPayload.fireRocket(client.player.getYaw(), client.player.getPitch()));
+            }
+        } else {
+            while (FIRE_ROCKET.wasPressed()) {
+                ClientPlayNetworking.send(LittleBirdActionPayload.fireRocket(client.player.getYaw(), client.player.getPitch()));
+            }
         }
 
         while (DROP_BOMB.wasPressed()) {

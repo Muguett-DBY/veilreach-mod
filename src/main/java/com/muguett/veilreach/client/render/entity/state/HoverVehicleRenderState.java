@@ -6,6 +6,8 @@ public final class HoverVehicleRenderState extends EntityRenderState {
     public float bodyYaw;
     public float bodyPitch;
     public float bodyRoll;
+    public float turretYaw;
+    public float turretPitch;
     public float throttle;
     public float damageFlash;
     public boolean damaged;

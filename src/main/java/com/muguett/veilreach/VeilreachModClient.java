@@ -15,6 +15,7 @@ import com.muguett.veilreach.client.render.entity.LittleBirdRocketEntityRenderer
 import com.muguett.veilreach.client.render.entity.LittleBirdTrackingMissileEntityRenderer;
 import com.muguett.veilreach.client.render.entity.MoonfallenKnightEntityRenderer;
 import com.muguett.veilreach.client.render.entity.MirrorStagEntityRenderer;
+import com.muguett.veilreach.client.render.entity.RiftGunshipEntityRenderer;
 import com.muguett.veilreach.client.render.entity.RiftSiegePlatformEntityRenderer;
 import com.muguett.veilreach.client.render.entity.RiftSkimmerEntityRenderer;
 import com.muguett.veilreach.client.render.entity.VeilboundWatcherEntityRenderer;
@@ -27,6 +28,7 @@ import com.muguett.veilreach.client.render.entity.model.LittleBirdEntityModel;
 import com.muguett.veilreach.client.render.entity.model.LittleBirdRocketEntityModel;
 import com.muguett.veilreach.client.render.entity.model.MoonfallenKnightEntityModel;
 import com.muguett.veilreach.client.render.entity.model.MirrorStagEntityModel;
+import com.muguett.veilreach.client.render.entity.model.RiftGunshipEntityModel;
 import com.muguett.veilreach.client.render.entity.model.RiftSiegePlatformEntityModel;
 import com.muguett.veilreach.client.render.entity.model.RiftSkimmerEntityModel;
 import com.muguett.veilreach.client.render.entity.model.VeilboundWatcherEntityModel;
@@ -57,6 +59,7 @@ public final class VeilreachModClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.LITTLE_BIRD, LittleBirdEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.LITTLE_BIRD_ROCKET, LittleBirdRocketEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.RIFT_SKIMMER, RiftSkimmerEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.RIFT_GUNSHIP, RiftGunshipEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.RIFT_SIEGE_PLATFORM, RiftSiegePlatformEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.MOONFALLEN_KNIGHT, MoonfallenKnightEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.VEILBOUND_WATCHER, VeilboundWatcherEntityModel::getTexturedModelData);
@@ -71,8 +74,11 @@ public final class VeilreachModClient implements ClientModInitializer {
         EntityRendererRegistry.register(VeilreachEntities.LITTLE_BIRD_TRACKING_MISSILE, LittleBirdTrackingMissileEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.LITTLE_BIRD_BOMB, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.RIFT_SKIMMER, RiftSkimmerEntityRenderer::new);
+        EntityRendererRegistry.register(VeilreachEntities.RIFT_GUNSHIP, RiftGunshipEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.RIFT_SIEGE_PLATFORM, RiftSiegePlatformEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.RIFT_PULSE_BOLT, FlyingItemEntityRenderer::new);
+        EntityRendererRegistry.register(VeilreachEntities.RIFT_GUNSHIP_ROCKET, FlyingItemEntityRenderer::new);
+        EntityRendererRegistry.register(VeilreachEntities.RIFT_GUNSHIP_ROUND, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.RIFT_SIEGE_SHELL, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.RIFT_SUPPRESSOR_CHARGE, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.HUSHLING, HushlingEntityRenderer::new);

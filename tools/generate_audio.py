@@ -327,6 +327,78 @@ def make_rift_skimmer_explosion() -> np.ndarray:
     return pan_stereo(signal, 0.02)
 
 
+def make_rift_gunship_startup() -> np.ndarray:
+    duration = 1.7
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    hum = sine(96.0, duration) * np.linspace(0.05, 0.24, t.size, dtype=np.float32)
+    whine = sine(320.0, duration) * np.linspace(0.02, 0.14, t.size, dtype=np.float32)
+    air = noise(duration, 150, "pink") * np.linspace(0.03, 0.08, t.size, dtype=np.float32)
+    signal = apply_reverb(hum + whine + air, 0.05, 0.32, 3)
+    return pan_stereo(signal * envelope(signal.size, 0.01, 0.14), 0.05)
+
+
+def make_rift_gunship_loop() -> np.ndarray:
+    duration = 4.6
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    bass = sine(88.0, duration) * 0.22
+    mid = sine(176.0, duration, phase=0.2) * 0.11
+    shimmer = sine(412.0, duration) * (0.05 + 0.02 * np.sin(2 * math.pi * 0.7 * t))
+    air = noise(duration, 151, "pink") * 0.026
+    pulse = np.sin(2 * math.pi * 7.0 * t) * 0.03
+    signal = apply_reverb(bass + mid + shimmer + air + pulse, 0.08, 0.34, 3)
+    return pan_stereo(signal * envelope(signal.size, 0.02, 0.04), -0.04)
+
+
+def make_rift_gunship_rocket() -> np.ndarray:
+    duration = 0.58
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    burst = noise(duration, 152, "white") * np.linspace(0.4, 0.02, t.size, dtype=np.float32)
+    hiss = noise(duration, 153, "pink") * np.linspace(0.16, 0.03, t.size, dtype=np.float32)
+    thump = sine(80.0, duration) * envelope(t.size, 0.01, 0.58) * 0.26
+    signal = apply_reverb(burst + hiss + thump, 0.03, 0.25, 2)
+    return pan_stereo(signal, 0.12)
+
+
+def make_rift_gunship_cannon() -> np.ndarray:
+    duration = 0.34
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    crack = noise(duration, 154, "white") * np.linspace(0.28, 0.0, t.size, dtype=np.float32)
+    ping = sine(880.0, duration) * envelope(t.size, 0.01, 0.72) * 0.12
+    low = sine(132.0, duration) * np.linspace(0.12, 0.0, t.size, dtype=np.float32)
+    signal = apply_reverb(crack + ping + low, 0.02, 0.18, 2)
+    return pan_stereo(signal, 0.08)
+
+
+def make_rift_gunship_countermeasure() -> np.ndarray:
+    duration = 0.72
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    fizz = noise(duration, 155, "white") * np.linspace(0.16, 0.02, t.size, dtype=np.float32)
+    flare = layered_chime([659.25, 880.0], duration, 156, drift=0.012) * 0.08
+    air = noise(duration, 157, "pink") * np.linspace(0.08, 0.02, t.size, dtype=np.float32)
+    signal = apply_reverb(fizz + flare + air, 0.03, 0.28, 3)
+    return pan_stereo(signal, -0.02)
+
+
+def make_rift_gunship_hit() -> np.ndarray:
+    duration = 0.46
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    metal = noise(duration, 158, "white") * np.linspace(0.2, 0.0, t.size, dtype=np.float32)
+    ping = sine(540.0, duration) * envelope(t.size, 0.01, 0.84) * 0.16
+    low = sine(98.0, duration) * np.linspace(0.14, 0.01, t.size, dtype=np.float32)
+    signal = apply_reverb(metal + ping + low, 0.03, 0.22, 2)
+    return pan_stereo(signal, -0.06)
+
+
+def make_rift_gunship_explosion() -> np.ndarray:
+    duration = 1.9
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    boom = noise(duration, 159, "brown") * np.linspace(0.74, 0.0, t.size, dtype=np.float32)
+    debris = noise(duration, 160, "white") * envelope(t.size, 0.01, 0.82) * 0.18
+    sub = sine(38.0, duration) * np.linspace(0.44, 0.02, t.size, dtype=np.float32)
+    signal = apply_reverb(boom + debris + sub, 0.1, 0.56, 5)
+    return pan_stereo(signal, 0.0)
+
+
 def make_rift_siege_hum() -> np.ndarray:
     duration = 4.8
     t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
@@ -404,6 +476,13 @@ def main() -> None:
     write_ogg("vehicle/rift_skimmer_loop.ogg", make_rift_skimmer_loop())
     write_ogg("vehicle/rift_skimmer_pulse.ogg", make_rift_skimmer_pulse())
     write_ogg("vehicle/rift_skimmer_explosion.ogg", make_rift_skimmer_explosion())
+    write_ogg("vehicle/rift_gunship_startup.ogg", make_rift_gunship_startup())
+    write_ogg("vehicle/rift_gunship_loop.ogg", make_rift_gunship_loop())
+    write_ogg("vehicle/rift_gunship_rocket.ogg", make_rift_gunship_rocket())
+    write_ogg("vehicle/rift_gunship_cannon.ogg", make_rift_gunship_cannon())
+    write_ogg("vehicle/rift_gunship_countermeasure.ogg", make_rift_gunship_countermeasure())
+    write_ogg("vehicle/rift_gunship_hit.ogg", make_rift_gunship_hit())
+    write_ogg("vehicle/rift_gunship_explosion.ogg", make_rift_gunship_explosion())
     write_ogg("vehicle/rift_siege_hum.ogg", make_rift_siege_hum())
     write_ogg("vehicle/rift_siege_cannon.ogg", make_rift_siege_cannon())
     write_ogg("vehicle/rift_siege_suppress.ogg", make_rift_siege_suppress())
