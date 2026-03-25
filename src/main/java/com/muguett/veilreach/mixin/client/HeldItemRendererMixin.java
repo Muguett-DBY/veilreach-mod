@@ -17,10 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class HeldItemRendererMixin {
     @Inject(method = "renderItem", at = @At("HEAD"))
     private void veilreach$tiltGrenadesWhileUsing(net.minecraft.entity.LivingEntity entity, ItemStack item, ItemDisplayContext displayContext, MatrixStack matrices, OrderedRenderCommandQueue renderQueue, int light, CallbackInfo ci) {
-        if (!(entity instanceof AbstractClientPlayerEntity player) || !(item.getItem() instanceof ThrowableGrenadeItem) || !player.isUsingItem() || player.getActiveItem() != item) {
+        if (!(entity instanceof AbstractClientPlayerEntity player) || !(item.getItem() instanceof ThrowableGrenadeItem) || !player.isUsingItem()) {
             return;
         }
         if (displayContext != ItemDisplayContext.FIRST_PERSON_RIGHT_HAND && displayContext != ItemDisplayContext.FIRST_PERSON_LEFT_HAND) {
+            return;
+        }
+        if (!ItemStack.areItemsAndComponentsEqual(player.getActiveItem(), item)) {
             return;
         }
 
