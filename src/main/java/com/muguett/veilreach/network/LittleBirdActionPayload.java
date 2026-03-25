@@ -12,6 +12,7 @@ public record LittleBirdActionPayload(int action, float forward, float turn, boo
     public static final int LOCK_TRACKING = 3;
     public static final int FIRE_TRACKING = 4;
     public static final int CLEAR_TRACKING_LOCKS = 5;
+    public static final int SWITCH_SEAT = 6;
 
     public static final Id<LittleBirdActionPayload> ID = CustomPayload.id("little_bird_action");
     public static final PacketCodec<RegistryByteBuf, LittleBirdActionPayload> CODEC = PacketCodec.tuple(
@@ -54,6 +55,10 @@ public record LittleBirdActionPayload(int action, float forward, float turn, boo
 
     public static LittleBirdActionPayload clearTrackingLocks() {
         return new LittleBirdActionPayload(CLEAR_TRACKING_LOCKS, 0.0F, 0.0F, false, false, 0.0F, 0.0F);
+    }
+
+    public static LittleBirdActionPayload switchSeat() {
+        return new LittleBirdActionPayload(SWITCH_SEAT, 0.0F, 0.0F, false, false, 0.0F, 0.0F);
     }
 
     @Override

@@ -50,6 +50,12 @@ public final class LittleBirdInputHandler {
             GLFW.GLFW_KEY_X,
             VEHICLE_CATEGORY
     ));
+    private static final KeyBinding SWITCH_SEAT = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.veilreach.vehicle_switch_seat",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_H,
+            VEHICLE_CATEGORY
+    ));
     private static final KeyBinding DESCEND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.veilreach.little_bird_descend",
             InputUtil.Type.KEYSYM,
@@ -116,6 +122,10 @@ public final class LittleBirdInputHandler {
 
         while (CLEAR_TRACKING_LOCKS.wasPressed()) {
             ClientPlayNetworking.send(LittleBirdActionPayload.clearTrackingLocks());
+        }
+
+        while (SWITCH_SEAT.wasPressed()) {
+            ClientPlayNetworking.send(LittleBirdActionPayload.switchSeat());
         }
     }
 

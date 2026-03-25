@@ -8,6 +8,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -243,6 +244,41 @@ public abstract class AbstractVehicleEntity extends Entity {
             return null;
         }
         return getSeatDefinitions().get(seatIndex);
+    }
+
+    public final boolean switchSeat(Entity passenger) {
+        int currentSeatIndex = getSeatIndex(passenger);
+        if (currentSeatIndex < 0) {
+            return false;
+        }
+
+        int seatCount = Math.min(getSeatDefinitions().size(), MAX_TRACKED_SEATS);
+        if (seatCount <= 1) {
+            return false;
+        }
+
+        int targetSeatIndex = (currentSeatIndex + 1) % seatCount;
+        if (targetSeatIndex == currentSeatIndex) {
+            return false;
+        }
+
+        int targetOccupantId = getSeatOccupantId(targetSeatIndex);
+        if (targetOccupantId >= 0 && targetOccupantId != passenger.getId()) {
+            return false;
+        }
+
+        if (!(passenger instanceof ServerPlayerEntity player)) {
+            return false;
+        }
+
+        setSeatOccupantId(currentSeatIndex, -1);
+        passenger.stopRiding();
+        if (!player.startRiding(this, true, true)) {
+            setSeatOccupantId(currentSeatIndex, passenger.getId());
+            return false;
+        }
+        assignSeat(passenger, targetSeatIndex);
+        return true;
     }
 
     public final boolean usesFlightHud(@Nullable Entity passenger) {

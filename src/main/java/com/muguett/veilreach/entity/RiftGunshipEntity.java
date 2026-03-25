@@ -46,15 +46,15 @@ public final class RiftGunshipEntity extends AbstractHoverVehicleEntity {
     public static final float MAX_HEALTH = 420.0F;
     public static final int MAX_ROCKET_AMMO = 6;
     public static final int MAX_COUNTERMEASURE_AMMO = 4;
-    public static final int MAX_GUN_HEAT = 100;
+    public static final int MAX_GUN_HEAT = 140;
     private static final int ROCKET_COOLDOWN_TICKS = 2;
     private static final int ROCKET_RELOAD_TICKS = 88;
     private static final int COUNTERMEASURE_COOLDOWN_TICKS = 34;
     private static final int COUNTERMEASURE_RELOAD_TICKS = 112;
     private static final int COUNTERMEASURE_ACTIVE_TICKS = 44;
-    private static final int GUN_HEAT_PER_SHOT = 11;
-    private static final int GUN_COOLDOWN_TICKS = 2;
-    private static final int GUN_VENT_TICKS = 36;
+    private static final int GUN_HEAT_PER_SHOT = 8;
+    private static final int GUN_COOLDOWN_TICKS = 1;
+    private static final int GUN_VENT_TICKS = 30;
     private static final List<VehicleSeatDefinition> SEAT_DEFINITIONS = List.of(
             new VehicleSeatDefinition(VehicleSeatRole.PILOT, new Vec3d(0.0D, 1.02D, -0.86D), new Vec3d(1.9D, 0.0D, 0.8D), true),
             new VehicleSeatDefinition(VehicleSeatRole.GUNNER, new Vec3d(0.0D, 0.98D, 0.26D), new Vec3d(-1.9D, 0.0D, 0.8D), false)
@@ -198,6 +198,11 @@ public final class RiftGunshipEntity extends AbstractHoverVehicleEntity {
                     deployCountermeasures(player);
                 }
             }
+            case LittleBirdActionPayload.SWITCH_SEAT -> {
+                if (hasPassenger(player)) {
+                    switchSeat(player);
+                }
+            }
             default -> {
             }
         }
@@ -295,16 +300,16 @@ public final class RiftGunshipEntity extends AbstractHoverVehicleEntity {
             return;
         }
 
-        Vec3d aim = Vec3d.fromPolar(getTurretPitch(), getTurretYaw()).normalize();
+        Vec3d aim = Vec3d.fromPolar(aimPitch, aimYaw).normalize();
         Vec3d muzzle = new Vec3d(getX(), getY() + 0.92D, getZ()).add(aim.multiply(1.72D));
         RiftGunshipRoundEntity round = new RiftGunshipRoundEntity(serverWorld, gunner);
-        round.refreshPositionAndAngles(muzzle.x, muzzle.y, muzzle.z, getTurretYaw(), getTurretPitch());
-        round.setVelocity(aim.multiply(2.75D).add(getVelocity().multiply(0.52D)));
+        round.refreshPositionAndAngles(muzzle.x, muzzle.y, muzzle.z, aimYaw, aimPitch);
+        round.setVelocity(aim.multiply(3.35D).add(getVelocity().multiply(0.58D)));
         serverWorld.spawnEntity(round);
 
         serverWorld.playSound(null, getX(), getY(), getZ(), VeilreachSoundEvents.RIFT_GUNSHIP_CANNON, SoundCategory.HOSTILE, 0.72F, 1.08F + (serverWorld.random.nextFloat() * 0.06F));
-        serverWorld.spawnParticles(ParticleTypes.SMALL_FLAME, muzzle.x, muzzle.y, muzzle.z, 3, 0.03D, 0.03D, 0.03D, 0.002D);
-        serverWorld.spawnParticles(ParticleTypes.GLOW, muzzle.x, muzzle.y, muzzle.z, 4, 0.04D, 0.04D, 0.04D, 0.0D);
+        serverWorld.spawnParticles(ParticleTypes.SMALL_FLAME, muzzle.x, muzzle.y, muzzle.z, 5, 0.04D, 0.04D, 0.04D, 0.003D);
+        serverWorld.spawnParticles(ParticleTypes.GLOW, muzzle.x, muzzle.y, muzzle.z, 6, 0.05D, 0.05D, 0.05D, 0.0D);
 
         setGunHeat(Math.min(MAX_GUN_HEAT, getGunHeat() + GUN_HEAT_PER_SHOT));
         setGunCooldown(isCriticalDamage() ? GUN_COOLDOWN_TICKS + 1 : GUN_COOLDOWN_TICKS);
