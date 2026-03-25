@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -28,14 +29,15 @@ public final class LittleBirdHudOverlay {
         int cy = height / 2;
         boolean firstPerson = client.options.getPerspective().isFirstPerson();
         Entity lockedTarget = helicopter.getLockedTarget();
+        int lockCount = helicopter.getLockedTargetCount();
 
         if (firstPerson) {
             drawCockpitFrame(drawContext, width, height, helicopter);
             drawFlightSymbology(drawContext, cx, cy, helicopter);
         }
-        drawReticle(drawContext, cx, cy, lockedTarget != null);
+        drawReticle(drawContext, cx, cy, lockCount > 0);
         drawHealth(drawContext, client, helicopter, width, height);
-        drawSystems(drawContext, client, helicopter, width, height, lockedTarget);
+        drawSystems(drawContext, client, helicopter, width, height, lockedTarget, lockCount);
     }
 
     private static void drawCockpitFrame(DrawContext drawContext, int width, int height, LittleBirdEntity helicopter) {
@@ -136,7 +138,7 @@ public final class LittleBirdHudOverlay {
         drawContext.drawTextWithShadow(client.textRenderer, Text.literal(Math.round(helicopter.getHealthAmount()) + " / " + Math.round(LittleBirdEntity.MAX_HEALTH)), x + 2, y + 10, 0xE7F6FF);
     }
 
-    private static void drawSystems(DrawContext drawContext, MinecraftClient client, LittleBirdEntity helicopter, int width, int height, Entity lockedTarget) {
+    private static void drawSystems(DrawContext drawContext, MinecraftClient client, LittleBirdEntity helicopter, int width, int height, Entity lockedTarget, int lockCount) {
         int panelWidth = 150;
         int x = width - panelWidth - 16;
         int y = height - 90;
@@ -158,9 +160,7 @@ public final class LittleBirdHudOverlay {
                 : helicopter.getTrackingMissileCooldown() > 0
                 ? Text.translatable("hud.veilreach.little_bird.tracking_cooldown", String.format("%.1f", helicopter.getTrackingMissileCooldown() / 20.0F), helicopter.getTrackingMissileAmmo(), LittleBirdEntity.MAX_TRACKING_MISSILES)
                 : Text.translatable("hud.veilreach.little_bird.tracking", helicopter.getTrackingMissileAmmo(), LittleBirdEntity.MAX_TRACKING_MISSILES);
-        Text lockText = lockedTarget != null
-                ? Text.translatable("hud.veilreach.little_bird.locked", lockedTarget.getName(), Math.round(helicopter.distanceTo(lockedTarget)))
-                : Text.translatable("hud.veilreach.little_bird.lock_none");
+        Text lockText = buildLockText(helicopter, lockedTarget, lockCount);
 
         drawContext.drawTextWithShadow(client.textRenderer, rocketText, x, y + 2, 0xE7F6FF);
         drawContext.drawTextWithShadow(client.textRenderer, bombText, x, y + 14, 0xE7F6FF);
@@ -170,5 +170,15 @@ public final class LittleBirdHudOverlay {
         drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.altitude", Math.round(helicopter.getY())), x + 74, y + 50, 0xBBD8E8);
         drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.throttle", Math.round(helicopter.getThrottle() * 100.0F)), x + 74, y + 2, 0xBBD8E8);
         drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.fire_hint"), x + 74, y + 14, 0xFFE0BE7A);
+    }
+
+    private static Text buildLockText(LittleBirdEntity helicopter, Entity lockedTarget, int lockCount) {
+        if (lockCount <= 0 || lockedTarget == null) {
+            return Text.translatable("hud.veilreach.little_bird.lock_none");
+        }
+        MutableText base = Text.translatable("hud.veilreach.little_bird.locked_count", lockCount);
+        base.append("  ");
+        base.append(Text.translatable("hud.veilreach.little_bird.lock_primary", lockedTarget.getName(), Math.round(helicopter.distanceTo(lockedTarget))));
+        return base;
     }
 }

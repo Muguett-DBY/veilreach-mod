@@ -41,7 +41,17 @@ public final class LittleBirdEntity extends Entity {
     private static final TrackedData<Integer> TRACKING_MISSILE_AMMO = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> TRACKING_MISSILE_COOLDOWN = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> TRACKING_MISSILE_RELOAD = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> LOCKED_TARGET_ID = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    @SuppressWarnings("unchecked")
+    private static final TrackedData<Integer>[] LOCKED_TARGET_IDS = new TrackedData[] {
+            DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER),
+            DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER),
+            DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER),
+            DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER),
+            DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER),
+            DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER),
+            DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER),
+            DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER)
+    };
     private static final TrackedData<Float> THROTTLE = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> VISUAL_PITCH = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> VISUAL_ROLL = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -49,13 +59,13 @@ public final class LittleBirdEntity extends Entity {
     public static final float MAX_HEALTH = 320.0F;
     public static final int MAX_ROCKET_AMMO = 12;
     public static final int MAX_BOMB_AMMO = 3;
-    public static final int MAX_TRACKING_MISSILES = 4;
+    public static final int MAX_TRACKING_MISSILES = 8;
     private static final int ROCKET_COOLDOWN_TICKS = 1;
     private static final int ROCKET_RELOAD_TICKS = 112;
     private static final int BOMB_COOLDOWN_TICKS = 22;
     private static final int BOMB_RELOAD_TICKS = 150;
-    private static final int TRACKING_MISSILE_COOLDOWN_TICKS = 18;
-    private static final int TRACKING_MISSILE_RELOAD_TICKS = 180;
+    private static final int TRACKING_MISSILE_COOLDOWN_TICKS = 1;
+    private static final int TRACKING_MISSILE_RELOAD_TICKS = 120;
     private static final float FORWARD_ACCELERATION = 0.135F;
     private static final float STRAFE_ACCELERATION = 0.11F;
     private static final float YAW_FOLLOW_RATE = 10.5F;
@@ -93,6 +103,9 @@ public final class LittleBirdEntity extends Entity {
     private int pendingRocketSalvo;
     private float rocketSalvoYaw;
     private float rocketSalvoPitch;
+    private final int[] pendingTrackingVolleyIds = new int[LOCKED_TARGET_IDS.length];
+    private int pendingTrackingVolleySize;
+    private int pendingTrackingVolleyIndex;
 
     public LittleBirdEntity(EntityType<? extends LittleBirdEntity> entityType, World world) {
         super(entityType, world);
@@ -111,7 +124,9 @@ public final class LittleBirdEntity extends Entity {
         builder.add(TRACKING_MISSILE_AMMO, MAX_TRACKING_MISSILES);
         builder.add(TRACKING_MISSILE_COOLDOWN, 0);
         builder.add(TRACKING_MISSILE_RELOAD, 0);
-        builder.add(LOCKED_TARGET_ID, -1);
+        for (TrackedData<Integer> trackedData : LOCKED_TARGET_IDS) {
+            builder.add(trackedData, -1);
+        }
         builder.add(THROTTLE, 0.0F);
         builder.add(VISUAL_PITCH, 0.0F);
         builder.add(VISUAL_ROLL, 0.0F);
@@ -222,12 +237,28 @@ public final class LittleBirdEntity extends Entity {
                 pendingRocketSalvo = 0;
             }
         }
+
+        if (pendingTrackingVolleyIndex < pendingTrackingVolleySize && getTrackingMissileCooldown() <= 0 && getTrackingMissileReload() <= 0) {
+            if (getControllingPassenger() instanceof ServerPlayerEntity pilot) {
+                fireNextTrackingVolleyShot(pilot);
+            } else {
+                pendingTrackingVolleyIndex = 0;
+                pendingTrackingVolleySize = 0;
+            }
+        }
     }
 
     private void tickTargetLock() {
-        Entity lockedTarget = getLockedTarget();
-        if (lockedTarget == null || !lockedTarget.isAlive() || squaredDistanceTo(lockedTarget) > (LOCK_KEEP_RANGE * LOCK_KEEP_RANGE)) {
-            setLockedTargetId(-1);
+        boolean changed = false;
+        for (int slot = 0; slot < LOCKED_TARGET_IDS.length; slot++) {
+            Entity lockedTarget = getLockedTarget(slot);
+            if (lockedTarget == null || !lockedTarget.isAlive() || squaredDistanceTo(lockedTarget) > (LOCK_KEEP_RANGE * LOCK_KEEP_RANGE)) {
+                setLockedTargetId(slot, -1);
+                changed = true;
+            }
+        }
+        if (changed) {
+            compactLockedTargets();
         }
     }
 
@@ -290,18 +321,6 @@ public final class LittleBirdEntity extends Entity {
     }
 
     private void tickRotorWashClient() {
-        if (getThrottle() < 0.18F || (age & 1) != 0) {
-            return;
-        }
-
-        double sweep = Math.toRadians(rotorAngle);
-        double ring = 1.08D + (getThrottle() * 0.32D);
-        double px = getX() + Math.cos(sweep) * ring;
-        double pz = getZ() + Math.sin(sweep) * ring;
-        getEntityWorld().addParticleClient(ParticleTypes.CLOUD, px, getY() + 1.18D, pz, 0.0D, 0.005D, 0.0D);
-        if ((age & 3) == 0) {
-            getEntityWorld().addParticleClient(ParticleTypes.GLOW, getX(), getY() + 1.26D, getZ(), 0.0D, 0.0D, 0.0D);
-        }
     }
 
     private Vec3d clampVelocity(Vec3d velocity) {
@@ -420,33 +439,94 @@ public final class LittleBirdEntity extends Entity {
         }
     }
 
-    public void tryLockOrFireTrackingMissile(ServerPlayerEntity pilot, float aimYaw, float aimPitch) {
+    public void tryToggleTrackingLock(ServerPlayerEntity pilot, float aimYaw, float aimPitch) {
         if (pilot != getControllingPassenger()) {
             return;
         }
 
-        Entity lockedTarget = getLockedTarget();
-        if (lockedTarget != null && lockedTarget.isAlive()) {
-            tryFireTrackingMissile(pilot, lockedTarget, aimYaw, aimPitch);
+        Entity candidate = findLockCandidate(pilot, aimYaw, aimPitch);
+        if (candidate == null) {
+            pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_DIDGERIDOO.value(), SoundCategory.PLAYERS, 0.55F, 0.75F);
             return;
         }
 
-        Entity candidate = findLockCandidate(pilot, aimYaw, aimPitch);
-        if (candidate != null) {
-            setLockedTargetId(candidate.getId());
-            pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.PLAYERS, 0.8F, 1.55F);
-        } else {
-            setLockedTargetId(-1);
+        if (removeLockedTarget(candidate)) {
+            pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(), SoundCategory.PLAYERS, 0.55F, 0.7F);
+            return;
+        }
+
+        if (getLockedTargetCount() >= LOCKED_TARGET_IDS.length) {
+            pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_DIDGERIDOO.value(), SoundCategory.PLAYERS, 0.6F, 0.65F);
+            return;
+        }
+
+        addLockedTarget(candidate);
+        pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.PLAYERS, 0.8F, 1.55F);
+    }
+
+    public void tryFireTrackingVolley(ServerPlayerEntity pilot) {
+        if (pilot != getControllingPassenger() || getTrackingMissileCooldown() > 0 || getTrackingMissileReload() > 0 || getTrackingMissileAmmo() <= 0) {
+            return;
+        }
+
+        int lockedCount = copyLockedTargetsToVolley();
+        if (lockedCount <= 0) {
             pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_DIDGERIDOO.value(), SoundCategory.PLAYERS, 0.55F, 0.75F);
+            return;
+        }
+
+        clearLockedTargets();
+        fireNextTrackingVolleyShot(pilot);
+    }
+
+    public void clearTrackingLocks(ServerPlayerEntity pilot) {
+        if (pilot != getControllingPassenger()) {
+            return;
+        }
+        if (getLockedTargetCount() <= 0) {
+            return;
+        }
+        clearLockedTargets();
+        pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(), SoundCategory.PLAYERS, 0.45F, 0.55F);
+    }
+
+    private int copyLockedTargetsToVolley() {
+        pendingTrackingVolleyIndex = 0;
+        pendingTrackingVolleySize = 0;
+        for (int slot = 0; slot < LOCKED_TARGET_IDS.length && pendingTrackingVolleySize < getTrackingMissileAmmo(); slot++) {
+            int targetId = getLockedTargetId(slot);
+            if (targetId >= 0) {
+                pendingTrackingVolleyIds[pendingTrackingVolleySize++] = targetId;
+            }
+        }
+        return pendingTrackingVolleySize;
+    }
+
+    private void fireNextTrackingVolleyShot(ServerPlayerEntity pilot) {
+        while (pendingTrackingVolleyIndex < pendingTrackingVolleySize) {
+            Entity target = getEntityWorld().getEntityById(pendingTrackingVolleyIds[pendingTrackingVolleyIndex++]);
+            if (target == null || !target.isAlive()) {
+                continue;
+            }
+            if (fireTrackingMissileShot(pilot, target)) {
+                return;
+            }
+            break;
+        }
+        if (pendingTrackingVolleyIndex >= pendingTrackingVolleySize) {
+            pendingTrackingVolleyIndex = 0;
+            pendingTrackingVolleySize = 0;
         }
     }
 
-    private void tryFireTrackingMissile(ServerPlayerEntity pilot, Entity target, float aimYaw, float aimPitch) {
+    private boolean fireTrackingMissileShot(ServerPlayerEntity pilot, Entity target) {
         if (getTrackingMissileCooldown() > 0 || getTrackingMissileReload() > 0 || getTrackingMissileAmmo() <= 0 || !(getEntityWorld() instanceof ServerWorld serverWorld)) {
-            return;
+            return false;
         }
 
-        Vec3d aim = Vec3d.fromPolar(aimPitch, aimYaw).normalize();
+        Vec3d targetPos = new Vec3d(target.getX(), target.getY() + (target.getHeight() * 0.4D), target.getZ());
+        Vec3d craftPos = new Vec3d(getX(), getY() + 0.88D, getZ());
+        Vec3d aim = targetPos.subtract(craftPos).normalize();
         Vec3d right = aim.crossProduct(new Vec3d(0.0D, 1.0D, 0.0D));
         if (right.lengthSquared() < 1.0E-4D) {
             right = Vec3d.fromPolar(0.0F, getYaw() - 90.0F);
@@ -455,25 +535,27 @@ public final class LittleBirdEntity extends Entity {
         }
 
         double sideOffset = ((launchSide++ & 1) == 0) ? 1.08D : -1.08D;
-        Vec3d launchPos = new Vec3d(getX(), getY(), getZ())
-                .add(0.0D, 0.88D, 0.0D)
-                .add(right.multiply(sideOffset))
-                .add(aim.multiply(1.18D));
+        Vec3d launchPos = craftPos.add(right.multiply(sideOffset)).add(aim.multiply(1.18D));
         LittleBirdTrackingMissileEntity missile = new LittleBirdTrackingMissileEntity(serverWorld, pilot, target);
-        missile.refreshPositionAndAngles(launchPos.x, launchPos.y, launchPos.z, aimYaw, aimPitch);
-        missile.setVelocity(aim.multiply(1.55D).add(getVelocity().multiply(0.72D)));
+        float missileYaw = (float) Math.toDegrees(Math.atan2(aim.x, aim.z));
+        float missilePitch = (float) -Math.toDegrees(Math.atan2(aim.y, aim.horizontalLength()));
+        missile.refreshPositionAndAngles(launchPos.x, launchPos.y, launchPos.z, missileYaw, missilePitch);
+        missile.setVelocity(aim.multiply(1.85D).add(getVelocity().multiply(0.78D)));
         serverWorld.spawnEntity(missile);
 
         serverWorld.playSound(null, getX(), getY(), getZ(), VeilreachSoundEvents.LITTLE_BIRD_ROCKET_LAUNCH, SoundCategory.HOSTILE, 1.0F, 0.78F);
-        serverWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, launchPos.x, launchPos.y, launchPos.z, 14, 0.1D, 0.08D, 0.1D, 0.03D);
-        serverWorld.spawnParticles(ParticleTypes.SMALL_FLAME, launchPos.x, launchPos.y, launchPos.z, 10, 0.05D, 0.05D, 0.05D, 0.006D);
+        serverWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, launchPos.x, launchPos.y, launchPos.z, 8, 0.06D, 0.05D, 0.06D, 0.018D);
+        serverWorld.spawnParticles(ParticleTypes.SMALL_FLAME, launchPos.x, launchPos.y, launchPos.z, 9, 0.04D, 0.04D, 0.04D, 0.005D);
         serverWorld.spawnParticles(ParticleTypes.GLOW, launchPos.x, launchPos.y, launchPos.z, 4, 0.03D, 0.03D, 0.03D, 0.0D);
 
         setTrackingMissileAmmo(getTrackingMissileAmmo() - 1);
         setTrackingMissileCooldown(TRACKING_MISSILE_COOLDOWN_TICKS);
         if (getTrackingMissileAmmo() <= 0) {
             setTrackingMissileReload(TRACKING_MISSILE_RELOAD_TICKS);
+            pendingTrackingVolleyIndex = 0;
+            pendingTrackingVolleySize = 0;
         }
+        return true;
     }
 
     private Entity findLockCandidate(ServerPlayerEntity pilot, float aimYaw, float aimPitch) {
@@ -528,7 +610,88 @@ public final class LittleBirdEntity extends Entity {
     }
 
     public Entity getLockedTarget() {
-        return getLockedTargetId() >= 0 ? getEntityWorld().getEntityById(getLockedTargetId()) : null;
+        return getLockedTarget(0);
+    }
+
+    public java.util.List<Entity> getLockedTargets() {
+        java.util.List<Entity> targets = new java.util.ArrayList<>();
+        for (int slot = 0; slot < LOCKED_TARGET_IDS.length; slot++) {
+            Entity target = getLockedTarget(slot);
+            if (target != null && target.isAlive()) {
+                targets.add(target);
+            }
+        }
+        return targets;
+    }
+
+    public int getLockedTargetCount() {
+        int count = 0;
+        for (int slot = 0; slot < LOCKED_TARGET_IDS.length; slot++) {
+            if (getLockedTargetId(slot) >= 0) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private Entity getLockedTarget(int slot) {
+        int id = getLockedTargetId(slot);
+        return id >= 0 ? getEntityWorld().getEntityById(id) : null;
+    }
+
+    private boolean addLockedTarget(Entity target) {
+        if (findLockedTargetSlot(target) >= 0) {
+            return false;
+        }
+        for (int slot = 0; slot < LOCKED_TARGET_IDS.length; slot++) {
+            if (getLockedTargetId(slot) < 0) {
+                setLockedTargetId(slot, target.getId());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean removeLockedTarget(Entity target) {
+        int slot = findLockedTargetSlot(target);
+        if (slot < 0) {
+            return false;
+        }
+        setLockedTargetId(slot, -1);
+        compactLockedTargets();
+        return true;
+    }
+
+    private int findLockedTargetSlot(Entity target) {
+        for (int slot = 0; slot < LOCKED_TARGET_IDS.length; slot++) {
+            if (getLockedTargetId(slot) == target.getId()) {
+                return slot;
+            }
+        }
+        return -1;
+    }
+
+    private void clearLockedTargets() {
+        for (int slot = 0; slot < LOCKED_TARGET_IDS.length; slot++) {
+            setLockedTargetId(slot, -1);
+        }
+    }
+
+    private void compactLockedTargets() {
+        int writeSlot = 0;
+        for (int readSlot = 0; readSlot < LOCKED_TARGET_IDS.length; readSlot++) {
+            int id = getLockedTargetId(readSlot);
+            if (id >= 0) {
+                if (writeSlot != readSlot) {
+                    setLockedTargetId(writeSlot, id);
+                    setLockedTargetId(readSlot, -1);
+                }
+                writeSlot++;
+            }
+        }
+        while (writeSlot < LOCKED_TARGET_IDS.length) {
+            setLockedTargetId(writeSlot++, -1);
+        }
     }
 
     @Override
@@ -662,6 +825,9 @@ public final class LittleBirdEntity extends Entity {
         writeView.putInt("tracking_missile_ammo", getTrackingMissileAmmo());
         writeView.putInt("tracking_missile_cooldown", getTrackingMissileCooldown());
         writeView.putInt("tracking_missile_reload", getTrackingMissileReload());
+        for (int slot = 0; slot < LOCKED_TARGET_IDS.length; slot++) {
+            writeView.putInt("locked_target_" + slot, getLockedTargetId(slot));
+        }
         writeView.putFloat("throttle", getThrottle());
         writeView.putFloat("visual_pitch", getVisualPitch());
         writeView.putFloat("visual_roll", getVisualRoll());
@@ -680,7 +846,9 @@ public final class LittleBirdEntity extends Entity {
         setTrackingMissileAmmo(readView.getInt("tracking_missile_ammo", MAX_TRACKING_MISSILES));
         setTrackingMissileCooldown(readView.getInt("tracking_missile_cooldown", 0));
         setTrackingMissileReload(readView.getInt("tracking_missile_reload", 0));
-        setLockedTargetId(-1);
+        for (int slot = 0; slot < LOCKED_TARGET_IDS.length; slot++) {
+            setLockedTargetId(slot, readView.getInt("locked_target_" + slot, -1));
+        }
         setThrottle(readView.getFloat("throttle", 0.0F));
         setVisualPitch(readView.getFloat("visual_pitch", 0.0F));
         setVisualRoll(readView.getFloat("visual_roll", 0.0F));
@@ -767,12 +935,12 @@ public final class LittleBirdEntity extends Entity {
         getDataTracker().set(TRACKING_MISSILE_RELOAD, value);
     }
 
-    public int getLockedTargetId() {
-        return getDataTracker().get(LOCKED_TARGET_ID);
+    public int getLockedTargetId(int slot) {
+        return getDataTracker().get(LOCKED_TARGET_IDS[slot]);
     }
 
-    private void setLockedTargetId(int value) {
-        getDataTracker().set(LOCKED_TARGET_ID, value);
+    private void setLockedTargetId(int slot, int value) {
+        getDataTracker().set(LOCKED_TARGET_IDS[slot], value);
     }
 
     public float getThrottle() {
