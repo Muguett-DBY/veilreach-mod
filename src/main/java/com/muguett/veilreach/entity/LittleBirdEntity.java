@@ -450,8 +450,8 @@ public final class LittleBirdEntity extends Entity {
             return;
         }
 
-        if (removeLockedTarget(candidate)) {
-            pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(), SoundCategory.PLAYERS, 0.55F, 0.7F);
+        if (findLockedTargetSlot(candidate) >= 0) {
+            pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(), SoundCategory.PLAYERS, 0.35F, 1.0F);
             return;
         }
 
@@ -561,27 +561,29 @@ public final class LittleBirdEntity extends Entity {
     private Entity findLockCandidate(ServerPlayerEntity pilot, float aimYaw, float aimPitch) {
         Vec3d origin = pilot.getEyePos();
         Vec3d look = Vec3d.fromPolar(aimPitch, aimYaw).normalize();
-        Box searchBox = getBoundingBox().stretch(look.multiply(LOCK_RANGE)).expand(LOCK_RANGE * 0.55D);
-
+        Vec3d end = origin.add(look.multiply(LOCK_RANGE));
+        Box searchBox = getBoundingBox().stretch(look.multiply(LOCK_RANGE)).expand(2.0D);
         Entity bestTarget = null;
-        double bestScore = LOCK_MIN_ALIGNMENT;
+        double bestDistance = LOCK_RANGE * LOCK_RANGE;
         for (Entity candidate : getEntityWorld().getOtherEntities(this, searchBox, this::isValidLockTarget)) {
+            java.util.Optional<Vec3d> hit = candidate.getBoundingBox().expand(0.18D).raycast(origin, end);
+            if (hit.isEmpty()) {
+                continue;
+            }
             Vec3d candidatePos = new Vec3d(candidate.getX(), candidate.getY() + (candidate.getHeight() * 0.45D), candidate.getZ());
-            Vec3d toCandidate = candidatePos.subtract(origin);
-            double distance = toCandidate.length();
-            if (distance < 6.0D || distance > LOCK_RANGE) {
+            double distance = origin.squaredDistanceTo(hit.get());
+            if (distance < 36.0D || distance > bestDistance) {
                 continue;
             }
-
-            Vec3d direction = toCandidate.normalize();
-            double alignment = direction.dotProduct(look);
-            if (alignment < LOCK_MIN_ALIGNMENT || !hasLineOfSight(origin, candidatePos)) {
+            if (!hasLineOfSight(origin, candidatePos)) {
                 continue;
             }
-
-            double score = alignment + (candidate.getWidth() * 0.04D) - (distance / LOCK_RANGE) * 0.28D;
-            if (score > bestScore) {
-                bestScore = score;
+            double alignment = candidatePos.subtract(origin).normalize().dotProduct(look);
+            if (alignment < LOCK_MIN_ALIGNMENT) {
+                continue;
+            }
+            if (distance < bestDistance) {
+                bestDistance = distance;
                 bestTarget = candidate;
             }
         }
