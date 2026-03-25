@@ -1,6 +1,6 @@
 package com.muguett.veilreach.item;
 
-import com.muguett.veilreach.registry.VeilreachEntities;
+import com.muguett.veilreach.entity.RiftSiegeShellEntity;
 import com.muguett.veilreach.registry.VeilreachItems;
 import com.muguett.veilreach.registry.VeilreachSoundEvents;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,10 +20,8 @@ public final class WatcherGrenadeLauncherItem extends AbstractRiftWeaponItem {
             return;
         }
 
-        com.muguett.veilreach.entity.RiftWeaponProjectileEntity shell = new com.muguett.veilreach.entity.RiftWeaponProjectileEntity(VeilreachEntities.RIFT_WEAPON_PROJECTILE, serverWorld);
+        RiftSiegeShellEntity shell = new RiftSiegeShellEntity(serverWorld, user);
         shell.setPosition(user.getX(), user.getEyeY() - 0.12D, user.getZ());
-        shell.setOwner(user);
-        shell.setItem(VeilreachItems.WATCHER_SHELL_ITEM.getDefaultStack());
         shell.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.42F, 0.85F);
         serverWorld.spawnEntity(shell);
         serverWorld.playSound(null, user.getX(), user.getY(), user.getZ(), VeilreachSoundEvents.WATCHER_LAUNCH, SoundCategory.PLAYERS, 0.9F, 0.88F);

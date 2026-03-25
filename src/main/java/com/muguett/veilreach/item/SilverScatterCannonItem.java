@@ -1,6 +1,6 @@
 package com.muguett.veilreach.item;
 
-import com.muguett.veilreach.registry.VeilreachEntities;
+import com.muguett.veilreach.entity.RiftGunshipRoundEntity;
 import com.muguett.veilreach.registry.VeilreachItems;
 import com.muguett.veilreach.registry.VeilreachSoundEvents;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,10 +21,8 @@ public final class SilverScatterCannonItem extends AbstractRiftWeaponItem {
         }
 
         for (int i = 0; i < 5; i++) {
-            com.muguett.veilreach.entity.RiftWeaponProjectileEntity shard = new com.muguett.veilreach.entity.RiftWeaponProjectileEntity(VeilreachEntities.RIFT_WEAPON_PROJECTILE, serverWorld);
+            RiftGunshipRoundEntity shard = new RiftGunshipRoundEntity(serverWorld, user);
             shard.setPosition(user.getX(), user.getEyeY() - 0.10D, user.getZ());
-            shard.setOwner(user);
-            shard.setItem(VeilreachItems.SCATTER_SHARD_ITEM.getDefaultStack());
             shard.setVelocity(user, user.getPitch(), user.getYaw() + ((i - 2) * 4.0F), 0.0F, 2.95F, 2.0F);
             serverWorld.spawnEntity(shard);
         }

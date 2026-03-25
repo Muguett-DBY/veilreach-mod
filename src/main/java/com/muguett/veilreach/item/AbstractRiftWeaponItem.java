@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -32,15 +33,18 @@ public abstract class AbstractRiftWeaponItem extends Item {
         if (user.getItemCooldownManager().isCoolingDown(stack)) {
             return ActionResult.CONSUME;
         }
-        if (!world.isClient()) {
-            fire(world, user, stack);
-            if (!user.isCreative() && hasAmmo(user)) {
-                consumeAmmo(user);
-            }
-            user.getItemCooldownManager().set(stack, cooldownTicks);
+        if (world.isClient()) {
+            user.swingHand(hand);
+            return ActionResult.SUCCESS;
         }
-        user.swingHand(hand);
-        return ActionResult.SUCCESS;
+
+        fire(world, user, stack);
+        user.incrementStat(Stats.USED.getOrCreateStat(this));
+        if (!user.isCreative() && hasAmmo(user)) {
+            consumeAmmo(user);
+        }
+        user.getItemCooldownManager().set(stack, cooldownTicks);
+        return ActionResult.CONSUME;
     }
 
     public Item getAmmoItem() {
