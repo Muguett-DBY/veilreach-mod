@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.muguett.veilreach.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "HeldItemRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

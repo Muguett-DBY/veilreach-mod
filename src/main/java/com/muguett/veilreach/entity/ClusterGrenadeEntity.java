@@ -12,12 +12,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public final class ClusterGrenadeEntity extends AbstractGrenadeEntity {
-    public static final float PRIMARY_BLAST_POWER = 2.2F;
-    public static final float SECONDARY_BLAST_POWER = 1.45F;
-    public static final float FINAL_BLAST_POWER = 1.15F;
-    private static final int PRIMARY_CHILDREN = 4;
-    private static final int SECONDARY_CHILDREN = 2;
-    private static final int SECONDARY_FUSE_TICKS = 16;
+    public static final float PRIMARY_BLAST_POWER = 3.8F;
+    public static final float SECONDARY_BLAST_POWER = 2.6F;
+    public static final float FINAL_BLAST_POWER = 1.9F;
+    private static final int PRIMARY_CHILDREN = 5;
+    private static final int SECONDARY_CHILDREN = 3;
+    private static final int SECONDARY_FUSE_TICKS = 14;
     private static final int FINAL_FUSE_TICKS = 16;
 
     private int stage;
@@ -74,10 +74,11 @@ public final class ClusterGrenadeEntity extends AbstractGrenadeEntity {
             ClusterGrenadeEntity child = new ClusterGrenadeEntity(world, owner, new ItemStack(VeilreachItems.CLUSTER_GRENADE), nextStage, childFuse + world.random.nextInt(5));
             child.refreshPositionAndAngles(getX(), getY() + 0.08D, getZ(), world.random.nextFloat() * 360.0F, 0.0F);
             double angle = (Math.PI * 2.0D * i) / count + (world.random.nextDouble() * 0.35D);
-            double speed = horizontalSpeed + (world.random.nextDouble() * 0.08D);
-            child.setVelocity(MathHelper.cos((float) angle) * speed, 0.23D + (world.random.nextDouble() * 0.09D), MathHelper.sin((float) angle) * speed);
+            double speed = horizontalSpeed + (world.random.nextDouble() * 0.12D);
+            child.setVelocity(MathHelper.cos((float) angle) * speed, 0.24D + (world.random.nextDouble() * 0.12D), MathHelper.sin((float) angle) * speed);
             world.spawnEntity(child);
-            world.spawnParticles(ParticleTypes.SMOKE, child.getX(), child.getY(), child.getZ(), 4, 0.05D, 0.05D, 0.05D, 0.01D);
+            world.spawnParticles(ParticleTypes.SMOKE, child.getX(), child.getY(), child.getZ(), 5, 0.06D, 0.06D, 0.06D, 0.01D);
+            world.spawnParticles(ParticleTypes.FLAME, child.getX(), child.getY(), child.getZ(), 3, 0.04D, 0.04D, 0.04D, 0.005D);
         }
     }
 
