@@ -88,6 +88,11 @@ public final class LittleBirdInputHandler {
         ensureLoopSound(client, vehicle);
         spawnLockIndicators(client, vehicle);
 
+        if (SWITCH_SEAT.wasPressed()) {
+            ClientPlayNetworking.send(LittleBirdActionPayload.switchSeat());
+            return;
+        }
+
         boolean pilotSeat = seatRole == VehicleSeatRole.PILOT;
         float forward = pilotSeat ? (client.options.forwardKey.isPressed() ? 1.0F : 0.0F) - (client.options.backKey.isPressed() ? 0.65F : 0.0F) : 0.0F;
         float turn = pilotSeat ? (client.options.rightKey.isPressed() ? 1.0F : 0.0F) - (client.options.leftKey.isPressed() ? 1.0F : 0.0F) : 0.0F;
@@ -122,11 +127,6 @@ public final class LittleBirdInputHandler {
 
         while (CLEAR_TRACKING_LOCKS.wasPressed()) {
             ClientPlayNetworking.send(LittleBirdActionPayload.clearTrackingLocks());
-        }
-
-        if (SWITCH_SEAT.wasPressed()) {
-            ClientPlayNetworking.send(LittleBirdActionPayload.switchSeat());
-            return;
         }
     }
 

@@ -46,7 +46,7 @@ public final class RiftGunshipEntity extends AbstractHoverVehicleEntity {
     public static final float MAX_HEALTH = 420.0F;
     public static final int MAX_ROCKET_AMMO = 6;
     public static final int MAX_COUNTERMEASURE_AMMO = 4;
-    public static final int MAX_GUN_HEAT = 140;
+    public static final int MAX_GUN_HEAT = 500;
     private static final int ROCKET_COOLDOWN_TICKS = 2;
     private static final int ROCKET_RELOAD_TICKS = 88;
     private static final int COUNTERMEASURE_COOLDOWN_TICKS = 34;
@@ -200,6 +200,7 @@ public final class RiftGunshipEntity extends AbstractHoverVehicleEntity {
             }
             case LittleBirdActionPayload.SWITCH_SEAT -> {
                 if (hasPassenger(player)) {
+                    rocketRippleRemaining = 0;
                     switchSeat(player);
                 }
             }
