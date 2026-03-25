@@ -43,6 +43,7 @@ public final class VeilreachModClient implements ClientModInitializer {
         EntityRendererRegistry.register(VeilreachEntities.GRENADE, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.IMPACT_GRENADE, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.CLUSTER_GRENADE, FlyingItemEntityRenderer::new);
+        EntityRendererRegistry.register(VeilreachEntities.MOLOTOV, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.HUSHLING, HushlingEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.HUSH_SOVEREIGN, HushSovereignEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.LANTERNKEEPER, LanternkeeperEntityRenderer::new);

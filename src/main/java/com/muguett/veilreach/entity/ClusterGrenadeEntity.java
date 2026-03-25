@@ -12,13 +12,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public final class ClusterGrenadeEntity extends AbstractGrenadeEntity {
-    public static final float PRIMARY_BLAST_POWER = 1.8F;
-    public static final float SECONDARY_BLAST_POWER = 1.25F;
-    public static final float FINAL_BLAST_POWER = 1.0F;
+    public static final float PRIMARY_BLAST_POWER = 2.2F;
+    public static final float SECONDARY_BLAST_POWER = 1.45F;
+    public static final float FINAL_BLAST_POWER = 1.15F;
     private static final int PRIMARY_CHILDREN = 4;
     private static final int SECONDARY_CHILDREN = 2;
     private static final int SECONDARY_FUSE_TICKS = 16;
-    private static final int FINAL_FUSE_TICKS = 10;
+    private static final int FINAL_FUSE_TICKS = 16;
 
     private int stage;
     private int fuseTicks;

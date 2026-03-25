@@ -19,6 +19,16 @@ public final class ImpactGrenadeItem extends ThrowableGrenadeItem {
     }
 
     @Override
+    public PreparationStyle getPreparationStyle() {
+        return PreparationStyle.SPARK;
+    }
+
+    @Override
+    public TrajectoryStyle getTrajectoryStyle() {
+        return TrajectoryStyle.IMPACT;
+    }
+
+    @Override
     protected AbstractGrenadeEntity createGrenade(ServerWorld world, PlayerEntity player, ItemStack stack, int remainingUseTicks) {
         return new ImpactGrenadeEntity(world, player, stack);
     }

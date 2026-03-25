@@ -7,6 +7,7 @@ import com.muguett.veilreach.entity.ClusterGrenadeEntity;
 import com.muguett.veilreach.entity.GrenadeEntity;
 import com.muguett.veilreach.entity.ImpactGrenadeEntity;
 import com.muguett.veilreach.entity.LanternkeeperEntity;
+import com.muguett.veilreach.entity.MolotovEntity;
 import com.muguett.veilreach.entity.MoonfallenKnightEntity;
 import com.muguett.veilreach.entity.MirrorStagEntity;
 import com.muguett.veilreach.entity.VeilboundWatcherEntity;
@@ -35,6 +36,8 @@ public final class VeilreachEntities {
             EntityType.Builder.<ImpactGrenadeEntity>create(ImpactGrenadeEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(6).trackingTickInterval(1));
     public static final EntityType<ClusterGrenadeEntity> CLUSTER_GRENADE = register("cluster_grenade",
             EntityType.Builder.<ClusterGrenadeEntity>create(ClusterGrenadeEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(8).trackingTickInterval(1));
+    public static final EntityType<MolotovEntity> MOLOTOV = register("molotov",
+            EntityType.Builder.<MolotovEntity>create(MolotovEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(6).trackingTickInterval(1));
 
     public static final EntityType<HushlingEntity> HUSHLING = register("hushling",
             EntityType.Builder.create(HushlingEntity::new, SpawnGroup.MONSTER).dimensions(0.6F, 1.95F));

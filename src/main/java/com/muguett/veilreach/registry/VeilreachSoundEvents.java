@@ -12,6 +12,8 @@ public final class VeilreachSoundEvents {
     public static final SoundEvent HUSH_PORTAL_LOOP = register("block.hush_portal_loop");
     public static final SoundEvent HUSHLING_LUNGE = register("entity.hushling_lunge");
     public static final SoundEvent HUSH_SOVEREIGN_PULSE = register("entity.hush_sovereign_pulse");
+    public static final SoundEvent GRENADE_PIN_PULL = register("ui.grenade_pin_pull");
+    public static final SoundEvent MOLOTOV_IGNITE = register("ui.molotov_ignite");
     public static final SoundEvent ASTRAL_SIGIL_USE = register("ui.astral_sigil");
     public static final SoundEvent SEALED_ALTAR_UNLOCK = register("ui.sealed_altar_unlock");
     public static final SoundEvent HUSHLANDS_ARRIVAL_INTRO = register("ui.hushlands_arrival_intro");

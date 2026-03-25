@@ -98,6 +98,26 @@ def make_ui_sigil() -> np.ndarray:
     return pan_stereo(base + whisper + pulse, -0.1)
 
 
+def make_grenade_pin_pull() -> np.ndarray:
+    duration = 0.42
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    click = noise(duration, 101, "white") * np.linspace(0.24, 0.0, t.size, dtype=np.float32)
+    ping = sine(1380.0, duration) * envelope(t.size, 0.01, 0.82) * 0.22
+    rattle = sine(460.0, duration, phase=0.4) * np.linspace(0.18, 0.02, t.size, dtype=np.float32)
+    signal = apply_reverb(click + ping + rattle, 0.025, 0.28, 2)
+    return pan_stereo(signal, -0.06)
+
+
+def make_molotov_ignite() -> np.ndarray:
+    duration = 0.66
+    t = np.linspace(0.0, duration, int(SAMPLE_RATE * duration), endpoint=False, dtype=np.float32)
+    scratch = noise(duration, 102, "white") * np.linspace(0.2, 0.04, t.size, dtype=np.float32)
+    flare = noise(duration, 103, "pink") * np.linspace(0.05, 0.12, t.size, dtype=np.float32)
+    flame = sine(190.0, duration) * np.linspace(0.05, 0.16, t.size, dtype=np.float32)
+    signal = apply_reverb(scratch + flare + flame, 0.03, 0.34, 3)
+    return pan_stereo(signal * envelope(t.size, 0.01, 0.32), 0.05)
+
+
 def make_altar_unlock() -> np.ndarray:
     low = layered_chime([130.81, 196.0, 261.63], 2.8, 3, drift=0.003)
     rise = np.linspace(0.2, 1.0, low.size, dtype=np.float32)
@@ -212,6 +232,8 @@ def make_music(seed: int, roots: list[float], duration: float, pan: float) -> np
 
 
 def main() -> None:
+    write_ogg("ui/grenade_pin_pull.ogg", make_grenade_pin_pull())
+    write_ogg("ui/molotov_ignite.ogg", make_molotov_ignite())
     write_ogg("ui/astral_sigil.ogg", make_ui_sigil())
     write_ogg("ui/sealed_altar_unlock.ogg", make_altar_unlock())
     write_ogg("ui/hushlands_arrival_intro.ogg", make_hushlands_arrival_intro())

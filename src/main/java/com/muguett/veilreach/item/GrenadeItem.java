@@ -47,6 +47,16 @@ public final class GrenadeItem extends ThrowableGrenadeItem {
     }
 
     @Override
+    public PreparationStyle getPreparationStyle() {
+        return PreparationStyle.SMOKE;
+    }
+
+    @Override
+    public TrajectoryStyle getTrajectoryStyle() {
+        return TrajectoryStyle.DELAYED;
+    }
+
+    @Override
     public boolean showsFuseHud() {
         return true;
     }

@@ -42,6 +42,22 @@
       }
     ]
   },
+  "ui.grenade_pin_pull": {
+    "sounds": [
+      {
+        "name": "veilreach:ui/grenade_pin_pull",
+        "volume": 0.82
+      }
+    ]
+  },
+  "ui.molotov_ignite": {
+    "sounds": [
+      {
+        "name": "veilreach:ui/molotov_ignite",
+        "volume": 0.86
+      }
+    ]
+  },
   "ui.astral_sigil": {
     "sounds": [
       {
