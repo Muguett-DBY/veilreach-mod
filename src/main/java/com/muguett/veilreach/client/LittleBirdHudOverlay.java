@@ -4,6 +4,7 @@ import com.muguett.veilreach.entity.LittleBirdEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -26,14 +27,15 @@ public final class LittleBirdHudOverlay {
         int cx = width / 2;
         int cy = height / 2;
         boolean firstPerson = client.options.getPerspective().isFirstPerson();
+        Entity lockedTarget = helicopter.getLockedTarget();
 
         if (firstPerson) {
             drawCockpitFrame(drawContext, width, height, helicopter);
             drawFlightSymbology(drawContext, cx, cy, helicopter);
         }
-        drawReticle(drawContext, cx, cy);
+        drawReticle(drawContext, cx, cy, lockedTarget != null);
         drawHealth(drawContext, client, helicopter, width, height);
-        drawSystems(drawContext, client, helicopter, width, height);
+        drawSystems(drawContext, client, helicopter, width, height, lockedTarget);
     }
 
     private static void drawCockpitFrame(DrawContext drawContext, int width, int height, LittleBirdEntity helicopter) {
@@ -96,9 +98,9 @@ public final class LittleBirdHudOverlay {
         drawContext.fill(cx + 2, cy + 28, cx + 10, cy + 30, 0x88D8F4FF);
     }
 
-    private static void drawReticle(DrawContext drawContext, int cx, int cy) {
-        int color = 0xC8D7F3FF;
-        int accent = 0xE8FFF4C4;
+    private static void drawReticle(DrawContext drawContext, int cx, int cy, boolean hasLock) {
+        int color = hasLock ? 0xD8FFD4A2 : 0xC8D7F3FF;
+        int accent = hasLock ? 0xF0FF8A6E : 0xE8FFF4C4;
         drawContext.fill(cx - 1, cy - 14, cx + 1, cy - 4, color);
         drawContext.fill(cx - 1, cy + 4, cx + 1, cy + 14, color);
         drawContext.fill(cx - 14, cy - 1, cx - 4, cy + 1, color);
@@ -108,6 +110,16 @@ public final class LittleBirdHudOverlay {
         drawContext.fill(cx + 18, cy - 10, cx + 24, cy - 8, color);
         drawContext.fill(cx - 24, cy + 8, cx - 18, cy + 10, color);
         drawContext.fill(cx + 18, cy + 8, cx + 24, cy + 10, color);
+        if (hasLock) {
+            drawContext.fill(cx - 34, cy - 18, cx - 30, cy - 2, accent);
+            drawContext.fill(cx - 34, cy - 18, cx - 18, cy - 14, accent);
+            drawContext.fill(cx + 30, cy - 18, cx + 34, cy - 2, accent);
+            drawContext.fill(cx + 18, cy - 18, cx + 34, cy - 14, accent);
+            drawContext.fill(cx - 34, cy + 2, cx - 30, cy + 18, accent);
+            drawContext.fill(cx - 34, cy + 14, cx - 18, cy + 18, accent);
+            drawContext.fill(cx + 30, cy + 2, cx + 34, cy + 18, accent);
+            drawContext.fill(cx + 18, cy + 14, cx + 34, cy + 18, accent);
+        }
     }
 
     private static void drawHealth(DrawContext drawContext, MinecraftClient client, LittleBirdEntity helicopter, int width, int height) {
@@ -124,11 +136,11 @@ public final class LittleBirdHudOverlay {
         drawContext.drawTextWithShadow(client.textRenderer, Text.literal(Math.round(helicopter.getHealthAmount()) + " / " + Math.round(LittleBirdEntity.MAX_HEALTH)), x + 2, y + 10, 0xE7F6FF);
     }
 
-    private static void drawSystems(DrawContext drawContext, MinecraftClient client, LittleBirdEntity helicopter, int width, int height) {
+    private static void drawSystems(DrawContext drawContext, MinecraftClient client, LittleBirdEntity helicopter, int width, int height, Entity lockedTarget) {
         int panelWidth = 150;
         int x = width - panelWidth - 16;
-        int y = height - 72;
-        drawContext.fill(x - 2, y - 14, x + panelWidth + 2, y + 36, 0x7A08111B);
+        int y = height - 90;
+        drawContext.fill(x - 2, y - 14, x + panelWidth + 2, y + 52, 0x7A08111B);
         drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.ordnance").formatted(Formatting.GOLD), x, y - 12, 0xFFF7E4B1);
 
         Text rocketText = helicopter.getRocketReload() > 0
@@ -141,11 +153,21 @@ public final class LittleBirdHudOverlay {
                 : helicopter.getBombCooldown() > 0
                 ? Text.translatable("hud.veilreach.little_bird.bombs_cooldown", String.format("%.1f", helicopter.getBombCooldown() / 20.0F), helicopter.getBombAmmo(), LittleBirdEntity.MAX_BOMB_AMMO)
                 : Text.translatable("hud.veilreach.little_bird.bombs", helicopter.getBombAmmo(), LittleBirdEntity.MAX_BOMB_AMMO);
+        Text trackingText = helicopter.getTrackingMissileReload() > 0
+                ? Text.translatable("hud.veilreach.little_bird.tracking_reload", String.format("%.1f", helicopter.getTrackingMissileReload() / 20.0F))
+                : helicopter.getTrackingMissileCooldown() > 0
+                ? Text.translatable("hud.veilreach.little_bird.tracking_cooldown", String.format("%.1f", helicopter.getTrackingMissileCooldown() / 20.0F), helicopter.getTrackingMissileAmmo(), LittleBirdEntity.MAX_TRACKING_MISSILES)
+                : Text.translatable("hud.veilreach.little_bird.tracking", helicopter.getTrackingMissileAmmo(), LittleBirdEntity.MAX_TRACKING_MISSILES);
+        Text lockText = lockedTarget != null
+                ? Text.translatable("hud.veilreach.little_bird.locked", lockedTarget.getName(), Math.round(helicopter.distanceTo(lockedTarget)))
+                : Text.translatable("hud.veilreach.little_bird.lock_none");
 
         drawContext.drawTextWithShadow(client.textRenderer, rocketText, x, y + 2, 0xE7F6FF);
         drawContext.drawTextWithShadow(client.textRenderer, bombText, x, y + 14, 0xE7F6FF);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.speed", String.format("%.1f", helicopter.getVelocity().horizontalLength() * 20.0D)), x, y + 26, 0xBBD8E8);
-        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.altitude", Math.round(helicopter.getY())), x + 74, y + 26, 0xBBD8E8);
+        drawContext.drawTextWithShadow(client.textRenderer, trackingText, x, y + 26, 0xFFDDBD84);
+        drawContext.drawTextWithShadow(client.textRenderer, lockText, x, y + 38, lockedTarget != null ? 0xFFFFAD8C : 0xBBD8E8);
+        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.speed", String.format("%.1f", helicopter.getVelocity().horizontalLength() * 20.0D)), x, y + 50, 0xBBD8E8);
+        drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.altitude", Math.round(helicopter.getY())), x + 74, y + 50, 0xBBD8E8);
         drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.throttle", Math.round(helicopter.getThrottle() * 100.0F)), x + 74, y + 2, 0xBBD8E8);
         drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("hud.veilreach.little_bird.fire_hint"), x + 74, y + 14, 0xFFE0BE7A);
     }

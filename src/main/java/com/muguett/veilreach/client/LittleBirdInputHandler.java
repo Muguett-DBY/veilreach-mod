@@ -26,6 +26,12 @@ public final class LittleBirdInputHandler {
             GLFW.GLFW_KEY_G,
             VEHICLE_CATEGORY
     ));
+    private static final KeyBinding LOCK_OR_FIRE_TRACKING = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.veilreach.little_bird_lock",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_V,
+            VEHICLE_CATEGORY
+    ));
     private static final KeyBinding DESCEND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.veilreach.little_bird_descend",
             InputUtil.Type.KEYSYM,
@@ -68,6 +74,10 @@ public final class LittleBirdInputHandler {
 
         while (DROP_BOMB.wasPressed()) {
             ClientPlayNetworking.send(LittleBirdActionPayload.dropBomb(client.player.getYaw(), client.player.getPitch()));
+        }
+
+        while (LOCK_OR_FIRE_TRACKING.wasPressed()) {
+            ClientPlayNetworking.send(LittleBirdActionPayload.lockOrFireTracking(client.player.getYaw(), client.player.getPitch()));
         }
     }
 

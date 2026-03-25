@@ -10,6 +10,7 @@ import com.muguett.veilreach.entity.LanternkeeperEntity;
 import com.muguett.veilreach.entity.LittleBirdBombEntity;
 import com.muguett.veilreach.entity.LittleBirdEntity;
 import com.muguett.veilreach.entity.LittleBirdRocketEntity;
+import com.muguett.veilreach.entity.LittleBirdTrackingMissileEntity;
 import com.muguett.veilreach.entity.MolotovEntity;
 import com.muguett.veilreach.entity.MoonfallenKnightEntity;
 import com.muguett.veilreach.entity.MirrorStagEntity;
@@ -45,6 +46,8 @@ public final class VeilreachEntities {
             EntityType.Builder.<LittleBirdEntity>create(LittleBirdEntity::new, SpawnGroup.MISC).dimensions(2.4F, 1.35F).maxTrackingRange(16).trackingTickInterval(1));
     public static final EntityType<LittleBirdRocketEntity> LITTLE_BIRD_ROCKET = register("little_bird_rocket",
             EntityType.Builder.<LittleBirdRocketEntity>create(LittleBirdRocketEntity::new, SpawnGroup.MISC).dimensions(0.28F, 0.28F).maxTrackingRange(10).trackingTickInterval(1));
+    public static final EntityType<LittleBirdTrackingMissileEntity> LITTLE_BIRD_TRACKING_MISSILE = register("little_bird_tracking_missile",
+            EntityType.Builder.<LittleBirdTrackingMissileEntity>create(LittleBirdTrackingMissileEntity::new, SpawnGroup.MISC).dimensions(0.3F, 0.3F).maxTrackingRange(12).trackingTickInterval(1));
     public static final EntityType<LittleBirdBombEntity> LITTLE_BIRD_BOMB = register("little_bird_bomb",
             EntityType.Builder.<LittleBirdBombEntity>create(LittleBirdBombEntity::new, SpawnGroup.MISC).dimensions(0.34F, 0.34F).maxTrackingRange(10).trackingTickInterval(1));
 

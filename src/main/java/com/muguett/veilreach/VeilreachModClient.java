@@ -11,6 +11,7 @@ import com.muguett.veilreach.client.render.entity.HushSovereignEntityRenderer;
 import com.muguett.veilreach.client.render.entity.LanternkeeperEntityRenderer;
 import com.muguett.veilreach.client.render.entity.LittleBirdEntityRenderer;
 import com.muguett.veilreach.client.render.entity.LittleBirdRocketEntityRenderer;
+import com.muguett.veilreach.client.render.entity.LittleBirdTrackingMissileEntityRenderer;
 import com.muguett.veilreach.client.render.entity.MoonfallenKnightEntityRenderer;
 import com.muguett.veilreach.client.render.entity.MirrorStagEntityRenderer;
 import com.muguett.veilreach.client.render.entity.VeilboundWatcherEntityRenderer;
@@ -56,6 +57,7 @@ public final class VeilreachModClient implements ClientModInitializer {
         EntityRendererRegistry.register(VeilreachEntities.MOLOTOV, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.LITTLE_BIRD, LittleBirdEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.LITTLE_BIRD_ROCKET, LittleBirdRocketEntityRenderer::new);
+        EntityRendererRegistry.register(VeilreachEntities.LITTLE_BIRD_TRACKING_MISSILE, LittleBirdTrackingMissileEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.LITTLE_BIRD_BOMB, FlyingItemEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.HUSHLING, HushlingEntityRenderer::new);
         EntityRendererRegistry.register(VeilreachEntities.HUSH_SOVEREIGN, HushSovereignEntityRenderer::new);

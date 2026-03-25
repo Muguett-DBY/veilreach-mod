@@ -21,6 +21,7 @@ public final class VeilreachNetworking {
                 switch (payload.action()) {
                     case LittleBirdActionPayload.FIRE_ROCKET -> helicopter.tryFireRocket(context.player(), payload.yaw(), payload.pitch());
                     case LittleBirdActionPayload.DROP_BOMB -> helicopter.tryDropBomb(context.player());
+                    case LittleBirdActionPayload.LOCK_OR_FIRE_TRACKING -> helicopter.tryLockOrFireTrackingMissile(context.player(), payload.yaw(), payload.pitch());
                     case LittleBirdActionPayload.UPDATE_CONTROLS ->
                             helicopter.applyPilotInputs(payload.forward(), payload.turn(), payload.ascend(), payload.descend(), payload.yaw(), payload.pitch());
                     default -> {

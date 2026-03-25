@@ -17,13 +17,18 @@ import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.RaycastContext;
 
 public final class LittleBirdEntity extends Entity {
     private static final TrackedData<Float> HEALTH = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -33,6 +38,10 @@ public final class LittleBirdEntity extends Entity {
     private static final TrackedData<Integer> BOMB_AMMO = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> BOMB_COOLDOWN = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> BOMB_RELOAD = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> TRACKING_MISSILE_AMMO = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> TRACKING_MISSILE_COOLDOWN = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> TRACKING_MISSILE_RELOAD = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> LOCKED_TARGET_ID = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Float> THROTTLE = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> VISUAL_PITCH = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> VISUAL_ROLL = DataTracker.registerData(LittleBirdEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -40,10 +49,13 @@ public final class LittleBirdEntity extends Entity {
     public static final float MAX_HEALTH = 320.0F;
     public static final int MAX_ROCKET_AMMO = 12;
     public static final int MAX_BOMB_AMMO = 3;
+    public static final int MAX_TRACKING_MISSILES = 4;
     private static final int ROCKET_COOLDOWN_TICKS = 1;
     private static final int ROCKET_RELOAD_TICKS = 112;
     private static final int BOMB_COOLDOWN_TICKS = 22;
     private static final int BOMB_RELOAD_TICKS = 150;
+    private static final int TRACKING_MISSILE_COOLDOWN_TICKS = 18;
+    private static final int TRACKING_MISSILE_RELOAD_TICKS = 180;
     private static final float FORWARD_ACCELERATION = 0.135F;
     private static final float STRAFE_ACCELERATION = 0.11F;
     private static final float YAW_FOLLOW_RATE = 10.5F;
@@ -61,6 +73,9 @@ public final class LittleBirdEntity extends Entity {
     private static final float AMBIENT_DAMAGE_MULTIPLIER = 0.24F;
     private static final float MIN_PROJECTILE_DAMAGE = 0.35F;
     private static final float MIN_HEAVY_DAMAGE = 0.9F;
+    private static final double LOCK_RANGE = 112.0D;
+    private static final double LOCK_KEEP_RANGE = 148.0D;
+    private static final double LOCK_MIN_ALIGNMENT = 0.84D;
 
     private float lastRotorAngle;
     private float rotorAngle;
@@ -93,6 +108,10 @@ public final class LittleBirdEntity extends Entity {
         builder.add(BOMB_AMMO, MAX_BOMB_AMMO);
         builder.add(BOMB_COOLDOWN, 0);
         builder.add(BOMB_RELOAD, 0);
+        builder.add(TRACKING_MISSILE_AMMO, MAX_TRACKING_MISSILES);
+        builder.add(TRACKING_MISSILE_COOLDOWN, 0);
+        builder.add(TRACKING_MISSILE_RELOAD, 0);
+        builder.add(LOCKED_TARGET_ID, -1);
         builder.add(THROTTLE, 0.0F);
         builder.add(VISUAL_PITCH, 0.0F);
         builder.add(VISUAL_ROLL, 0.0F);
@@ -160,11 +179,16 @@ public final class LittleBirdEntity extends Entity {
     }
 
     private void tickWeaponState() {
+        tickTargetLock();
+
         if (getRocketCooldown() > 0) {
             setRocketCooldown(getRocketCooldown() - 1);
         }
         if (getBombCooldown() > 0) {
             setBombCooldown(getBombCooldown() - 1);
+        }
+        if (getTrackingMissileCooldown() > 0) {
+            setTrackingMissileCooldown(getTrackingMissileCooldown() - 1);
         }
 
         if (getRocketReload() > 0) {
@@ -180,6 +204,12 @@ public final class LittleBirdEntity extends Entity {
                 setBombAmmo(MAX_BOMB_AMMO);
             }
         }
+        if (getTrackingMissileReload() > 0) {
+            setTrackingMissileReload(getTrackingMissileReload() - 1);
+            if (getTrackingMissileReload() == 0) {
+                setTrackingMissileAmmo(MAX_TRACKING_MISSILES);
+            }
+        }
 
         if (pendingRocketSalvo > 0 && getRocketCooldown() <= 0 && getRocketReload() <= 0) {
             if (getControllingPassenger() instanceof ServerPlayerEntity pilot) {
@@ -191,6 +221,13 @@ public final class LittleBirdEntity extends Entity {
             } else {
                 pendingRocketSalvo = 0;
             }
+        }
+    }
+
+    private void tickTargetLock() {
+        Entity lockedTarget = getLockedTarget();
+        if (lockedTarget == null || !lockedTarget.isAlive() || squaredDistanceTo(lockedTarget) > (LOCK_KEEP_RANGE * LOCK_KEEP_RANGE)) {
+            setLockedTargetId(-1);
         }
     }
 
@@ -383,6 +420,117 @@ public final class LittleBirdEntity extends Entity {
         }
     }
 
+    public void tryLockOrFireTrackingMissile(ServerPlayerEntity pilot, float aimYaw, float aimPitch) {
+        if (pilot != getControllingPassenger()) {
+            return;
+        }
+
+        Entity lockedTarget = getLockedTarget();
+        if (lockedTarget != null && lockedTarget.isAlive()) {
+            tryFireTrackingMissile(pilot, lockedTarget, aimYaw, aimPitch);
+            return;
+        }
+
+        Entity candidate = findLockCandidate(pilot, aimYaw, aimPitch);
+        if (candidate != null) {
+            setLockedTargetId(candidate.getId());
+            pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.PLAYERS, 0.8F, 1.55F);
+        } else {
+            setLockedTargetId(-1);
+            pilot.getEntityWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_NOTE_BLOCK_DIDGERIDOO.value(), SoundCategory.PLAYERS, 0.55F, 0.75F);
+        }
+    }
+
+    private void tryFireTrackingMissile(ServerPlayerEntity pilot, Entity target, float aimYaw, float aimPitch) {
+        if (getTrackingMissileCooldown() > 0 || getTrackingMissileReload() > 0 || getTrackingMissileAmmo() <= 0 || !(getEntityWorld() instanceof ServerWorld serverWorld)) {
+            return;
+        }
+
+        Vec3d aim = Vec3d.fromPolar(aimPitch, aimYaw).normalize();
+        Vec3d right = aim.crossProduct(new Vec3d(0.0D, 1.0D, 0.0D));
+        if (right.lengthSquared() < 1.0E-4D) {
+            right = Vec3d.fromPolar(0.0F, getYaw() - 90.0F);
+        } else {
+            right = right.normalize();
+        }
+
+        double sideOffset = ((launchSide++ & 1) == 0) ? 1.08D : -1.08D;
+        Vec3d launchPos = new Vec3d(getX(), getY(), getZ())
+                .add(0.0D, 0.88D, 0.0D)
+                .add(right.multiply(sideOffset))
+                .add(aim.multiply(1.18D));
+        LittleBirdTrackingMissileEntity missile = new LittleBirdTrackingMissileEntity(serverWorld, pilot, target);
+        missile.refreshPositionAndAngles(launchPos.x, launchPos.y, launchPos.z, aimYaw, aimPitch);
+        missile.setVelocity(aim.multiply(1.55D).add(getVelocity().multiply(0.72D)));
+        serverWorld.spawnEntity(missile);
+
+        serverWorld.playSound(null, getX(), getY(), getZ(), VeilreachSoundEvents.LITTLE_BIRD_ROCKET_LAUNCH, SoundCategory.HOSTILE, 1.0F, 0.78F);
+        serverWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, launchPos.x, launchPos.y, launchPos.z, 14, 0.1D, 0.08D, 0.1D, 0.03D);
+        serverWorld.spawnParticles(ParticleTypes.SMALL_FLAME, launchPos.x, launchPos.y, launchPos.z, 10, 0.05D, 0.05D, 0.05D, 0.006D);
+        serverWorld.spawnParticles(ParticleTypes.GLOW, launchPos.x, launchPos.y, launchPos.z, 4, 0.03D, 0.03D, 0.03D, 0.0D);
+
+        setTrackingMissileAmmo(getTrackingMissileAmmo() - 1);
+        setTrackingMissileCooldown(TRACKING_MISSILE_COOLDOWN_TICKS);
+        if (getTrackingMissileAmmo() <= 0) {
+            setTrackingMissileReload(TRACKING_MISSILE_RELOAD_TICKS);
+        }
+    }
+
+    private Entity findLockCandidate(ServerPlayerEntity pilot, float aimYaw, float aimPitch) {
+        Vec3d origin = pilot.getEyePos();
+        Vec3d look = Vec3d.fromPolar(aimPitch, aimYaw).normalize();
+        Box searchBox = getBoundingBox().stretch(look.multiply(LOCK_RANGE)).expand(LOCK_RANGE * 0.55D);
+
+        Entity bestTarget = null;
+        double bestScore = LOCK_MIN_ALIGNMENT;
+        for (Entity candidate : getEntityWorld().getOtherEntities(this, searchBox, this::isValidLockTarget)) {
+            Vec3d candidatePos = new Vec3d(candidate.getX(), candidate.getY() + (candidate.getHeight() * 0.45D), candidate.getZ());
+            Vec3d toCandidate = candidatePos.subtract(origin);
+            double distance = toCandidate.length();
+            if (distance < 6.0D || distance > LOCK_RANGE) {
+                continue;
+            }
+
+            Vec3d direction = toCandidate.normalize();
+            double alignment = direction.dotProduct(look);
+            if (alignment < LOCK_MIN_ALIGNMENT || !hasLineOfSight(origin, candidatePos)) {
+                continue;
+            }
+
+            double score = alignment + (candidate.getWidth() * 0.04D) - (distance / LOCK_RANGE) * 0.28D;
+            if (score > bestScore) {
+                bestScore = score;
+                bestTarget = candidate;
+            }
+        }
+
+        return bestTarget;
+    }
+
+    private boolean isValidLockTarget(Entity candidate) {
+        if (candidate == this || candidate == getControllingPassenger() || hasPassenger(candidate)) {
+            return false;
+        }
+        if (!candidate.isAlive() || !candidate.canHit()) {
+            return false;
+        }
+        return candidate instanceof LivingEntity || candidate instanceof LittleBirdEntity;
+    }
+
+    private boolean hasLineOfSight(Vec3d origin, Vec3d targetPos) {
+        BlockHitResult hitResult = getEntityWorld().raycast(new RaycastContext(origin, targetPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
+        if (hitResult.getType() == HitResult.Type.MISS) {
+            return true;
+        }
+        double hitDistance = origin.squaredDistanceTo(hitResult.getPos());
+        double targetDistance = origin.squaredDistanceTo(targetPos);
+        return hitDistance + 0.25D >= targetDistance;
+    }
+
+    public Entity getLockedTarget() {
+        return getLockedTargetId() >= 0 ? getEntityWorld().getEntityById(getLockedTargetId()) : null;
+    }
+
     @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
         if (player.shouldCancelInteraction()) {
@@ -511,6 +659,9 @@ public final class LittleBirdEntity extends Entity {
         writeView.putInt("bomb_ammo", getBombAmmo());
         writeView.putInt("bomb_cooldown", getBombCooldown());
         writeView.putInt("bomb_reload", getBombReload());
+        writeView.putInt("tracking_missile_ammo", getTrackingMissileAmmo());
+        writeView.putInt("tracking_missile_cooldown", getTrackingMissileCooldown());
+        writeView.putInt("tracking_missile_reload", getTrackingMissileReload());
         writeView.putFloat("throttle", getThrottle());
         writeView.putFloat("visual_pitch", getVisualPitch());
         writeView.putFloat("visual_roll", getVisualRoll());
@@ -526,6 +677,10 @@ public final class LittleBirdEntity extends Entity {
         setBombAmmo(readView.getInt("bomb_ammo", MAX_BOMB_AMMO));
         setBombCooldown(readView.getInt("bomb_cooldown", 0));
         setBombReload(readView.getInt("bomb_reload", 0));
+        setTrackingMissileAmmo(readView.getInt("tracking_missile_ammo", MAX_TRACKING_MISSILES));
+        setTrackingMissileCooldown(readView.getInt("tracking_missile_cooldown", 0));
+        setTrackingMissileReload(readView.getInt("tracking_missile_reload", 0));
+        setLockedTargetId(-1);
         setThrottle(readView.getFloat("throttle", 0.0F));
         setVisualPitch(readView.getFloat("visual_pitch", 0.0F));
         setVisualRoll(readView.getFloat("visual_roll", 0.0F));
@@ -586,6 +741,38 @@ public final class LittleBirdEntity extends Entity {
 
     private void setBombReload(int value) {
         getDataTracker().set(BOMB_RELOAD, value);
+    }
+
+    public int getTrackingMissileAmmo() {
+        return getDataTracker().get(TRACKING_MISSILE_AMMO);
+    }
+
+    private void setTrackingMissileAmmo(int value) {
+        getDataTracker().set(TRACKING_MISSILE_AMMO, value);
+    }
+
+    public int getTrackingMissileCooldown() {
+        return getDataTracker().get(TRACKING_MISSILE_COOLDOWN);
+    }
+
+    private void setTrackingMissileCooldown(int value) {
+        getDataTracker().set(TRACKING_MISSILE_COOLDOWN, value);
+    }
+
+    public int getTrackingMissileReload() {
+        return getDataTracker().get(TRACKING_MISSILE_RELOAD);
+    }
+
+    private void setTrackingMissileReload(int value) {
+        getDataTracker().set(TRACKING_MISSILE_RELOAD, value);
+    }
+
+    public int getLockedTargetId() {
+        return getDataTracker().get(LOCKED_TARGET_ID);
+    }
+
+    private void setLockedTargetId(int value) {
+        getDataTracker().set(LOCKED_TARGET_ID, value);
     }
 
     public float getThrottle() {

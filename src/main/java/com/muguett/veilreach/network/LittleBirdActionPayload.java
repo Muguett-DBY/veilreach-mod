@@ -9,6 +9,7 @@ public record LittleBirdActionPayload(int action, float forward, float turn, boo
     public static final int FIRE_ROCKET = 0;
     public static final int DROP_BOMB = 1;
     public static final int UPDATE_CONTROLS = 2;
+    public static final int LOCK_OR_FIRE_TRACKING = 3;
 
     public static final Id<LittleBirdActionPayload> ID = CustomPayload.id("little_bird_action");
     public static final PacketCodec<RegistryByteBuf, LittleBirdActionPayload> CODEC = PacketCodec.tuple(
@@ -39,6 +40,10 @@ public record LittleBirdActionPayload(int action, float forward, float turn, boo
 
     public static LittleBirdActionPayload controls(float forward, float turn, boolean ascend, boolean descend, float yaw, float pitch) {
         return new LittleBirdActionPayload(UPDATE_CONTROLS, forward, turn, ascend, descend, yaw, pitch);
+    }
+
+    public static LittleBirdActionPayload lockOrFireTracking(float yaw, float pitch) {
+        return new LittleBirdActionPayload(LOCK_OR_FIRE_TRACKING, 0.0F, 0.0F, false, false, yaw, pitch);
     }
 
     @Override
