@@ -33,16 +33,15 @@ public abstract class AbstractRiftWeaponItem extends Item {
         if (user.getItemCooldownManager().isCoolingDown(stack)) {
             return ActionResult.CONSUME;
         }
-        if (!hasAmmo(user) && !user.isCreative()) {
-            world.playSound(null, user.getX(), user.getY(), user.getZ(), VeilreachSoundEvents.RIFT_GUNSHIP_COUNTERMEASURE, SoundCategory.PLAYERS, 0.45F, 0.76F);
-            return ActionResult.FAIL;
-        }
         if (!world.isClient()) {
             fire(world, user, stack);
-            if (!user.isCreative()) {
+            if (!user.isCreative() && hasAmmo(user)) {
                 consumeAmmo(user);
             }
             user.getItemCooldownManager().set(stack, cooldownTicks);
+        }
+        if (world.isClient() && !hasAmmo(user) && !user.isCreative()) {
+            world.playSound(user, user.getX(), user.getY(), user.getZ(), VeilreachSoundEvents.RIFT_GUNSHIP_COUNTERMEASURE, SoundCategory.PLAYERS, 0.35F, 0.82F);
         }
         user.swingHand(hand);
         return ActionResult.SUCCESS;
