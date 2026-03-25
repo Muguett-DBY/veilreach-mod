@@ -6,7 +6,7 @@ import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.util.math.RotationAxis;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,27 +15,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HeldItemRenderer.class)
 public abstract class HeldItemRendererMixin {
-    @Inject(
-            method = "renderFirstPersonItem",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemDisplayContext;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;I)V",
-                    shift = At.Shift.BEFORE
-            )
-    )
-    private void veilreach$tiltGrenadesWhileUsing(AbstractClientPlayerEntity player, float tickProgress, float pitch, Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices, OrderedRenderCommandQueue renderQueue, int light, CallbackInfo ci) {
-        if (!(item.getItem() instanceof ThrowableGrenadeItem) || !player.isUsingItem() || player.getActiveHand() != hand) {
+    @Inject(method = "renderItem", at = @At("HEAD"))
+    private void veilreach$tiltGrenadesWhileUsing(net.minecraft.entity.LivingEntity entity, ItemStack item, ItemDisplayContext displayContext, MatrixStack matrices, OrderedRenderCommandQueue renderQueue, int light, CallbackInfo ci) {
+        if (!(entity instanceof AbstractClientPlayerEntity player) || !(item.getItem() instanceof ThrowableGrenadeItem) || !player.isUsingItem() || player.getActiveItem() != item) {
+            return;
+        }
+        if (displayContext != ItemDisplayContext.FIRST_PERSON_RIGHT_HAND && displayContext != ItemDisplayContext.FIRST_PERSON_LEFT_HAND) {
             return;
         }
 
-        boolean rightHand = hand == Hand.MAIN_HAND ? player.getMainArm() == net.minecraft.util.Arm.RIGHT : player.getMainArm() != net.minecraft.util.Arm.RIGHT;
+        boolean rightHand = displayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
         float charge = 1.0F - (player.getItemUseTimeLeft() / 72000.0F);
         float eased = Math.min(1.0F, charge * 10.0F);
         float handSign = rightHand ? 1.0F : -1.0F;
 
-        matrices.translate(handSign * -0.16F * eased, -0.18F * eased, -0.24F * eased);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-28.0F * eased));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(handSign * 18.0F * eased));
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(handSign * -14.0F * eased));
+        matrices.translate(handSign * -0.22F * eased, -0.24F * eased, -0.3F * eased);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-36.0F * eased));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(handSign * 22.0F * eased));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(handSign * -18.0F * eased));
     }
 }

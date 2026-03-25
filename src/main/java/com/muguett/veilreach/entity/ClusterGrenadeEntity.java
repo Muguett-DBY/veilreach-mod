@@ -13,12 +13,9 @@ import net.minecraft.world.World;
 
 public final class ClusterGrenadeEntity extends AbstractGrenadeEntity {
     public static final float PRIMARY_BLAST_POWER = 4.8F;
-    public static final float SECONDARY_BLAST_POWER = 3.4F;
-    public static final float FINAL_BLAST_POWER = 2.3F;
-    private static final int PRIMARY_CHILDREN = 3;
-    private static final int SECONDARY_CHILDREN = 2;
-    private static final int SECONDARY_FUSE_TICKS = 12;
-    private static final int FINAL_FUSE_TICKS = 18;
+    public static final float FINAL_BLAST_POWER = 3.1F;
+    private static final int FINAL_CHILDREN = 6;
+    private static final int FINAL_FUSE_TICKS = 24;
 
     private int stage;
     private int fuseTicks;
@@ -56,14 +53,12 @@ public final class ClusterGrenadeEntity extends AbstractGrenadeEntity {
             return;
         }
 
-        float blastPower = stage == 0 ? PRIMARY_BLAST_POWER : stage == 1 ? SECONDARY_BLAST_POWER : FINAL_BLAST_POWER;
+        float blastPower = stage == 0 ? PRIMARY_BLAST_POWER : FINAL_BLAST_POWER;
         world.createExplosion(this, getX(), getY(), getZ(), blastPower, World.ExplosionSourceType.TNT);
-        world.spawnParticles(stage >= 2 ? ParticleTypes.FLAME : ParticleTypes.SMOKE, getX(), getY() + 0.12D, getZ(), 8, 0.12D, 0.08D, 0.12D, 0.01D);
+        world.spawnParticles(stage >= 1 ? ParticleTypes.FLAME : ParticleTypes.SMOKE, getX(), getY() + 0.12D, getZ(), 10, 0.16D, 0.1D, 0.16D, 0.01D);
 
         if (stage == 0) {
-            spawnChildren(world, PRIMARY_CHILDREN, 1, SECONDARY_FUSE_TICKS, 0.38D);
-        } else if (stage == 1) {
-            spawnChildren(world, SECONDARY_CHILDREN, 2, FINAL_FUSE_TICKS, 0.30D);
+            spawnChildren(world, FINAL_CHILDREN, 1, FINAL_FUSE_TICKS, 0.52D);
         }
 
         discard();
@@ -74,12 +69,12 @@ public final class ClusterGrenadeEntity extends AbstractGrenadeEntity {
         for (int i = 0; i < count; i++) {
             ClusterGrenadeEntity child = new ClusterGrenadeEntity(world, owner, new ItemStack(VeilreachItems.CLUSTER_GRENADE), nextStage, childFuse + world.random.nextInt(5));
             child.refreshPositionAndAngles(getX(), getY() + 0.08D, getZ(), world.random.nextFloat() * 360.0F, 0.0F);
-            double angle = (Math.PI * 2.0D * i) / count + (world.random.nextDouble() * 0.35D);
-            double speed = horizontalSpeed + (world.random.nextDouble() * 0.12D);
-            child.setVelocity(MathHelper.cos((float) angle) * speed, 0.24D + (world.random.nextDouble() * 0.12D), MathHelper.sin((float) angle) * speed);
+            double angle = (Math.PI * 2.0D * i) / count + (world.random.nextDouble() * 0.22D);
+            double speed = horizontalSpeed + (world.random.nextDouble() * 0.16D);
+            child.setVelocity(MathHelper.cos((float) angle) * speed, 0.42D + (world.random.nextDouble() * 0.12D), MathHelper.sin((float) angle) * speed);
             world.spawnEntity(child);
-            world.spawnParticles(ParticleTypes.SMOKE, child.getX(), child.getY(), child.getZ(), 5, 0.06D, 0.06D, 0.06D, 0.01D);
-            world.spawnParticles(ParticleTypes.FLAME, child.getX(), child.getY(), child.getZ(), 3, 0.04D, 0.04D, 0.04D, 0.005D);
+            world.spawnParticles(ParticleTypes.SMOKE, child.getX(), child.getY(), child.getZ(), 6, 0.08D, 0.08D, 0.08D, 0.01D);
+            world.spawnParticles(ParticleTypes.FLAME, child.getX(), child.getY(), child.getZ(), 4, 0.05D, 0.05D, 0.05D, 0.005D);
         }
     }
 
