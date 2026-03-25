@@ -52,14 +52,16 @@
     }
   },
   "features": [
-    [], [], [], [], [], [], [], [], ["veilreach:rift_bloom_patch"], ["veilreach:echo_monolith", "veilreach:riftglass_basin", "veilreach:lantern_watchpost", "veilreach:silent_archive", "veilreach:rift_spire"], [], []
+    [], [], [], [], [], [], [], [], ["veilreach:rift_bloom_patch"], ["veilreach:riftglass_basin", "veilreach:lantern_watchpost", "veilreach:silent_archive", "veilreach:forgotten_manor", "veilreach:rift_spire"], [], []
   ],
   "spawn_costs": {},
   "spawners": {
     "monster": [
-      { "type": "veilreach:hushling", "weight": 58, "minCount": 2, "maxCount": 4 },
-      { "type": "veilreach:lanternkeeper", "weight": 12, "minCount": 1, "maxCount": 2 },
-      { "type": "veilreach:veilbound_watcher", "weight": 14, "minCount": 1, "maxCount": 2 }
+      { "type": "veilreach:hushling", "weight": 60, "minCount": 2, "maxCount": 4 },
+      { "type": "veilreach:lanternkeeper", "weight": 14, "minCount": 1, "maxCount": 2 },
+      { "type": "veilreach:veilbound_watcher", "weight": 18, "minCount": 1, "maxCount": 2 },
+      { "type": "veilreach:moonfallen_knight", "weight": 8, "minCount": 1, "maxCount": 1 },
+      { "type": "veilreach:warden_of_silence", "weight": 5, "minCount": 1, "maxCount": 1 }
     ],
     "creature": [
       { "type": "veilreach:mirror_stag", "weight": 10, "minCount": 2, "maxCount": 3 }

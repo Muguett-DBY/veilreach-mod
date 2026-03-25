@@ -1,6 +1,8 @@
 package com.muguett.veilreach.client;
 
 import com.muguett.veilreach.registry.VeilreachSoundEvents;
+import com.muguett.veilreach.world.HushlandsRegion;
+import com.muguett.veilreach.world.HushlandsRegionResolver;
 import com.muguett.veilreach.world.dimension.VeilreachDimensions;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -23,6 +25,7 @@ public final class HushlandsClientEffects {
     private static int arrivalBurstTicks;
     private static int ambientPulseTicks;
     private static String lastBiomeId = "";
+    private static HushlandsRegion lastRegion;
     private static int biomeTitleCooldown;
     private static final Set<String> shownBiomeTitles = new HashSet<>();
 
@@ -40,8 +43,10 @@ public final class HushlandsClientEffects {
             arrivalBurstTicks = 0;
             ambientPulseTicks = 0;
             lastBiomeId = "";
+            lastRegion = null;
             biomeTitleCooldown = 0;
             shownBiomeTitles.clear();
+            HushlandsProgressClientState.reset();
             return;
         }
 
@@ -63,6 +68,7 @@ public final class HushlandsClientEffects {
 
         Random random = world.random;
         BlockPos origin = client.player.getBlockPos();
+        HushlandsRegion region = HushlandsRegionResolver.getRegion(client.player);
         RegistryEntry<Biome> biome = world.getBiome(origin);
         String biomeId = biome.getKey().map(key -> key.getValue().toString()).orElse("");
         boolean moonlit = biomeId.contains("moonlit_thicket");
@@ -79,6 +85,11 @@ public final class HushlandsClientEffects {
             biomeTitleCooldown = 200;
         }
         lastBiomeId = biomeId;
+        if (region != lastRegion && biomeTitleCooldown == 0) {
+            showRegionTitle(client, region);
+            biomeTitleCooldown = 120;
+        }
+        lastRegion = region;
 
         if (arrivalBurstTicks > 0) {
             spawnArrivalBurst(world, client, origin, random, moonlit || rift);
@@ -186,6 +197,15 @@ public final class HushlandsClientEffects {
         client.inGameHud.setTitle(net.minecraft.text.Text.translatable("biome.veilreach." + biomeKey));
         client.inGameHud.setSubtitle(net.minecraft.text.Text.translatable("subtitle.veilreach.biome." + biomeKey));
         client.inGameHud.setTitleTicks(10, 55, 20);
+    }
+
+    private static void showRegionTitle(MinecraftClient client, HushlandsRegion region) {
+        if (client.inGameHud == null || region == null) {
+            return;
+        }
+        client.inGameHud.setTitle(net.minecraft.text.Text.translatable(region.titleKey()));
+        client.inGameHud.setSubtitle(net.minecraft.text.Text.translatable(region.subtitleKey()));
+        client.inGameHud.setTitleTicks(8, 40, 18);
     }
 
     private static void spawnArrivalBurst(ClientWorld world, MinecraftClient client, BlockPos origin, Random random, boolean bright) {

@@ -4,15 +4,12 @@
     "type": "minecraft:noise",
     "settings": "minecraft:overworld",
     "biome_source": {
-      "type": "minecraft:checkerboard",
-      "scale": 5,
-      "biomes": [
-        "veilreach:hush_grove",
-        "veilreach:gloam_forest",
-        "veilreach:moonlit_thicket",
-        "veilreach:rift_meadows",
-        "veilreach:silent_badlands"
-      ]
+      "type": "veilreach:hushlands_regions",
+      "outer_primary": "veilreach:hush_grove",
+      "outer_secondary": "veilreach:gloam_forest",
+      "outer_tertiary": "veilreach:moonlit_thicket",
+      "middle": "veilreach:rift_meadows",
+      "inner": "veilreach:silent_badlands"
     }
   }
 }

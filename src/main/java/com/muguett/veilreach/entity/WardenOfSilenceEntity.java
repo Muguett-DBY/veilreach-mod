@@ -1,5 +1,6 @@
 package com.muguett.veilreach.entity;
 
+import com.muguett.veilreach.progress.HushlandsProgression;
 import com.muguett.veilreach.registry.VeilreachItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -45,6 +46,10 @@ public class WardenOfSilenceEntity extends WitherSkeletonEntity {
     public void onDeath(DamageSource damageSource) {
         if (this.getEntityWorld() instanceof ServerWorld serverWorld && !this.isRemoved()) {
             this.dropStack(serverWorld, new ItemStack(VeilreachItems.WARDEN_SIGIL));
+            if (damageSource.getAttacker() instanceof net.minecraft.server.network.ServerPlayerEntity player) {
+                HushlandsProgression.markWardenDefeated(player);
+                HushlandsProgression.sync(player, true);
+            }
             serverWorld.spawnParticles(ParticleTypes.REVERSE_PORTAL, this.getX(), this.getBodyY(0.85D), this.getZ(), 36, 0.5D, 0.8D, 0.5D, 0.06D);
             serverWorld.spawnParticles(ParticleTypes.END_ROD, this.getX(), this.getBodyY(1.1D), this.getZ(), 20, 0.35D, 0.65D, 0.35D, 0.04D);
             serverWorld.playSound(null, this.getBlockPos(), SoundEvents.BLOCK_BEACON_DEACTIVATE, this.getSoundCategory(), 0.95F, 0.65F);
@@ -59,9 +64,21 @@ public class WardenOfSilenceEntity extends WitherSkeletonEntity {
             serverWorld.spawnParticles(ParticleTypes.SCULK_SOUL, this.getX(), this.getBodyY(0.85D), this.getZ(), 3, 0.25D, 0.35D, 0.25D, 0.01D);
         }
         if (this.getTarget() != null && this.age % 80 == 0) {
-            this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 60, 0));
-            this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 60, 0));
+            this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 70, 0));
+            this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 70, 0));
+            this.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 45, 0));
+            double dx = this.getTarget().getX() - this.getX();
+            double dz = this.getTarget().getZ() - this.getZ();
+            double scale = Math.max(0.001D, Math.sqrt(dx * dx + dz * dz));
+            this.getTarget().addVelocity(dx / scale * 0.75D, 0.18D, dz / scale * 0.75D);
             this.playSound(SoundEvents.ENTITY_WARDEN_NEARBY_CLOSER, 0.75F, 0.6F);
+        }
+        if (this.getTarget() != null && this.age % 120 == 0 && this.squaredDistanceTo(this.getTarget()) > 16.0D) {
+            double dx = this.getTarget().getX() - this.getX();
+            double dz = this.getTarget().getZ() - this.getZ();
+            double scale = Math.max(0.001D, Math.sqrt(dx * dx + dz * dz));
+            this.addVelocity(dx / scale * 0.7D, 0.3D, dz / scale * 0.7D);
+            this.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, 0.6F, 0.8F);
         }
     }
 }

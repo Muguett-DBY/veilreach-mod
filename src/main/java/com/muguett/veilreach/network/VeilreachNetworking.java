@@ -11,6 +11,7 @@ public final class VeilreachNetworking {
 
     public static void initialize() {
         PayloadTypeRegistry.playC2S().register(LittleBirdActionPayload.ID, LittleBirdActionPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(HushlandsProgressPayload.ID, HushlandsProgressPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(LittleBirdActionPayload.ID, (payload, context) -> {
             context.server().execute(() -> {
                 Entity vehicle = context.player().getVehicle();

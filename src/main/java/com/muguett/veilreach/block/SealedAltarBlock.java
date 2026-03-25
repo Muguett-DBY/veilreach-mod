@@ -1,5 +1,6 @@
 package com.muguett.veilreach.block;
 
+import com.muguett.veilreach.progress.HushlandsProgression;
 import com.muguett.veilreach.registry.VeilreachBlocks;
 import com.muguett.veilreach.registry.VeilreachEntities;
 import com.muguett.veilreach.registry.VeilreachItems;
@@ -59,6 +60,11 @@ public class SealedAltarBlock extends Block {
             held.decrement(1);
             consumeOne(player, VeilreachItems.SANCTUM_KEY);
             consumeOne(player, VeilreachItems.CATHEDRAL_SEAL);
+        }
+        if (player instanceof net.minecraft.server.network.ServerPlayerEntity serverPlayer) {
+            HushlandsProgression.markCathedralCompleted(serverPlayer);
+            HushlandsProgression.markSanctumCompleted(serverPlayer);
+            HushlandsProgression.sync(serverPlayer, true);
         }
         return ActionResult.SUCCESS;
     }

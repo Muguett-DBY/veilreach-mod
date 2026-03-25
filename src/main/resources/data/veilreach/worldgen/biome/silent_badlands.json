@@ -52,15 +52,15 @@
     }
   },
   "features": [
-    [], [], [], [], [], [], [], [], ["veilreach:veilstone_pile"], ["veilreach:echo_monolith", "veilreach:watcher_obelisk", "veilreach:rift_spire"], [], []
+    [], [], [], [], [], [], [], [], ["veilreach:veilstone_pile"], ["veilreach:watcher_obelisk", "veilreach:rift_spire", "veilreach:moonfall_cathedral", "veilreach:sunken_sanctum", "veilreach:silent_throne"], [], []
   ],
   "spawn_costs": {},
   "spawners": {
     "monster": [
-      { "type": "veilreach:hushling", "weight": 40, "minCount": 1, "maxCount": 3 },
-      { "type": "veilreach:moonfallen_knight", "weight": 12, "minCount": 1, "maxCount": 1 },
-      { "type": "veilreach:veilbound_watcher", "weight": 22, "minCount": 1, "maxCount": 2 },
-      { "type": "veilreach:warden_of_silence", "weight": 8, "minCount": 1, "maxCount": 1 }
+      { "type": "veilreach:hushling", "weight": 46, "minCount": 2, "maxCount": 4 },
+      { "type": "veilreach:moonfallen_knight", "weight": 18, "minCount": 1, "maxCount": 2 },
+      { "type": "veilreach:veilbound_watcher", "weight": 24, "minCount": 1, "maxCount": 2 },
+      { "type": "veilreach:warden_of_silence", "weight": 10, "minCount": 1, "maxCount": 1 }
     ],
     "creature": [],
     "ambient": [],

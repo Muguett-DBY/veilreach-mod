@@ -4,6 +4,7 @@ import com.muguett.veilreach.client.GrenadeHudOverlay;
 import com.muguett.veilreach.client.GrenadeTrajectoryPreview;
 import com.muguett.veilreach.client.HushlandsClientEffects;
 import com.muguett.veilreach.client.HushlandsHudOverlay;
+import com.muguett.veilreach.client.HushlandsProgressClientState;
 import com.muguett.veilreach.client.LittleBirdHudOverlay;
 import com.muguett.veilreach.client.LittleBirdInputHandler;
 import com.muguett.veilreach.client.render.entity.HushlingEntityRenderer;
@@ -26,8 +27,10 @@ import com.muguett.veilreach.client.render.entity.model.MoonfallenKnightEntityMo
 import com.muguett.veilreach.client.render.entity.model.MirrorStagEntityModel;
 import com.muguett.veilreach.client.render.entity.model.VeilboundWatcherEntityModel;
 import com.muguett.veilreach.client.render.entity.model.WardenOfSilenceEntityModel;
+import com.muguett.veilreach.network.HushlandsProgressPayload;
 import com.muguett.veilreach.registry.VeilreachEntities;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
@@ -41,6 +44,8 @@ public final class VeilreachModClient implements ClientModInitializer {
         GrenadeTrajectoryPreview.initialize();
         LittleBirdHudOverlay.initialize();
         LittleBirdInputHandler.initialize();
+        ClientPlayNetworking.registerGlobalReceiver(HushlandsProgressPayload.ID, (payload, context) ->
+                context.client().execute(() -> HushlandsProgressClientState.setFlags(payload.flags())));
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.MIRROR_STAG, MirrorStagEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.HUSHLING, HushlingEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(VeilreachEntityModelLayers.HUSH_SOVEREIGN, HushSovereignEntityModel::getTexturedModelData);

@@ -20,6 +20,7 @@
     ]
   },
   "mixins": [
+    "veilreach.mixins.json",
     "veilreach.client.mixins.json"
   ],
   "depends": {
