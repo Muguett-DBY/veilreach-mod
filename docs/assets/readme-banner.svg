@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="280" viewBox="0 0 1080 280" role="img" aria-labelledby="title desc">
+<title id="title">Veilreach</title><desc id="desc">A moonlit wilderness, beyond a woven gate.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101522"/><stop offset="1" stop-color="#202139"/></linearGradient><radialGradient id="glow"><stop stop-color="#bfafff" stop-opacity=".16"/><stop offset="1" stop-color="#bfafff" stop-opacity="0"/></radialGradient></defs>
+<rect width="1080" height="280" rx="20" fill="url(#bg)"/>
+<circle cx="910" cy="124" r="210" fill="url(#glow)"/>
+<path d="M743 30v220" stroke="#ffffff" opacity=".1"/>
+<path d="M40 246h660" stroke="#ffffff" opacity=".12"/>
+<rect x="42" y="43" width="4" height="14" rx="2" fill="#bfafff"/>
+<text x="57" y="55" font-family="Consolas,monospace" font-size="12" letter-spacing="2" fill="#bfafff">THE HUSHLANDS / WORLD EXPERIMENT</text>
+<text x="40" y="117" font-family="Segoe UI,Arial,sans-serif" font-weight="700" font-size="44" fill="#f5f3fb">Veilreach</text>
+<text x="42" y="156" font-family="Segoe UI,Arial,sans-serif" font-size="18" fill="#c5c9db">A moonlit wilderness, beyond a woven gate.</text>
+<text x="42" y="214" font-family="Consolas,monospace" font-size="12" letter-spacing="1" fill="#9bd9e3">BY CUSTARD</text>
+<path d="M820 224V102a68 68 0 0 1 136 0v122M840 224V102a48 48 0 0 1 96 0v122M808 225h160" stroke="#bfafff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><g fill="#9bd9e3"><circle cx="790" cy="61" r="3"/><circle cx="1000" cy="171" r="3"/><path d="m975 45 3 10 10 3-10 3-3 10-3-10-10-3 10-3z"/></g>
+</svg>
