@@ -1,0 +1,62 @@
+name: Fabric build
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle.properties'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'LICENSE'
+      - '.github/workflows/fabric-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Build mod
+        run: bash ./gradlew --no-daemon build
+      - name: Verify packaged Fabric Loader requirement
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          properties = dict(
+              line.split("=", 1)
+              for line in Path("gradle.properties").read_text().splitlines()
+              if "=" in line and not line.lstrip().startswith("#")
+          )
+          jar = Path("build/libs") / (
+              properties["archives_base_name"] + "-" + properties["mod_version"] + ".jar"
+          )
+          with ZipFile(jar) as artifact:
+              metadata = json.loads(artifact.read("fabric.mod.json"))
+          expected = ">=" + properties["loader_version"]
+          actual = metadata["depends"]["fabricloader"]
+          if actual != expected:
+              raise SystemExit(f"{jar.name}: expected Fabric Loader {expected}, found {actual}")
+          print(f"{jar.name}: Fabric Loader {actual}")
+          PY
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: veilreach-mod
+          path: |
+            build/libs/veilreach-mod-*.jar
+            !build/libs/*-sources.jar
+          if-no-files-found: error
+          retention-days: 7
